@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "boxify",
+    "boxify": "boxify"
+  },
+  "targets": {}
+}

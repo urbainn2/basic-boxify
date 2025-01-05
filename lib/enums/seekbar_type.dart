@@ -1,0 +1,4 @@
+enum SeekBarType {
+  small,
+  large,
+}

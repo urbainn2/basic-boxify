@@ -1,0 +1,142 @@
+name: boxify
+description: Rivers's Private Demos
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.3.8+38
+# Actually the build number is not optional, you may want to double check in the android dashboard for the last number. 
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: 3.24.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  rivify:
+    path: ../rivify
+  weezify:
+    path: ../weezify
+
+  background_downloader: ^8.2.0
+  cloud_firestore: ^4.17.4
+  cloud_firestore_web: ^3.12.4
+  firebase_auth: ^4.17.8
+  firebase_core: ^2.27.0
+  firebase_messaging: ^14.9.2
+  firebase_storage: ^11.6.9
+  firebase_crashlytics: ^3.4.18
+
+  audioplayers: ^6.0.0
+  audio_session: ^0.1.18   
+  auto_size_text: ^3.0.0
+  bloc_concurrency: ^0.2.2
+  charcode: ^1.2.0
+  cached_network_image: ^3.3.1
+  connectivity_plus: ^5.0.2
+  clipboard: ^0.1.3     
+  device_info_plus: ^9.0.3
+  devicelocale: ^0.7.0
+  dio: ^5.1.1
+  easy_localization: ^3.0.7
+  easy_logger: ^0.0.2
+  equatable: ^2.0.3
+  fading_edge_scrollview: ^4.1.1
+  file_picker: ^5.2.1  
+  flutter_bloc: ^8.1.3
+  flutter_image_compress: ^2.1.0
+  flutter_linkify: ^6.0.0
+  flutter_local_notifications: ^17.2.2
+  flutter_rating_bar: ^4.0.0
+  fuzzywuzzy: ^1.1.6
+  go_router: ^13.2.2
+  google_sign_in_platform_interface: ^2.4.0
+  google_sign_in: ^6.1.0
+  google_sign_in_web: ^0.12.0
+  hive: ^2.0.4
+  hive_flutter: ^1.1.0
+  image_cropper: ^8.0.2
+  image_picker: ^1.0.6
+  intl: ^0.19.0
+  http: ^1.1.0  
+  just_audio: ^0.9.39
+  just_audio_background: ^0.0.1-beta.11
+  logger: ^2.0.2+1
+
+  # package_info_plus: ^5.0.1
+  package_info_plus: ^4.2.0
+  path_provider: ^2.0.14 
+  permission_handler: ^11.3.1
+  profanity_filter: ^2.0.0-nullsafety.0
+  provider: ^6.0.5   
+  # purchases_flutter: ^6.21.0
+  purchases_flutter: ^8.1.3
+  sqflite: ^2.3.0
+  timeago: ^3.1.0
+  share_plus: ^7.2.1
+  shared_preferences: ^2.2.0
+  url_launcher: ^6.1.10  
+  uni_links: ^0.5.1
+  universal_platform: ^1.0.0+1
+  universal_html: ^2.2.3
+  universal_io: ^2.0.3 
+  upgrader: ^8.2.0
+  validators: ^3.0.0  
+  material_design_icons_flutter: 7.0.7296
+
+dependency_overrides:
+  modal_bottom_sheet: ^3.0.0-pre
+  archive: ^3.6.1
+  win32: ^5.5.3
+
+  # fading_edge_scrollview: ^4.1.1 # for marquee until they fix the issue
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.10.0
+  dependency_validator: ^3.1.2
+  mockito: ^5.4.4
+  test: ^1.16.8
+  lints: ^3.0.0
+  hive_generator: ^2.0.0
+  build_runner: ^2.3.3
+
+
+  
+
+# The `image_path` in `flutter_icons` is meant to point directly to a specific image file, 
+# not a directory. This image is then used to generate the app icons, 
+# sized appropriately for both Android and iOS platforms.
+# Your existing configuration, with `image_path` set as `assets/icons/boxify.png`, 
+# is correct as long as `boxify.png` exists inside the `assets/icons/` directory. 
+# The `flutter_launcher_icons` package will take this image and generate multiple 
+# sized icons required for the application launcher.
+flutter_icons:
+  image_path: "assets/icons/boxify.png"
+  android: true
+  ios: true
+
+flutter:
+  uses-material-design: true  
+  assets:
+    - assets/data/
+    - assets/icons/
+    - assets/images/
+    - assets/translations/
+    
+
+
