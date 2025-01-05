@@ -26,10 +26,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  rivify:
-    path: ../rivify
-  weezify:
-    path: ../weezify
+  # rivify:
+  #   path: ../rivify
+  # weezify:
+  #   path: ../weezify
 
   background_downloader: ^8.2.0
   cloud_firestore: ^4.17.4
