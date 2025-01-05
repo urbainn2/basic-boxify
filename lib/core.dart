@@ -174,6 +174,10 @@ class Core {
     deviceLocale = await Devicelocale.currentAsLocale;
     logger.i('device locale: $deviceLocale');
 
+    iOSDeepLinkService.instance; // WORK IN PROGRESS
+
+    await NotificationService.initialize();
+
     await app.init();
     logger.i('iCore.app.init done');
   }
