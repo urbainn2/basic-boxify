@@ -61,7 +61,7 @@ class App extends BaseApp {
 
 class AppColor extends BaseColor {
   @override
-  get primary => Colors.blue;
+  get primary => Colors.green;
 
   // @override
   // get navBar => Core.app.isSplitView ? Colors.white : const Color(0xFFF7F6F6);
