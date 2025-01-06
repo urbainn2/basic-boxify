@@ -15,5 +15,6 @@ export '../providers/providers.dart';
 export '../repositories/repositories.dart';
 export '../screens/screens.dart';
 export '../services/services.dart';
+export '../theme/themes.dart';
 export '../ui/ui.dart';
 export 'widgets/widgets.dart';

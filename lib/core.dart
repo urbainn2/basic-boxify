@@ -85,13 +85,13 @@ class Core {
   /// - `baseStyle`: A base style configuration. If not supplied, a default style is applied.
   /// - `baseColor`: A base color configuration. Defaults to a standard set if not provided.
   /// - `baseUI`: A base User Interface configuration. Defaults to a standard UI if not provided.
-  /// - `firebaseOptions`: The options used to initialize Firebase. Firebase is not initialized if this is not supplied.
+  /// - `firebaseOptions`: The options used to initialize Firebase.
   ///
   /// Returns:
   /// - `Future<void>`: Once the application has been initialized successfully, a complete future is returned.
   static init({
     required String appName,
-    required FirebaseOptions firebaseOptions,
+    FirebaseOptions? firebaseOptions,
     dynamic baseApp,
     dynamic baseStyle,
     dynamic baseColor,
@@ -110,6 +110,11 @@ class Core {
     GoRouter.optionURLReflectsImperativeAPIs = true;
     print('initializing core');
     if (kIsWeb) {
+
+      if (firebaseOptions == null) {
+        throw Exception('Firebase options must be provided for web apps');
+      }
+
       logger.i('initializing firebase on web');
 
       await Firebase.initializeApp(options: firebaseOptions);
