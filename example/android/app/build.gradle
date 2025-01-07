@@ -6,7 +6,7 @@ plugins {
 
     // // If you need Firebase/Google services in this example:
     // // (Adjust version as needed)
-    // id "com.google.gms.google-services" version "4.3.15"
+    id "com.google.gms.google-services" version "4.3.15"
 }
 
 //-------------------------------------------------------------------
@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         // Application ID for this example
-        applicationId "com.example.example"
+        applicationId "com.example.example" // changed to this so googleservicejson can find weezify firebase
 
         minSdk = 23
         targetSdk = 34
