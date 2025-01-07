@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         // Application ID for this example
-        applicationId "com.example.example" // changed to this so googleservicejson can find weezify firebase
+        applicationId "com.boxify.dev" // changed to this so googleservicejson can find weezify firebase
 
         minSdk = 23
         targetSdk = 34
@@ -97,5 +97,4 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 }
 
-// // If using Google services in your example, apply the plugin at the bottom:
-// apply plugin: "com.google.gms.google-services"
+apply plugin: "com.google.gms.google-services"

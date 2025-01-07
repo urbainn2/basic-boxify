@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.example"
+    package="com.boxify.dev"
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Common permissions used by many Flutter apps -->
