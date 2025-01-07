@@ -20,11 +20,11 @@ void main() async {
       baseColor: AppColor());
 
   runApp(
-    createRiverTunesApp(),
+    createExampleBoxifyApp(),
   );
 }
 
-AppBase createRiverTunesApp({bool showLoaders = true}) {
+AppBase createExampleBoxifyApp({bool showLoaders = true}) {
   return AppBase(
     builder: (context, setState) {
       return AppRoot();

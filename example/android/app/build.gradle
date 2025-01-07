@@ -38,9 +38,8 @@ android {
 
     defaultConfig {
         // Application ID for this example
-        applicationId "com.example.boxifyexample"
+        applicationId "com.example.example"
 
-        // Weezify used minSdkVersion 23; pick whichever you like.
         minSdk = 23
         targetSdk = 34
 
