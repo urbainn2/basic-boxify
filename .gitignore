@@ -1,8 +1,8 @@
 .env
 secrets
-# Firebase
-# android/app/google-services.json
-# ios/Runner/GoogleService-Info.plist
+
+# Firebase is in child app .gitignores
+
 .firebase/hosting.*.cache
 .flutter-plugins
 .flutter-plugins-dependencies
@@ -23,10 +23,10 @@ secrets
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-.vscode/
+# # The .vscode folder contains launch configuration and tasks you configure in
+# # VS Code which you may wish to be included in version control, so this line
+# # is commented out by default.
+# .vscode/
 .venv
 
 # Flutter/Dart/Pub related
