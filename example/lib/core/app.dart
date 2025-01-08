@@ -18,7 +18,7 @@ import 'package:boxify/screens/market/api/purchase_api.dart';
 /// }
 class App extends BaseApp {
   @override
-  String get name => "Examplefy";
+  String get name => "Examplify";
 
   @override
   AppType get type => AppType.advanced;
@@ -61,10 +61,8 @@ class App extends BaseApp {
 
 class AppColor extends BaseColor {
   @override
-  get primary => Colors.green;
+  get primary => Colors.blue;
 
-  // @override
-  // get navBar => Core.app.isSplitView ? Colors.white : const Color(0xFFF7F6F6);
   @override
   get link => primary;
 }

@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         // Application ID for this example
-        applicationId "com.boxify.dev" // changed to this so googleservicejson can find weezify firebase
+        applicationId "com.boxify.dev"
 
         minSdk = 23
         targetSdk = 34
@@ -84,17 +84,17 @@ flutter {
 // 2) Dependencies
 //    If you want to show how to integrate Firebase, multiDex, etc. in the example:
 //-------------------------------------------------------------------
+
 dependencies {
-    // (Optional) If demonstrating Firebase:
-    implementation platform('com.google.firebase:firebase-bom:32.2.0')
+    implementation platform('com.google.firebase:firebase-bom:30.3.2')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.firebase:firebase-storage'
-    implementation 'com.google.firebase:firebase-messaging'
-
-    // multiDex if your example might exceed the 65k method limit
-    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.google.firebase:firebase-storage'  
+    implementation("com.android.support:multidex:1.0.3") // for multi-dex
+    // Other dependencies
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'    
+    implementation 'com.google.firebase:firebase-messaging'   
 }
 
 apply plugin: "com.google.gms.google-services"
