@@ -1,5 +1,5 @@
 
-  # BOXIFY EXAMPLE
+  # EXAMPLIFY
 
   This folder contains the working demo of Boxify (similar to the private Weezify and Rivertunes repositories).  
   If you want to run or contribute to Boxify, **this** is where to start!
@@ -22,7 +22,7 @@
   ---
 
   ## Overview
-  **Boxify Example** is a fully runnable version of the base Boxify code. It demonstrates how all the pieces fit together and connects to Firebase for authentication, Firestore, etc.
+  **Examplify** is a fully runnable version of the base Boxify code. It demonstrates how all the pieces fit together and connects to Firebase for authentication, Firestore, etc.
 
   ---
 
