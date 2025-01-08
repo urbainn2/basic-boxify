@@ -33,6 +33,9 @@ class App extends BaseApp {
   @override
   String get iosApiKey => '';
 
+  @override
+  List<String> get defaultPlaylistIds => [];
+
 
 // PLAYLIST
   String defaultPlaylistId = '40briftVDwVQmA0NAayo';

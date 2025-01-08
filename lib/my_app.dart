@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
   final audioPlayer = AudioPlayerSingleton.instance;
 
-  Track getInitialTrack(TrackBloc trackBloc, User user) {
+  Track? getInitialTrack(TrackBloc trackBloc, User user) {
     Track? track;
 
     final availableTracks = trackBloc.state.allTracks
@@ -44,8 +44,10 @@ class MyApp extends StatelessWidget {
     // Handle the case where no suitable track was found
     // e.g., because the list of all tracks was empty
     if (track == null) {
-      // Handle this scenario, maybe return a default track or throw an error
-      throw Exception('No tracks found');
+      logger.e('No track found');
+      // // Handle this scenario, maybe return a default track or throw an error
+      // throw Exception('No tracks found');
+      return null;
     }
 
     return track;
@@ -619,11 +621,13 @@ class MyApp extends StatelessWidget {
 
             final track = getInitialTrack(trackBloc, user);
             logger.i('SetDisplayedTracksWithTracks');
-            trackBloc.add(SetDisplayedTracksWithTracks(tracks: [track]));
-            logger.i('LoadPlayer!');
-            playerBloc.add(
-              LoadPlayer([track]),
-            );
+            if (track != null) {
+              trackBloc.add(SetDisplayedTracksWithTracks(tracks: [track]));
+              logger.i('LoadPlayer!');
+              playerBloc.add(
+                LoadPlayer([track]),
+              );
+            }
           }
         },
       ),

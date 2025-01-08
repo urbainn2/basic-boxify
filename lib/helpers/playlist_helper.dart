@@ -150,7 +150,6 @@ class PlaylistHelper {
 
 // For RiverTunes
   List<Track> filterTracksByRole(List<Track> unratedTracks, User user) {
-    
     // For non-collaborators, remove the Collaborators tracks from the unrated playlist
     if (!user.roles!.contains('collaborator')) {
       unratedTracks = unratedTracks.where((track) {
@@ -373,10 +372,13 @@ class PlaylistHelper {
   ) {
     logger.i('_createNewReleasesPlaylist');
 
-    var newReleasesPlaylist = allPlaylists
-        .firstWhere((element) => element.id == Core.app.newReleasesPlaylistId);
-
-    return newReleasesPlaylist;
+    try {
+      return allPlaylists.firstWhere(
+          (element) => element.id == Core.app.newReleasesPlaylistId);
+    } catch (e) {
+      logger.w('No new releases playlist found');
+      return null;
+    }
   }
 
   /// Returns a list of [Playlist]s the [User] follows (or owns) (including Core.app.defaultPlaylistIds)
