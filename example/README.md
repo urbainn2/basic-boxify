@@ -37,7 +37,7 @@
 
   ## Project Structure
   - `lib/`  
-    Contains the Flutter source code (widgets, blocs, models, etc.).
+    Contains the configuration for this app's implementation of Boxify. To develop the app, you'll mostly be working in Boxify's `lib/` folder.
   - `assets/`  
     Holds image assets for the UI.
   - `android/` and `ios/`  
