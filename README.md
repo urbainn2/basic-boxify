@@ -20,3 +20,6 @@ If you're interested in contributing or running Boxify locally:
 1. Check out the documentation in [`example/README.md`](example/README.md)
 2. Follow the setup instructions provided there
 3. Make your changes in the appropriate `lib/` subdirectory
+
+
+git submodule add --name boxify-scripts https://github.com/riverscuomo/boxify weezify/scripts/boxify_scripts

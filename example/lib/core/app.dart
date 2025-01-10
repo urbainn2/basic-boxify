@@ -64,7 +64,7 @@ class App extends BaseApp {
 
 class AppColor extends BaseColor {
   @override
-  get primary => Colors.blue;
+  get primary => const Color(0xFF00C0C0);
 
   @override
   get link => primary;

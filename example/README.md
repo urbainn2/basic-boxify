@@ -101,7 +101,12 @@
   ## Updating Images
   Add your new images to the `assets/` folder. Then ensure `pubspec.yaml` lists them under `assets:` so Flutter can access them.
 
-
+  ## Python scripts for working with firebase_admin and the Firestore database
+  - `firebase_admin.py`  
+    You'll need to create a service account key from the Firebase console and save it ....
+    There is another repo called `boxify-scripts` that contains some core scripts for working with the Firestore database.
+    Rivers also has many scripts in his private 'Weezify' repo.
+    
   ## License
   <!-- 
     If you have a specific license, link it here, e.g.:
