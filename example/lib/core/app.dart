@@ -25,7 +25,7 @@ class App extends BaseApp {
 
   @override
   String get serverToken =>
-      '';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnYiOiJzdGFnaW5nIn0.sanDGWAQy-VEWGuJ0B_pFFL3E-pkMteJK7PwE3w3S2g';
 
   @override
   String get androidApiKey => '';
@@ -48,6 +48,25 @@ class App extends BaseApp {
   //LARGE NAV PANEL
   // double playerHeight = 110;
   double staticPanelHeight = 266; // This is just the unchanging part at the top
+
+  // SERVER URLS
+  // String baseUrlLocal = 'localhost:8686/';
+
+  @override
+  String get serverUrl => 'https://rivers-staging-a57034f97ea2.herokuapp.com/';
+
+  // String get bundlesAPIUrl => '${serverUrl}bundles/api';
+  // String get tracksAPIUrl => '${serverUrl}tracks/api';
+  // String get usersAPIUrl => '${serverUrl}weezify_users/api';
+  // String get lastUpdatedTracksUrl => '$tracksAPIUrl/last_updated';
+  // String get lastUpdatedBundlesUrl => '$bundlesAPIUrl/last_updated';
+  // String get lastUpdatedUsersUrl => '$usersAPIUrl/last_updated';
+  // String get emailBundleUrl => '${serverUrl}email_bundle/api';
+  // String get libraryUrl => '${serverUrl}wiki';
+  // String get marketUrlTest => 'http://127.0.0.1:5000//demos';
+  // String get marketUrl => '${serverUrl}demos';
+  // String get weezifyPrivacyPolicyUrl =>
+  //     '$libraryUrl/Weezify%20Privacy%20Policy';
 
   @override
   postInit() async {

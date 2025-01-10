@@ -120,7 +120,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackState> {
     logRunTime(start2, 'cacheHelper.getTracks');
 
     // If there are cached tracks, use them
-    if (cachedTracks != null) {
+    if (cachedTracks != null && cachedTracks.isNotEmpty) {  
       logger.i('there are cachedTracks!');
       final userId = _authBloc.state.user!.uid;
       _trackHelper.updateTrackLinksBulk(cachedTracks, userId);
@@ -131,7 +131,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackState> {
       logRunTime(start, 'load all tracks');
       return;
     }
-    logger.i('there are no cachedTracks !');
+    logger.i('cachedTracks is null or empty');
 
     // If there are no cached tracks, fetch them from the server
     final List<Track> tracks;

@@ -39,7 +39,13 @@ class TrackRepository extends BaseTrackRepository {
       if (response.statusCode == 200) {
         final tracks = parseTracksFromResponse(response);
         return tracks;
-      } else if (response.statusCode == 503) {
+      } else if (response.statusCode == 401) {
+        logger.e(
+            'fetchTracksFromRCServerAPI: 401! Unauthorized! Did you pass the correct Core.app.serverToken?');
+        return [];
+      }
+      
+      else if (response.statusCode == 503) {
         logger.e(
             'fetchTracksFromRCServerAPI: 503! Server is down! Check books-r-fun server on Heroku. They may have updated your postgresql database credentials. Run the server locally to test.');
         return [];
