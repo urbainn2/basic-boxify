@@ -33,17 +33,33 @@ class App extends BaseApp {
   @override
   String get iosApiKey => '';
 
-  @override
-  List<String> get defaultPlaylistIds => [];
-
-
 // PLAYLIST
   String defaultPlaylistId = '40briftVDwVQmA0NAayo';
-  String ethan = 'g39cCaKrmQaeIUGWFsY5dJ1jXp33';
-  String jake = '4293';
-  String jaketest = 'edhkKs3fM5PEftB4ZJQmj8Ore0w1';
-  String charliebrand = '3XwuPaGEpVhYI9PWvaBsMIK1fFu1';
-  String kingTomId = '1922';
+
+
+  @override
+  String preWeezerPlaylistId = 'Xih5mmsI9PVYttdiCvbE';
+@override
+  String bluePinkertonPlaylistId = 'tjGtXvfS2mnf1KCCARMy';
+@override
+  String greenPlaylistId = '1cHanICoiKFZ5kJgrkj0';
+@override
+  String makeBelievePlaylistId = '7PBHKKun1I8miewHqfuU';
+@override
+  String byThePeoplePlaylistId = 'n7Dgp6oJVc6iDvkpPZQB';
+@override
+  String redRadHurleyPlaylistId = 'YS4qmRtQzjVaQJPz85WJ';
+@override
+  String ewbaitePlaylistId = 'oDIz7u5HqWvFnOvD6P2p';
+@override
+  String whitePlaylistId = 'ifxcDmApNKjjEaj2sstu';
+@override
+  String patrickAndRiversPlaylistId = 'EHrCdpuWBfMQnCV63Jx9';
+@override
+  String weezmaPlaylistId = '8OwoXYmtyXBmiifq1Y5R';
+String pacificDaydreamBlackPlaylistId = 'yFE6XUB8hZFk4MNvd9wE';
+@override
+  String pianoPlaylistId = 'btQRMVXFDwWxjrU6bhfA';
 
   //LARGE NAV PANEL
   // double playerHeight = 110;

@@ -128,19 +128,18 @@ class BaseApp {
   String bluePinkertonPlaylistId = 'ImAlVo9CSrGXgaBPpXo3';
   String byThePeoplePlaylistId = 'BOvQOnRqJmgLJJjWYWbg';
   String greenPlaylistId = 'gBSq42uaUs64vPfYc7DQ';
-  String highestRatedPlaylistId = '6C7GjLWSQKvvTco33Sfz';
+  String highestRatedPlaylistId = '6C7GjLWSQKvvTco33Sfz';//
   String ewbaitePlaylistId = 'llpm2LkFjw8Prhjcu19V';
   String makeBelievePlaylistId = 'wpWrAtYYIffNzmOzKmo6';
   // String maladroitPlaylistId = 'fyab5urz2Vk1cltqi56z';
   String newReleasesPlaylistId = 'RAUZopvzD6WjWa2PuVin';
-  String pacificDaydreamPlaylistId = 'nvD0gesKQHaap5k2gbiW';
+  String pacificDaydreamPlaylistId = 'nvD0gesKQHaap5k2gbiW';//
   String patrickAndRiversPlaylistId = 'ucpOckpbIfnkNvIwnhFg';
   String pianoPlaylistId = '5zztuyJ7Vjd4GFnJCoPj';
   String preWeezerPlaylistId = "SGqAcY3htl6Vc3QlZm1h";
   String redRadHurleyPlaylistId = 'FPmNMeGMNduvZq1YLWpF';
   String weezmaPlaylistId = "CPAfuZxpQQsgJcLRD4Xe";
   String whitePlaylistId = 'sPDeejLKjMO4SKvCMPnQ';
-
   String blackAlbumPlaylistId = 'abXrLOK2ybsYnvboT0bV';
   String sZNZPlaylistId = 'X2fz9YYcl6XlASHuU0V1';
   String oKHumanPlaylistId = 'jAWdM78MsKMr0TSeCKLi';
@@ -152,12 +151,10 @@ class BaseApp {
         highestRatedPlaylistId, // The highest rated rivers demos
         ewbaitePlaylistId,
         byThePeoplePlaylistId,
-
         pacificDaydreamPlaylistId,
-        weezmaPlaylistId, // the best of weezma
-        redRadHurleyPlaylistId, // the best of red rad
-        bluePinkertonPlaylistId, // the best of blue pink
-
+        weezmaPlaylistId,
+        redRadHurleyPlaylistId,
+        bluePinkertonPlaylistId,
         whitePlaylistId, // the best of white
         makeBelievePlaylistId, // the best of make believe
         patrickAndRiversPlaylistId, // Patrick & Rivers
@@ -168,10 +165,10 @@ class BaseApp {
         // maladroitPlaylistId,
         // blackRoomPlaylistId, // the best of black room
 
-        blackAlbumPlaylistId,
-        sZNZPlaylistId,
-        oKHumanPlaylistId,
-        vanWeezerPlaylistId,
+        // blackAlbumPlaylistId,
+        // sZNZPlaylistId,
+        // oKHumanPlaylistId,
+        // vanWeezerPlaylistId,
       ];
   List<String> get defaultPlaylistIds => bestOfPlaylistIds;
 
@@ -181,8 +178,6 @@ class BaseApp {
 
   /// For playlist images
   Map<String, String> get playlistIdToImageMap => {
-        // blackAlbumPlaylistId: "assets/images/black_album.jpg",
-
         bluePinkertonPlaylistId: "assets/images/blue.jpg",
         byThePeoplePlaylistId: "assets/images/bythepeople.jpg",
         ewbaitePlaylistId: "assets/images/ewbaite.jpg",

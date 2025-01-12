@@ -422,7 +422,7 @@ class PlaylistHelper {
         } else {
           if (Core.app.defaultPlaylistIds.contains(id)) {
             logger.w(
-                'User is following a default playlist id $id that is not in allPlaylists');
+                'User is following a default playlist id $id that is in Core.app.defaultPlaylistIds but is not in allPlaylists');
           } else {
             logger.e(
                 'User is following a playlist id $id not found in allPlaylists');
