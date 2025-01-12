@@ -146,7 +146,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     );
 
     // If the cached playlists are not null, use them
-    if (cachedPlaylists != null) {
+    if (cachedPlaylists != null && cachedPlaylists.isNotEmpty) {
       logger.i('_onLoadAllPlaylists: got cache');
 
       // If the app is RiverTunes, sort the playlists by display name, descending

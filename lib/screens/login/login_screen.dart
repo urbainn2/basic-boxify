@@ -193,7 +193,7 @@ class LoginScreen extends StatelessWidget {
       builder: (context) => ErrorDialog(
         content: message ?? 'genericError'.translate(),
         onPressed: () {
-          logger.e('pressed ok on error dialog');
+          logger.e('pressed ok on loginscreen error dialog');
           Navigator.of(context).pop();
         },
       ),

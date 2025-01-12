@@ -56,7 +56,7 @@ class PlaylistRepository extends BasePlaylistRepository {
   /// Requires a string userId to get the playlists created by the user, regardless of score.
   @override
   Future<List<Playlist>> fetchPlaylistsAdvanced(String userId) async {
-    logger.i('fetchPlaylistsAdvanced');
+    logger.d('fetchPlaylistsAdvanced');
 
     final CollectionReference playlistsRef =
         _firebaseFirestore.collection(Paths.playlists);
@@ -64,11 +64,11 @@ class PlaylistRepository extends BasePlaylistRepository {
     var playlistScoreCutoff = -1;
 
     if (kReleaseMode) {
-      logger.i(
+      logger.d(
           'Running in release mode so fetching all playlist with score > $playlistScoreCutoff');
     } else {
       playlistScoreCutoff = 10;
-      logger.i(
+      logger.d(
           'Running in either Debug or Artist mode so limiting allPlaylists to score > $playlistScoreCutoff');
     }
 
@@ -88,7 +88,7 @@ class PlaylistRepository extends BasePlaylistRepository {
     final playlists = await Future.wait(
       allPlaylistsDocs.map((doc) => Playlist.fromDoc(doc, userId)).toList(),
     );
-    // logger.i(playlists);
+    // logger.d(playlists);
     // logger.i('${s.elapsedMilliseconds}ms to Playlist.fromDoc).toList');
     final uniquePlaylists =
         {for (var playlist in playlists) playlist.id: playlist}.values.toList();
