@@ -1,10 +1,11 @@
 
-  # EXAMPLIFY
+# EXAMPLIFY
 
   This folder contains the working demo of Boxify (similar to the private Weezify and Rivertunes repositories).  
   If you want to run or contribute to Boxify, **this** is where to start!
 
-  ## Table of Contents
+## Table of Contents
+
   1. [Overview](#overview)
   2. [Features](#features)
   3. [Project Structure](#project-structure)
@@ -21,63 +22,74 @@
 
   ---
 
-  ## Overview
+## Overview
+
   **Examplify** is a fully runnable version of the base Boxify code. It demonstrates how all the pieces fit together and connects to Firebase for authentication, Firestore, etc.
 
   ---
 
-  ## Features
-  - **User Authentication** (Firebase)
-  - **Playlist Creation & Management**
-  - **Track Management** (add/remove/listen)
-  - **Metadata Handling**
-  - **Support for Dev/Staging Firebase Environments** (so we don’t touch production data)
+## Features
+
+- **User Authentication** (Firebase)
+- **Playlist Creation & Management**
+- **Track Management** (add/remove/listen)
+- **Metadata Handling**
+- **Support for Dev/Staging Firebase Environments** (so we don’t touch production data)
 
   ---
 
-  ## Project Structure
-  - `lib/`  
+## Project Structure
+
+- `lib/`  
     Contains the configuration for this app's implementation of Boxify. To develop the app, you'll mostly be working in Boxify's `lib/` folder.
-  - `assets/`  
+- `assets/`  
     Holds image assets for the UI.
-  - `android/` and `ios/`  
+- `android/` and `ios/`  
     Platform-specific configuration.
-  - `firebase_options.dart`  
+- `firebase_options.dart`  
     manually inserted.  
-  - `google-services.json`  
+- `google-services.json`  
     Placed in `android/app` after you download from Firebase console.  
-  - `GoogleService-Info.plist`  
+- `GoogleService-Info.plist`  
     Placed in `ios/Runner` after you download it.
 
   ---
 
-  ## Getting Started
+## Getting Started
 
-  ### Prerequisites
+### Prerequisites
+
   1. **Flutter SDK** (version specified in `pubspec.yaml`)
   2. **Dart** (bundled with Flutter)
   3. (Optional) **Android Studio** or **VS Code** for local dev.
 
-  ### Firebase Setup
+### Firebase Setup
+
   This example requires a **Firebase project** (development/staging).  
 
   1. **Contact the maintainer** to be added to the 'boxify-dev' Firebase console.
   2. **Download**:
-     - `google-services.json` into `android/app`.
+     - `google-services.json` into `android/app` from the Firebase console <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/android:com.boxify.dev>
      - `GoogleService-Info.plist` into `ios/Runner`.
      - The auto-generated `firebase_options.dart` into `lib/config/`.
   3. Make sure those files **are not** committed to GitHub if they contain sensitive info. Check `.gitignore`.
 
-  ### Running the App
+### Running the App
+
   1. **Install dependencies**:
+
      ```bash
      flutter pub get
      ```
+
   2. **Run**:
+
      ```bash
      flutter run
      ```
+
   3. **Select a platform**:
+
      ```bash
      flutter run -d android
      # or flutter run -d ios
@@ -85,24 +97,27 @@
 
   ---
 
-  ## Contributing
+## Contributing
+
   Contributions are welcome! Steps:
+
   1. Fork & create a new branch.
   2. Commit changes with a clear message.
   3. Open a Pull Request into `main` (or whichever branch we use).
 
-  ### Guidelines
-  - Follow the existing code style (see `analysis_options.yaml`).
-  - Submit small, focused PRs.
-  - For major changes, open an issue first to discuss.
+### Guidelines
+
+- Follow the existing code style (see `analysis_options.yaml`).
+- Submit small, focused PRs.
+- For major changes, open an issue first to discuss.
 
   ---
 
-  ## Updating Images
+## Updating Images
+
   Add your new images to the `assets/` folder. Then ensure `pubspec.yaml` lists them under `assets:` so Flutter can access them.
 
-    
-  ## License
+## License
   <!-- 
     If you have a specific license, link it here, e.g.:
     [MIT License](LICENSE.md)
@@ -110,7 +125,8 @@
 
   ---
 
-  ## Contact
-  - **Maintainer:** Rivers
-  - **Email:** rivers@riverscuomo.com
-  - **Discord:** https://discord.com/channels/@me/1325992565278900285 
+## Contact
+
+- **Maintainer:** Rivers
+- **Email:** <rivers@riverscuomo.com>
+- **Discord:** <https://discord.com/channels/@me/1325992565278900285>
