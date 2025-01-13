@@ -1,24 +1,25 @@
 {
-    "workbench.colorCustomizations": {
-        "activityBar.activeBackground": "#00a3a3",
-        "activityBar.background": "#00a3a3",
-        "activityBar.foreground": "#e7e7e7",
-        "activityBar.inactiveForeground": "#e7e7e799",
-        "activityBarBadge.background": "#ffbfff",
-        "activityBarBadge.foreground": "#15202b",
-        "commandCenter.border": "#e7e7e799",
-        "sash.hoverBorder": "#00a3a3",
-        "statusBar.background": "#007070",
-        "statusBar.foreground": "#e7e7e7",
-        "statusBarItem.hoverBackground": "#00a3a3",
-        "statusBarItem.remoteBackground": "#007070",
-        "statusBarItem.remoteForeground": "#e7e7e7",
-        "tab.activeBorder": "#00a3a3",
-        "titleBar.activeBackground": "#007070",
-        "titleBar.activeForeground": "#e7e7e7",
-        "titleBar.inactiveBackground": "#00707099",
-        "titleBar.inactiveForeground": "#e7e7e799"
-    },
-    "peacock.color": "#007070",
-    "java.configuration.updateBuildConfiguration": "interactive"
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#00a3a3",
+    "activityBar.background": "#00a3a3",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#ffbfff",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#00a3a3",
+    "statusBar.background": "#007070",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#00a3a3",
+    "statusBarItem.remoteBackground": "#007070",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "tab.activeBorder": "#00a3a3",
+    "titleBar.activeBackground": "#007070",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#00707099",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#007070",
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "dart.flutterSdkPath": ".fvm/versions/3.24.1"
 }
