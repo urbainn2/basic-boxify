@@ -1,4 +1,4 @@
-from boxify_scripts.playlist_scripts import update_best_of_playlists_tracks_and_total
+from boxify_scripts.playlists.playlist_scripts import update_best_of_playlists_tracks_and_total
 from constants import best_of_playlist_ids
 
 
@@ -7,4 +7,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main( )
+    main()
