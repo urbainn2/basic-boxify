@@ -61,7 +61,7 @@
 
   1. **Flutter SDK** (version specified in `pubspec.yaml`)
   2. **Dart** (bundled with Flutter)
-  3. (Optional) **Android Studio** or **VS Code** for local dev.
+  3. (Optional) **VS Code** for local dev.
 
 ### Firebase Setup
 
@@ -70,8 +70,8 @@
   1. **Contact the maintainer** to be added to the 'boxify-dev' Firebase console.
   2. **Download**:
      - `google-services.json` into `android/app` from the Firebase console <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/android:com.boxify.dev>
-     - `GoogleService-Info.plist` into `ios/Runner`.
-     - The auto-generated `firebase_options.dart` into `lib/config/`.
+     - `GoogleService-Info.plist` into `ios/Runner` (if you'll be developing on iOS)
+     - The auto-generated `firebase_options.dart` into `lib/config/` from <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/web:ZmNlM2QyYjQtMGRlNC00N2QzLWJkZDktYjYwOWE1NzZhZWYz>
   3. Make sure those files **are not** committed to GitHub if they contain sensitive info. Check `.gitignore`.
 
 ### Running the App
