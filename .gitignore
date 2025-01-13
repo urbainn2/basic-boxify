@@ -1,6 +1,10 @@
 .env
 secrets
 
+# Python envs
+.G
+.9
+
 # Firebase is in child app .gitignores
 
 .firebase/hosting.*.cache
