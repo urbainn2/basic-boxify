@@ -36,53 +36,36 @@ class App extends BaseApp {
 // PLAYLIST
   String defaultPlaylistId = '40briftVDwVQmA0NAayo';
 
-
   @override
-  String preWeezerPlaylistId = 'Xih5mmsI9PVYttdiCvbE';
-@override
-  String bluePinkertonPlaylistId = 'tjGtXvfS2mnf1KCCARMy';
-@override
-  String greenPlaylistId = '1cHanICoiKFZ5kJgrkj0';
-@override
-  String makeBelievePlaylistId = '7PBHKKun1I8miewHqfuU';
-@override
-  String byThePeoplePlaylistId = 'n7Dgp6oJVc6iDvkpPZQB';
-@override
-  String redRadHurleyPlaylistId = 'YS4qmRtQzjVaQJPz85WJ';
-@override
-  String ewbaitePlaylistId = 'oDIz7u5HqWvFnOvD6P2p';
-@override
-  String whitePlaylistId = 'ifxcDmApNKjjEaj2sstu';
-@override
-  String patrickAndRiversPlaylistId = 'EHrCdpuWBfMQnCV63Jx9';
-@override
-  String weezmaPlaylistId = '8OwoXYmtyXBmiifq1Y5R';
-String pacificDaydreamBlackPlaylistId = 'yFE6XUB8hZFk4MNvd9wE';
-@override
-  String pianoPlaylistId = 'btQRMVXFDwWxjrU6bhfA';
+  String get preWeezerPlaylistId => 'Xih5mmsI9PVYttdiCvbE';
+  @override
+  String get bluePinkertonPlaylistId => 'tjGtXvfS2mnf1KCCARMy';
+  @override
+  String get greenPlaylistId => '1cHanICoiKFZ5kJgrkj0';
+  @override
+  String get makeBelievePlaylistId => '7PBHKKun1I8miewHqfuU';
+  @override
+  String get byThePeoplePlaylistId => 'n7Dgp6oJVc6iDvkpPZQB';
+  @override
+  String get redRadHurleyPlaylistId => 'YS4qmRtQzjVaQJPz85WJ';
+  @override
+  String get ewbaitePlaylistId => 'oDIz7u5HqWvFnOvD6P2p';
+  @override
+  String get whitePlaylistId => 'ifxcDmApNKjjEaj2sstu';
+  @override
+  String get patrickAndRiversPlaylistId => 'EHrCdpuWBfMQnCV63Jx9';
+  @override
+  String get weezmaPlaylistId => '8OwoXYmtyXBmiifq1Y5R';
+  String get pacificDaydreamBlackPlaylistId => 'yFE6XUB8hZFk4MNvd9wE';
+  @override
+  String get pianoPlaylistId => 'btQRMVXFDwWxjrU6bhfA';
 
-  //LARGE NAV PANEL
-  // double playerHeight = 110;
-  double staticPanelHeight = 266; // This is just the unchanging part at the top
+  // //LARGE NAV PANEL
+  // double staticPanelHeight = 266; // This is just the unchanging part at the top
 
-  // SERVER URLS
-  // String baseUrlLocal = 'localhost:8686/';
 
   @override
   String get serverUrl => 'https://rivers-staging-a57034f97ea2.herokuapp.com/';
-
-  // String get bundlesAPIUrl => '${serverUrl}bundles/api';
-  // String get tracksAPIUrl => '${serverUrl}tracks/api';
-  // String get usersAPIUrl => '${serverUrl}weezify_users/api';
-  // String get lastUpdatedTracksUrl => '$tracksAPIUrl/last_updated';
-  // String get lastUpdatedBundlesUrl => '$bundlesAPIUrl/last_updated';
-  // String get lastUpdatedUsersUrl => '$usersAPIUrl/last_updated';
-  // String get emailBundleUrl => '${serverUrl}email_bundle/api';
-  // String get libraryUrl => '${serverUrl}wiki';
-  // String get marketUrlTest => 'http://127.0.0.1:5000//demos';
-  // String get marketUrl => '${serverUrl}demos';
-  // String get weezifyPrivacyPolicyUrl =>
-  //     '$libraryUrl/Weezify%20Privacy%20Policy';
 
   @override
   postInit() async {

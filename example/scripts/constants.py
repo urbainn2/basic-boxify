@@ -3,28 +3,15 @@ default_from_path = bundles_path
 default_table_name = "tracks"
 ratings_table_name = "ratings"
 
-# bundle ids
-# by_the_people_bundle_id = "1Vxg8FUzbxR4hFItNB6x"
-
 
 # playlist ids
 # defaultPlaylistId = "40briftVDwVQmA0NAayo"
 # DON'T PUT THIS IN WITH THE BEST PLAYLISTS because playlists_routine.py will destroy it.
 # highest_rated_demos_playlist_id = "6C7GjLWSQKvvTco33Sfz"
+
 # newReleasesPlaylistId will be pulled separately in player screen bloc load user
 # newReleasesPlaylistId = "RAUZopvzD6WjWa2PuVin"
 # piano_playlist_id = "5zztuyJ7Vjd4GFnJCoPj"
-
-# Best of Playlists
-# byThePeoplePlaylistId = "BOvQOnRqJmgLJJjWYWbg"
-# ewbaitePlaylistId = "llpm2LkFjw8Prhjcu19V"
-# maladroitPlaylistId = "fyab5urz2Vk1cltqi56z"
-# pacificDaydreamPlaylistId = "nvD0gesKQHaap5k2gbiW"
-
-# black_album_playlist_id = "abXrLOK2ybsYnvboT0bV"
-# sznz_playlist_id = "X2fz9YYcl6XlASHuU0V1"
-# ok_human_playlist_id = "jAWdM78MsKMr0TSeCKLi"
-# van_weezer_playlist_id = "RHCEXTTiCLutTcpG8qVi"
 
 pre_weezer_playlist_id = "Xih5mmsI9PVYttdiCvbE"
 the_blue_pinkerton_years_playlist_id = "tjGtXvfS2mnf1KCCARMy"
@@ -61,7 +48,6 @@ best_of_playlist_ids = [
 # Every user gets all of these
 # newReleasesPlaylistId will be pulled separately in player screen bloc load user
 default_playlist_ids = best_of_playlist_ids
-
 
 # user ids
 

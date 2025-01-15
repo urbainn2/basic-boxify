@@ -22,7 +22,7 @@ class HomeTile extends StatelessWidget {
         GoRouter.of(context).push('/');
       },
       title: HoverText(
-          text: Core.app.homeTitle.translate(),
+          text: 'home'.translate(),
           fontSize: Core.app.titleFontSize),
     );
   }

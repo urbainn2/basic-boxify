@@ -23,29 +23,23 @@ class BaseApp {
 
   // Sizes
   double appBarHeight = 75;
-
   double largeScreenRowHeight = 60;
   double playerHeight = 95;
   double smallPlayerHeight = 60;
-
   double libraryPanelWidth = 350;
   double navPanelWidth = 350;
   double smallRowImageSize = 50;
   double titleFontSize = 15;
   double subtitleFontSize = 13;
   double signInBoxWidth = 500;
-
   double largeSmallBreakpoint = 660;
 
   BasePrefs get prefs => BasePrefs();
 
   String _version = '';
   String _buildNumber = '';
-  String name = 'Boxify';
+  String name = '';
   AppType type = AppType.basic;
-  String homeTitle = 'home'.translate();
-  String playlistsHeader = 'yourPlaylists'.translate();
-
   String get appVersion =>
       _version.isNotEmpty ? '$_version ($_buildNumber)' : '';
   String get displayAppVersion => appVersion;
@@ -80,7 +74,6 @@ class BaseApp {
   String redRadHurleyBundleId = '40';
   String weezmaBundleId = '48';
   String whiteBundleId = '30';
-
   String blackAlbumBundleId = 'Xuq6DptPbiXebElzip99';
   String sznzBundleId = 'K8B5vBaQJnck9aoSAZ1b';
   String vanWeezerBundleId = 'qki8QLSg7m8W6yVyD1OO';
