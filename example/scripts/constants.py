@@ -1,7 +1,7 @@
 bundles_path = r"C:\RC Dropbox\Rivers Cuomo\Music--Me\Rivers Cuomo\BUNDLES"
 default_from_path = bundles_path
 default_table_name = "tracks"
-ratings_table_name = "ratings"
+ratings_table_name = "ratings2"
 
 
 # playlist ids
@@ -49,20 +49,6 @@ best_of_playlist_ids = [
 # newReleasesPlaylistId will be pulled separately in player screen bloc load user
 default_playlist_ids = best_of_playlist_ids
 
+
 # user ids
 
-# images
-# riversPicUrl = r"https://firebasestorage.googleapis.com/v0/b/riverscuomo-8cc6d.appspot.com/o/images%2Fusers%2FuserProfile_72d03916-688f-482e-b7af-7050828f91f1.jpg?alt=media&token=5d0c3f08-de45-4d3a-bfa3-8c2e8dd70bb0"
-kyokoPicUrl = "https://firebasestorage.googleapis.com/v0/b/riverscuomo-8cc6d.appspot.com/o/images%2Fusers%2FuserProfile_72d03916-688f-482e-b7af-7050828f91f1.jpg?alt=media&token=5d0c3f08-de45-4d3a-bfa3-8c2e8dd70bb0"
-riversPicUrl = 'https://www.dl.dropboxusercontent.com/s/soonlxryu4gxhvu/rc.png?raw=1'
-gerbil = "https://firebasestorage.googleapis.com/v0/b/riverscuomo-8cc6d.appspot.com/o/00d5aae3-39e9-43fc-8c60-c1fef8be3a65?alt=media&token=01f2983b-fa5e-4a20-987c-44225b54bd47"
-
-HIGHEST_RATED_PLAYLIST_IMAGE = "https://firebasestorage.googleapis.com/v0/b/riverscuomo-8cc6d.appspot.com/o/images%2Fposts%2Fpost_589f126a-e9b7-4210-a538-8f4a66d1e027.jpg?alt=media&token=60d1c832-c335-48df-8257-031bf7a2ac16"
-NEW_RELEASES_PLAYLIST_IMAGE = HIGHEST_RATED_PLAYLIST_IMAGE
-# default objects
-default_user = {
-    "email": "",
-    "username": "jerbil binks",
-    "profileImageUrl": gerbil,
-    "bio": "This is a Yanni Zone",
-}

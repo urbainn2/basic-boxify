@@ -59,6 +59,8 @@ class App extends BaseApp {
   String get pacificDaydreamBlackPlaylistId => 'yFE6XUB8hZFk4MNvd9wE';
   @override
   String get pianoPlaylistId => 'btQRMVXFDwWxjrU6bhfA';
+  @override
+  String get highestRatedPlaylistId => 'BtGNyYpmiyHi0a7Zbmp3'; // Create this in boxify scripts first. // Should be added by to user userrepo when a user signs up as part of Core.app.defaultPlaylistIds
 
   // //LARGE NAV PANEL
   // double staticPanelHeight = 266; // This is just the unchanging part at the top

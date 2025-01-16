@@ -121,7 +121,7 @@ class BaseApp {
   String bluePinkertonPlaylistId = 'ImAlVo9CSrGXgaBPpXo3';
   String byThePeoplePlaylistId = 'BOvQOnRqJmgLJJjWYWbg';
   String greenPlaylistId = 'gBSq42uaUs64vPfYc7DQ';
-  String highestRatedPlaylistId = '6C7GjLWSQKvvTco33Sfz';//
+  String highestRatedPlaylistId = '6C7GjLWSQKvvTco33Sfz'; // Should be added by userrepo when a user signs up as part of Core.app.defaultPlaylistIds
   String ewbaitePlaylistId = 'llpm2LkFjw8Prhjcu19V';
   String makeBelievePlaylistId = 'wpWrAtYYIffNzmOzKmo6';
   // String maladroitPlaylistId = 'fyab5urz2Vk1cltqi56z';
