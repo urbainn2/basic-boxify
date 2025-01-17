@@ -25,24 +25,6 @@ You'll notice the local packages are not installed. That's because they are not 
 `cd gspreader`
 `pip install -e .`
 
-pip install -e ai/.
-pip install -e anki/.
-pip install -e catalog/.
-pip install -e crawlers/.
-pip install -e demos/.
-pip install -e kyoko/.
-pip install -e lyricprocessor/.
-pip install -e new_albums/.
-pip install -e rhymes/.
-pip install -e social/.
-pip install -e spotkin/.
-pip install -e gspreader/.
-pip install -e rivertils/.
+## Running scripts against the example Firestore project
 
-# Running scripts against the example Firestore project
-
-You will need to create and download the service account json file from the Firebase console and place it in the `lib/config/` directory.
-
-<https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/serviceaccounts/adminsdk>
-
-Make sure not to commit this file to the repository. Add it to the `.gitignore` file.
+Clone the boxify-scripts repo and follow the instructions in the README.md file.

@@ -1,6 +1,9 @@
 from boxify_scripts.demos_routine import daily_routine
 from constants import best_of_playlist_ids, piano_playlist_id
 
+from dotenv import load_dotenv
+load_dotenv()  # automatically reads .env
+
 
 def main():
     daily_routine()
