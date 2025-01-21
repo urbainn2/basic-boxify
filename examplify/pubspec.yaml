@@ -1,5 +1,4 @@
-name: example # your Dart package name, which is separate from the Android application ID. 
-# It's fine to keep it as just "example" since this is following the standard Flutter package example app convention.
+name: Examplify # your Dart package name, which is separate from the Android application ID. 
 # The Android-specific identifiers that need to match are:
 # - applicationId in build.gradle
 # - package in AndroidManifest.xml

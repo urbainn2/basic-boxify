@@ -1,7 +1,7 @@
 
 # EXAMPLIFY
 
-  This folder contains the working demo of Boxify (similar to the private Weezify and Rivertunes repositories).  
+  This folder contains the working demo of Boxify (similar to the private Weezify repository).  
   If you want to run or contribute to Boxify, **this** is where to start!
 
 ## Table of Contents
