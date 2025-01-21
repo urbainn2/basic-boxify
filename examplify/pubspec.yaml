@@ -1,4 +1,4 @@
-name: Examplify # your Dart package name, which is separate from the Android application ID. 
+name: examplify # your Dart package name, which is separate from the Android application ID. 
 # The Android-specific identifiers that need to match are:
 # - applicationId in build.gradle
 # - package in AndroidManifest.xml

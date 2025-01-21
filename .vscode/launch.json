@@ -5,21 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "example",
-            "cwd": "example",
+            "name": "examplify",
+            "cwd": "examplify",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "example (profile mode)",
-            "cwd": "example",
+            "name": "examplify (profile mode)",
+            "cwd": "examplify",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "example (release mode)",
-            "cwd": "example",
+            "name": "examplify (release mode)",
+            "cwd": "examplify",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
