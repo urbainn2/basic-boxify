@@ -1,7 +1,7 @@
 import 'package:boxify/app_core.dart';
 import 'package:flutter/material.dart';
-// import 'package:example/config/firebase_options.dart';
-import 'package:example/core/app.dart';
+// import 'package:examplify/config/firebase_options.dart';
+import 'package:examplify/core/app.dart';
 
 void main() async {
   info('main');
@@ -20,11 +20,11 @@ void main() async {
       baseColor: AppColor());
 
   runApp(
-    createExampleBoxifyApp(),
+    createExamplifyApp(),
   );
 }
 
-AppBase createExampleBoxifyApp({bool showLoaders = true}) {
+AppBase createExamplifyApp({bool showLoaders = true}) {
   return AppBase(
     builder: (context, setState) {
       return AppRoot();
