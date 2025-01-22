@@ -37,6 +37,9 @@ class App extends BaseApp {
   String defaultPlaylistId = '40briftVDwVQmA0NAayo';
 
   @override
+  String get newReleasesPlaylistId => 'ZpammK6ZV2GEiBqbOLMn';
+
+  @override
   String get preWeezerPlaylistId => 'Xih5mmsI9PVYttdiCvbE';
   @override
   String get bluePinkertonPlaylistId => 'tjGtXvfS2mnf1KCCARMy';

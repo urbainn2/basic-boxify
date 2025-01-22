@@ -10,7 +10,7 @@ ratings_table_name = "ratings2"
 # highest_rated_demos_playlist_id = "6C7GjLWSQKvvTco33Sfz"
 
 # newReleasesPlaylistId will be pulled separately in player screen bloc load user
-# newReleasesPlaylistId = "RAUZopvzD6WjWa2PuVin"
+newReleasesPlaylistId = "ZpammK6ZV2GEiBqbOLMn"
 # piano_playlist_id = "5zztuyJ7Vjd4GFnJCoPj"
 
 pre_weezer_playlist_id = "Xih5mmsI9PVYttdiCvbE"
@@ -51,4 +51,4 @@ default_playlist_ids = best_of_playlist_ids
 
 
 # user ids
-
+rivers = "AcO4llut6JUCxxUcpGa5k0UPqSs1"
