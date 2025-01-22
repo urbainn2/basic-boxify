@@ -71,7 +71,7 @@
   2. **Download**:
      - `google-services.json` into `android/app` from the Firebase console <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/android:com.boxify.dev>
      - `GoogleService-Info.plist` into `ios/Runner` (if you'll be developing on iOS)
-     - The auto-generated `firebase_options.dart` into `lib/config/` from <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/web:ZmNlM2QyYjQtMGRlNC00N2QzLWJkZDktYjYwOWE1NzZhZWYz>
+     - Go to <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/web:ZmNlM2QyYjQtMGRlNC00N2QzLWJkZDktYjYwOWE1NzZhZWYz> and click on Config. Copy the code. Create a new file called `firebase_options.dart` in `lib/config/`. Use the example file for instructions on how to paste the information you copied. 
   3. Make sure those files **are not** committed to GitHub if they contain sensitive info. Check `.gitignore`.
 
 ### Running the App
