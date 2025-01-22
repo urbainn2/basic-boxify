@@ -359,7 +359,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
   ) async {
     logger.i('_onLoadNewReleases');
     emit(state.copyWith(status: PlaylistStatus.newReleasesPlaylistLoading));
-
+    // Note, this playlist is added as an individual property to the state, not to the user's playlists.
     final newReleasesPlaylist = _playlistHelper.createNewReleasesPlaylist(
       state.allPlaylists,
     );

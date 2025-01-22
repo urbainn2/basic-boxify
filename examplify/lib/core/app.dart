@@ -37,7 +37,7 @@ class App extends BaseApp {
   String defaultPlaylistId = '40briftVDwVQmA0NAayo';
 
   @override
-  String get newReleasesPlaylistId => 'ZpammK6ZV2GEiBqbOLMn';
+  String get newReleasesPlaylistId => 'ZpammK6ZV2GEiBqbOLMn';  // Note, this playlist is added as an individual property to the state, not to the user's playlists.
 
   @override
   String get preWeezerPlaylistId => 'Xih5mmsI9PVYttdiCvbE';

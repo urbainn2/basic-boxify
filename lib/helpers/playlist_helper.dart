@@ -370,13 +370,12 @@ class PlaylistHelper {
   Playlist? createNewReleasesPlaylist(
     List<Playlist> allPlaylists,
   ) {
-    logger.i('_createNewReleasesPlaylist');
-
+    logger.i('createNewReleasesPlaylist');
+    final newReleasesPlaylist = allPlaylists.firstWhere(
+        (element) => element.id == Core.app.newReleasesPlaylistId);
     try {
-      return allPlaylists.firstWhere(
-          (element) => element.id == Core.app.newReleasesPlaylistId);
+      return newReleasesPlaylist;
     } catch (e) {
-      logger.w('No new releases playlist found');
       return null;
     }
   }

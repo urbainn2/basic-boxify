@@ -125,7 +125,7 @@ class BaseApp {
   String ewbaitePlaylistId = 'llpm2LkFjw8Prhjcu19V';
   String makeBelievePlaylistId = 'wpWrAtYYIffNzmOzKmo6';
   // String maladroitPlaylistId = 'fyab5urz2Vk1cltqi56z';
-  String newReleasesPlaylistId = 'RAUZopvzD6WjWa2PuVin';
+  String newReleasesPlaylistId = 'RAUZopvzD6WjWa2PuVin'; // Note, this playlist is added as an individual property to the state, not to the user's playlists.
   String pacificDaydreamPlaylistId = 'nvD0gesKQHaap5k2gbiW';//
   String patrickAndRiversPlaylistId = 'ucpOckpbIfnkNvIwnhFg';
   String pianoPlaylistId = '5zztuyJ7Vjd4GFnJCoPj';

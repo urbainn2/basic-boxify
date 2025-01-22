@@ -125,11 +125,6 @@ class SmallLibraryBody extends StatelessWidget {
         playlist: playlistBloc.state.newReleasesPlaylist,
       );
     }
-    // else if (index == 2) {
-    //   return PlaylistTile(
-    //     playlist: playlistBloc.state.newReleasesPlaylist,
-    //   );
-    // }
     else if (index ==
         playlistBloc.state.followedPlaylists.length + pinnedPlaylistsLength) {
       return UrlLaunchTile(
