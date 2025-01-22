@@ -60,10 +60,14 @@ class App extends BaseApp {
   @override
   String get weezmaPlaylistId => '8OwoXYmtyXBmiifq1Y5R';
   String get pacificDaydreamBlackPlaylistId => 'yFE6XUB8hZFk4MNvd9wE';
+
+  // These two are included in bestOfPlaylistIds/defaultPlaylistIds
+  // Create this in boxify scripts first.
+  // Should be added by to user userrepo when a user signs up as part of Core.app.defaultPlaylistIds
   @override
   String get pianoPlaylistId => 'btQRMVXFDwWxjrU6bhfA';
   @override
-  String get highestRatedPlaylistId => 'BtGNyYpmiyHi0a7Zbmp3'; // Create this in boxify scripts first. // Should be added by to user userrepo when a user signs up as part of Core.app.defaultPlaylistIds
+  String get highestRatedPlaylistId => 'BtGNyYpmiyHi0a7Zbmp3'; 
 
   // //LARGE NAV PANEL
   // double staticPanelHeight = 266; // This is just the unchanging part at the top
