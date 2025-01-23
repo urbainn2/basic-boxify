@@ -23,6 +23,17 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
-        }
+        },
+        {
+            "name": "Examplify scripts (playlists routine)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/examplify/scripts/playlists_routine.py",
+            "console": "externalTerminal",
+            // "args": [
+            //     "--routines",
+            //     "playlists"
+            // ],
+        },
     ]
 }
