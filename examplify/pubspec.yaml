@@ -22,6 +22,8 @@ dependencies:
   boxify:
     path: ../../boxify
 
+  # If you were to deploy this app with GitHub Actions or CodeMagic, you would use the following instead of the above:
+  # (You could put this in a separate file, `pubspec_overrides.yaml`, and not commit it to the repo)
   # boxify:
   #   git:
   #     url: https://github.com/riverscuomo/boxify.git
