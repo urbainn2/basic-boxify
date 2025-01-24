@@ -33,12 +33,9 @@ class App extends BaseApp {
   @override
   String get iosApiKey => '';
 
-// PLAYLIST
-  String defaultPlaylistId = '40briftVDwVQmA0NAayo';
 
-  @override
-  String get newReleasesPlaylistId => 'ZpammK6ZV2GEiBqbOLMn';  // Note, this playlist is added as an individual property to the state, not to the user's playlists.
-
+// PLAYLISTS
+/// Please see the notes in the BaseApp class for more information
   @override
   String get preWeezerPlaylistId => 'Xih5mmsI9PVYttdiCvbE';
   @override
@@ -59,19 +56,14 @@ class App extends BaseApp {
   String get patrickAndRiversPlaylistId => 'EHrCdpuWBfMQnCV63Jx9';
   @override
   String get weezmaPlaylistId => '8OwoXYmtyXBmiifq1Y5R';
+  @override
   String get pacificDaydreamBlackPlaylistId => 'yFE6XUB8hZFk4MNvd9wE';
-
-  // These two are included in bestOfPlaylistIds/defaultPlaylistIds
-  // Create this in boxify scripts first.
-  // Should be added by to user userrepo when a user signs up as part of Core.app.defaultPlaylistIds
   @override
   String get pianoPlaylistId => 'btQRMVXFDwWxjrU6bhfA';
   @override
-  String get highestRatedPlaylistId => 'BtGNyYpmiyHi0a7Zbmp3'; 
-
-  // //LARGE NAV PANEL
-  // double staticPanelHeight = 266; // This is just the unchanging part at the top
-
+  String get highestRatedPlaylistId => 'BtGNyYpmiyHi0a7Zbmp3';
+  @override
+  String get newReleasesPlaylistId => 'ZpammK6ZV2GEiBqbOLMn';
 
   @override
   String get serverUrl => 'https://rivers-staging-a57034f97ea2.herokuapp.com/';

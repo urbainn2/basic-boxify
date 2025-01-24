@@ -34,3 +34,7 @@ If you're interested in contributing or running Boxify locally:
 3. Make your changes in the appropriate `lib/` subdirectory
 
 git submodule add --name boxify-scripts <https://github.com/riverscuomo/boxify> weezify/scripts/boxify_scripts
+
+## Playlists
+
+Please see `base_app.dart` `BaseApp` class for the playlist logic.

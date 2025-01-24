@@ -24,7 +24,7 @@
 
 ## Overview
 
-  **Examplify** is a fully runnable version of the base Boxify code. It demonstrates how all the pieces fit together and connects to Firebase for authentication, Firestore, etc.
+  **Examplify** is a fully runnable version of the base Boxify code. It demonstrates how all the pieces fit together and connects to Firebase for authentication, Firestore, etc. Note: the primary color is a little different from the actual Weezify app, just to make it easier to distinguish.
 
   ---
 
@@ -71,7 +71,7 @@
   2. **Download**:
      - `google-services.json` into `android/app` from the Firebase console <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/android:com.boxify.dev>
      - `GoogleService-Info.plist` into `ios/Runner` (if you'll be developing on iOS)
-     - Go to <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/web:ZmNlM2QyYjQtMGRlNC00N2QzLWJkZDktYjYwOWE1NzZhZWYz> and click on Config. Copy the code. Create a new file called `firebase_options.dart` in `lib/config/`. Use the example file for instructions on how to paste the information you copied. 
+     - Go to <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/web:ZmNlM2QyYjQtMGRlNC00N2QzLWJkZDktYjYwOWE1NzZhZWYz> and click on Config. Copy the code. Create a new file called `firebase_options.dart` in `lib/config/`. Use the example file for instructions on how to paste the information you copied.
   3. Make sure those files **are not** committed to GitHub if they contain sensitive info. Check `.gitignore`.
 
 ### Running the App

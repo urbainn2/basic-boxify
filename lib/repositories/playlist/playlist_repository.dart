@@ -67,7 +67,7 @@ class PlaylistRepository extends BasePlaylistRepository {
       logger.i(
           'Running in release mode so fetching all playlist with score > $playlistScoreCutoff');
     } else {
-      playlistScoreCutoff = 10;
+      playlistScoreCutoff = Core.app.playlistScoreCutoff;
       logger.i(
           'Running in either Debug or Artist mode so limiting allPlaylists to score > $playlistScoreCutoff');
     }
