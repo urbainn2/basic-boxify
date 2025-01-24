@@ -33,6 +33,9 @@ class App extends BaseApp {
   @override
   String get iosApiKey => '';
 
+  @override
+  int get playlistScoreCutoff => -1;
+
 
 // PLAYLISTS
 /// Please see the notes in the BaseApp class for more information
