@@ -371,11 +371,13 @@ class PlaylistHelper {
     List<Playlist> allPlaylists,
   ) {
     logger.i('createNewReleasesPlaylist');
+    try {
     final newReleasesPlaylist = allPlaylists.firstWhere(
         (element) => element.id == Core.app.newReleasesPlaylistId);
-    try {
+    
       return newReleasesPlaylist;
     } catch (e) {
+      logger.e('createNewReleasesPlaylist() error: $e');
       return null;
     }
   }
