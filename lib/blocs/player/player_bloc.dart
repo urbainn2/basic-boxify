@@ -314,7 +314,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     // url = url.split('?')[0]; // remove query params from url
     // url += '?raw=1'; // add raw=1 to url
     // url = url.replaceAll('scl/fi', 's'); // replace spaces with %20
-    // https://www.dropbox.com/scl/fi/zfmtpgf4xjk9g7zk80h2k/02-Chill-Out-126-new-songs-7.mp3?rlkey=8zk9zt8uss0ripjs82tz8243t&raw=1
     url = url.replaceAll('www.dropbox.com',
         'dl.dropboxusercontent.com'); // replace spaces with %20
     return url;
@@ -355,16 +354,10 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
             }
             // print(url);
             url = Utils.sanitizeUrl(url!);
-            // print(url);
-
-            // final bad =
-            //     "https://dl.dropboxusercontent.com/scl/fi/ad1rewc0p8gaw1t9v1a0p/My-Dinner-With-Irene-78-better-mix-new-songs-4.mp3?rlkey=ffgwgqk3hvdpwj6h4q68u9hda&raw=1";
-            // final good =
-            //     "https://www.dropbox.com/scl/fi/ad1rewc0p8gaw1t9v1a0p/05-My-Dinner-With-Irene-78-better-mix-new-songs-4.mp3?rlkey=ffgwgqk3hvdpwj6h4q68u9hda&raw=1";
 
             return AudioSource.uri(
               Uri.parse(
-                url!,
+                url,
               ),
               tag: MediaItem(
                 // Specify a unique ID for each media item:
