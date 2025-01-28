@@ -41,7 +41,7 @@ class TrackAdapter extends TypeAdapter<Track> {
       explicit: fields[21] as bool?,
       album: fields[22] as String?,
       folder: fields[23] as String?,
-      privateReleaseDate: fields[24] as String?,
+      releaseDate: fields[24] as String?,
       isRateable: fields[25] as bool,
       bundleId: fields[26] as String?,
       finalSongTitle: fields[27] as String?,
@@ -105,7 +105,7 @@ class TrackAdapter extends TypeAdapter<Track> {
       ..writeByte(23)
       ..write(obj.folder)
       ..writeByte(24)
-      ..write(obj.privateReleaseDate)
+      ..write(obj.releaseDate)
       ..writeByte(25)
       ..write(obj.isRateable)
       ..writeByte(26)
