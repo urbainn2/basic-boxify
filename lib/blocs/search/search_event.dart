@@ -42,16 +42,6 @@ class SearchArtists extends SearchEvent {
   List<Object?> get props => [allArtists];
 }
 
-// class ReplaceSelectedTracksWithSearchResults extends SearchEvent {
-//   // const SetSelectedIndex({required this.index});
-//   // final int index;
-//   final List<Track> tracks;
-
-//   ReplaceSelectedTracksWithSearchResults(this.tracks);
-//   @override
-//   List<Object?> get props => [tracks];
-// }
-
 class SearchTracks extends SearchEvent {
   final List<Track> tracks;
   const SearchTracks(this.tracks);

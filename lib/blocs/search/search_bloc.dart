@@ -222,30 +222,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     ));
   }
 
-  // Future<void> _onReplaceSelectedTracksWithSearchResults(
-  //   ReplaceSelectedTracksWithSearchResults event,
-  //   Emitter<SearchState> emit,
-  // ) async {
-  //   try {
-  //     // TODO: UPDATE TRACKBLOC.QUEUE
-  //     // emit(
-  //     //   state.copyWith(
-  //     //     // queue: state.searchResultsTracks , // TODO: REFACTOR
-  //     //     displayedTracks: state.searchResultsTracks ,
-  //     //   ),
-  //     // );
-  //   } catch (err) {
-  //     emit(
-  //       state.copyWith(
-  //         status: SearchStatus.error,
-  //         failure: Failure(
-  //           message:
-  //               'SearchBloc._replaceSelectedTracksWithSearchResults: ${err.toString()}.',
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
 
   Future<void> _onSearchPlaylists(
     SearchPlaylists event,
