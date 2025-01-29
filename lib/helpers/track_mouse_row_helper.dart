@@ -229,7 +229,7 @@ class TrackMouseRowHelper {
     final List tracks;
     final userBloc = context.read<UserBloc>();
     final trackBloc = context.read<TrackBloc>();
-    final playerBloc = context.read<PlayerBloc>();
+    // final playerBloc = context.read<PlayerBloc>();
     final playlistBloc = context.read<PlaylistBloc>();
     final playlistTracksBloc = context.read<PlaylistTracksBloc>();
     final searchBloc = context.read<SearchBloc>();
@@ -317,15 +317,20 @@ class TrackMouseRowHelper {
               onTapRow: (track, i, context) {
                 return onTapRow(track, i, context);
               },
-              onDoubleTapRow: (track, i, context) {
+              onDoubleTapRow: (track, i, context) async {
+                // 1) Dispatch the event that updates the displayedTracks
                 if (replaceSelectedTracksWithSearchResultsOnTap) {
-                  trackBloc.add(
-                    ReplaceSelectedTracksWithSearchResults(
-                      searchBloc.state.searchResultsTracks,
-                    ),
-                  );
+                  trackBloc.add(ReplaceSelectedTracksWithSearchResults(
+                    searchBloc.state.searchResultsTracks,
+                  ));
                 }
-                return onDoubleTapRow(track, i, context);
+
+                // 2) Wait for a rebuild or a short delay for the bloc to process because it was playing before the
+                // displayedTracks were updated, playing the previously loaded track. Hack alert.
+                await Future.delayed(const Duration(milliseconds: 50));
+
+                // 3) Now call handlePlay, guaranteed the new tracks are in trackBloc.state
+                onDoubleTapRow(track, i, context);
               },
               showLeadingWidget:
                   trackRowType != TrackRowType.searchResultsForAddToPlaylist,

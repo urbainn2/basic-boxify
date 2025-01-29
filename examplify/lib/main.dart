@@ -1,6 +1,6 @@
 import 'package:boxify/app_core.dart';
 import 'package:flutter/material.dart';
-// import 'package:examplify/config/firebase_options.dart';
+import 'package:examplify/config/firebase_options.dart';
 import 'package:examplify/core/app.dart';
 
 void main() async {
@@ -15,7 +15,7 @@ void main() async {
 
   await Core.init(
       appName: 'Examplify',
-      // firebaseOptions: firebaseOptions,
+      firebaseOptions: firebaseOptions,
       baseApp: App(),
       baseColor: AppColor());
 
