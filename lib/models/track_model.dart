@@ -80,8 +80,8 @@ class Track extends Equatable {
   @HiveField(23)
   final String? folder;
 
-  @HiveField(24)
-  final String? releaseDate;
+  // @HiveField(24)
+  // final String? releaseDate;
 
   @HiveField(25)
   final bool isRateable;
@@ -129,7 +129,7 @@ class Track extends Equatable {
     this.explicit,
     this.album,
     this.folder,
-    this.releaseDate,
+    // this.releaseDate,
     this.isRateable = true,
     this.bundleId,
     this.finalSongTitle,
@@ -166,7 +166,7 @@ class Track extends Equatable {
         album,
         // RivifyTrack unique properties
         folder,
-        releaseDate,
+        // releaseDate,
         isRateable,
         // audioAssetPath,
 
@@ -207,7 +207,7 @@ class Track extends Equatable {
       available: false,
       // RivifyTrack unique properties
       folder: '',
-      releaseDate: '',
+      // releaseDate: '',
       isRateable: true,
       // audioAssetPath: '',
       // Track Weezify unique properties
@@ -244,7 +244,7 @@ class Track extends Equatable {
     bool? available,
     // RivifyTrack unique properties
     String? folder,
-    String? releaseDate,
+    // String? releaseDate,
     bool? isRateable,
     // String? audioAssetPath,
     // Weezify Track unique properties
@@ -281,7 +281,7 @@ class Track extends Equatable {
       album: album ?? this.album,
       // RivifyTrack unique properties
       folder: folder ?? this.folder,
-      releaseDate: releaseDate ?? this.releaseDate,
+      // releaseDate: releaseDate ?? this.releaseDate,
       isRateable: isRateable ?? this.isRateable,
       // audioAssetPath: audioAssetPath ?? this.audioAssetPath,
       // Weezify Track unique properties
@@ -345,7 +345,7 @@ class Track extends Equatable {
         available: _getAvailable(data),
         lyrics: data['lyrics'] ?? '',
         folder: data['folder'] ?? '',
-        releaseDate: getReleaseDate(data),
+        // releaseDate: getReleaseDate(data),
         isRateable: _getIsRateable(data),
         bundleId: data['bundleId'] ?? '',
         finalSongTitle: data['finalSongTitle'] ?? '',
@@ -492,73 +492,38 @@ class Track extends Equatable {
     return url;
   }
 
-  // /// Ensure releaseDate is in the format 'yyyy-MM-dd'
-  // static String getgetReleaseDate(Map<String, dynamic> data) {
-  //   // Directly return the current date if releaseDate is not present or is null
-  //   if (!data.containsKey('releaseDate') ||
-  //       data['releaseDate'] == null) {
-  //     return DateTime.now().toIso8601String().substring(0, 10);
-  //   }
 
-  //   var releaseDate = data['releaseDate'];
+/// Ensure releaseDate is in the format 'yyyy-MM-dd'
+static String getReleaseDate(Map<String, dynamic> data) {
+  String dateField = Core.app.type == AppType.advanced ? 
+    'publicReleaseDate' : 'privateReleaseDate';
 
-  //   // If releaseDate is a Timestamp, convert to DateTime and format
-  //   if (releaseDate is Timestamp) {
-  //     return releaseDate.toDate().toIso8601String().substring(0, 10);
-  //   }
-
-  //   // If it's a string, ensure it's in the correct format, fallback to current date if not
-  //   if (releaseDate is String && releaseDate.length == 10) {
-  //     return releaseDate;
-  //   }
-
-  //   // Fallback to current date for any format discrepancy or other data types
-  //   return DateTime.now().toIso8601String().substring(0, 10);
-  // }
-
-  static String getReleaseDate(Map<String, dynamic> data) {
-  if (Core.app.type == AppType.advanced) {
-    // Weezify: try publicReleaseDate first
-    if (data.containsKey('publicReleaseDate') && data['publicReleaseDate'] != null) {
-      var releaseDate = data['publicReleaseDate'];
-      
-      if (releaseDate is Timestamp) {
-        return releaseDate.toDate().toIso8601String().substring(0, 10);
-      }
-
-      if (releaseDate is String && releaseDate.length == 10) {
-        return releaseDate;
-      }
-    }
+  // First try app-specific field
+  if (data.containsKey(dateField) && data[dateField] != null) {
+    var releaseDate = data[dateField];
     
-    // Fallback for cached data: check releaseDate
-    if (data.containsKey('releaseDate') && data['releaseDate'] != null) {
-      var releaseDate = data['releaseDate'];
-      
-      if (releaseDate is Timestamp) {
-        return releaseDate.toDate().toIso8601String().substring(0, 10);
-      }
-
-      if (releaseDate is String && releaseDate.length == 10) {
-        return releaseDate;
-      }
+    if (releaseDate is Timestamp) {
+      return releaseDate.toDate().toIso8601String().substring(0, 10);
     }
-  } else {
-    // Rivertunes: use releaseDate
-    if (data.containsKey('releaseDate') && data['releaseDate'] != null) {
-      var releaseDate = data['releaseDate'];
-      
-      if (releaseDate is Timestamp) {
-        return releaseDate.toDate().toIso8601String().substring(0, 10);
-      }
 
-      if (releaseDate is String && releaseDate.length == 10) {
-        return releaseDate;
-      }
+    if (releaseDate is String && releaseDate.length == 10) {
+      return releaseDate;
+    }
+  }
+  
+  // Fallback for cached data
+  if (data.containsKey('privateReleaseDate') && data['privateReleaseDate'] != null) {
+    var releaseDate = data['privateReleaseDate'];
+    
+    if (releaseDate is Timestamp) {
+      return releaseDate.toDate().toIso8601String().substring(0, 10);
+    }
+
+    if (releaseDate is String && releaseDate.length == 10) {
+      return releaseDate;
     }
   }
 
-  // Final fallback to current date
   return DateTime.now().toIso8601String().substring(0, 10);
 }
 

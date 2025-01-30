@@ -41,7 +41,6 @@ class TrackAdapter extends TypeAdapter<Track> {
       explicit: fields[21] as bool?,
       album: fields[22] as String?,
       folder: fields[23] as String?,
-      releaseDate: fields[24] as String?,
       isRateable: fields[25] as bool,
       bundleId: fields[26] as String?,
       finalSongTitle: fields[27] as String?,
@@ -55,7 +54,7 @@ class TrackAdapter extends TypeAdapter<Track> {
   @override
   void write(BinaryWriter writer, Track obj) {
     writer
-      ..writeByte(32)
+      ..writeByte(31)
       ..writeByte(0)
       ..write(obj.databaseId)
       ..writeByte(1)
@@ -104,8 +103,6 @@ class TrackAdapter extends TypeAdapter<Track> {
       ..write(obj.album)
       ..writeByte(23)
       ..write(obj.folder)
-      ..writeByte(24)
-      ..write(obj.releaseDate)
       ..writeByte(25)
       ..write(obj.isRateable)
       ..writeByte(26)

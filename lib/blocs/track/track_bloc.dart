@@ -292,6 +292,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackState> {
       final displayedTracksPlayable = event.tracks.where((track) {
         return track.available == true;
       }).toList();
+      
       emit(
         state.copyWith(
             displayedTracks: event.tracks,
