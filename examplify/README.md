@@ -59,9 +59,7 @@
 
 ### Prerequisites
 
-  1. **Flutter SDK** (version specified in `pubspec.yaml`)
-  2. **Dart** (bundled with Flutter)
-  3. (Optional) **VS Code** for local dev.
+If this is your first time using Flutter, make sure you can run the Flutter example app. Getting all of that set up properly is a huge process and it doesn't have anything to do with this project. Better get that work out of the way before you start here. (Very important, make sure to install the version of Flutter specified in `pubspec.yaml`. It's likely not the version that will be installed by default.)
 
 ### Firebase Setup
 
