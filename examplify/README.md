@@ -61,6 +61,33 @@
 
 If this is your first time using Flutter, make sure you can run the Flutter example app. Getting all of that set up properly is a huge process and it doesn't have anything to do with this project. Better get that work out of the way before you start here. (Very important, make sure to install the version of Flutter specified in `pubspec.yaml`. It's likely not the version that will be installed by default.)
 
+  1. **Confirm your existing setup**
+
+      ```bash
+      flutter doctor -v
+      ```
+
+  2. **Align your Flutter version**
+
+  If you need to make a change to your Flutter version to make it match the version specified in `pubspec.yaml`, in your terminal, change directory to your flutter installation folder, then:
+
+```bash
+   git checkout x.x.x # where x.x.x ia the required Flutter version
+   ```
+
+  3. **Align your Java version**
+
+  If you need to make a change to your Java version (hint, Java SDK 17 is currently compatible with most Flutter projects):
+
+  - Download and install the required Java version (note the installation path as it is required in the next step)
+  - Configure Flutter to use the required Java version
+
+     ```bash
+     flutter config --jdk-dir <javasdk17-path-dir> # where <javasdk17-path-dir> is the location you installed the required Java version, e.g. flutter config --jdk-dir /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
+     ```
+
+  - If you are using Android Studio, shut down and re-open for the changes to take effect
+
 ### Firebase Setup
 
   This example requires a **Firebase project** (development/staging).  
