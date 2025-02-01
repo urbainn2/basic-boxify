@@ -12,13 +12,11 @@
   4. [Getting Started](#getting-started)
      - [Prerequisites](#prerequisites)
      - [Firebase Setup](#firebase-setup)
-     - [Project Configuration](#project-configuration)
      - [Running the App](#running-the-app)
   5. [Contributing](#contributing)
   6. [Updating Images](#updating-images)
-  7. [Upgrading Packages](#upgrading-packages)
-  8. [License](#license)
-  9. [Contact](#contact)
+  7. [License](#license)
+  8. [Contact](#contact)
 
   ---
 
