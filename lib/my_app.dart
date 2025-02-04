@@ -756,16 +756,7 @@ class MyApp extends StatelessWidget {
                   localizationsDelegates: context.localizationDelegates,
                   supportedLocales: context.supportedLocales,
                   locale: context.locale,
-                  theme: ThemeData.dark().copyWith(
-                    scaffoldBackgroundColor:
-                        Core.appColor.scaffoldBackgroundColor,
-                    primaryColor: const Color.fromRGBO(
-                      30,
-                      30,
-                      30,
-                      1,
-                    ),
-                  ),
+                  theme: BoxifyTheme.buildTheme(),
                   builder: (context, child) {
                     return UpgradeAlert(
                       navigatorKey: router.routerDelegate.navigatorKey,

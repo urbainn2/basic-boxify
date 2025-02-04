@@ -4,7 +4,7 @@ import 'package:examplify/config/firebase_options.dart';
 import 'package:examplify/core/app.dart';
 
 void main() async {
-  info('main');
+  info('Examplify main');
 
   ///  The Flutter framework uses bindings to get instances of different services such
   /// as the `WidgetsBinding`, `ServicesBinding`, or `SchedulerBinding`.
@@ -29,6 +29,6 @@ AppBase createExamplifyApp({bool showLoaders = true}) {
     builder: (context, setState) {
       return AppRoot();
     },
-    themeData: BoxifyTheme.buildTheme(),
+    // themeData: BoxifyTheme.buildTheme(),
   );
 }
