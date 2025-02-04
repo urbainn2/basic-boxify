@@ -24,6 +24,15 @@ class UsernameScreen extends StatelessWidget {
                 context: context,
                 builder: (context) => ErrorDialog(
                   content: state.failure.message,
+                  onPressed: () {
+                    // Fix: Avoid double route stack pop in default function. In username_screen, only one route exists in the stack,
+                    // so this custom callback pops it once to prevent an empty stack error that would cause the app to crash.
+                    context.read<UsernameCubit>().reset();
+                    context
+                        .read<UsernameCubit>()
+                        .usernameChanged(state.username);
+                    Navigator.of(context).pop();
+                  },
                 ),
               );
             }
