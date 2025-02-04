@@ -1,40 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:boxify/app_core.dart';
 
+/// Refer to the values that are set in each app's app.dart file, so they can have their colors and styles
+/// rather than using actual [Color]s and [TextStyle]s here.
 class BoxifyTheme {
   static ThemeData buildTheme() {
-    return ThemeData.dark().copyWith(      
+    return ThemeData.dark().copyWith(
       scaffoldBackgroundColor: Core.appColor.scaffoldBackgroundColor,
-      primaryColor: const Color.fromRGBO(30, 30, 30, 1),
-
-      // Text theme with white text across all body text styles
+      primaryColor: Core.appColor.primary,
       textTheme: ThemeData.dark().textTheme.copyWith(
-        bodyLarge: const TextStyle(color: Colors.white),
-        bodyMedium: const TextStyle(color: Colors.white),
-        bodySmall: const TextStyle(color: Colors.white),
-      ),
-      
+            bodyLarge: TextStyle(color: Core.appColor.text),
+            bodyMedium: TextStyle(color: Core.appColor.text),
+            bodySmall: TextStyle(color: Core.appColor.text),
+          ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white, // White text on buttons
+          foregroundColor: Core.appColor.text,
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: Colors.white, // White text on buttons
+          foregroundColor: Core.appColor.text,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.white, // White text on buttons
+          foregroundColor: Core.appColor.text,
         ),
       ),
-
-      iconTheme: const IconThemeData(color: Colors.white),  // White icons
-
+      iconTheme: IconThemeData(color: Core.appColor.text),
       appBarTheme: AppBarTheme(
-        backgroundColor: const Color.fromRGBO(30, 30, 30, 1), // AppBar background color
-        iconTheme: const IconThemeData(color: Colors.white), // White icons in AppBar
+        iconTheme: IconThemeData(color: Core.appColor.text),
       ),
     );
   }
