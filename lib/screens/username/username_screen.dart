@@ -24,6 +24,13 @@ class UsernameScreen extends StatelessWidget {
                 context: context,
                 builder: (context) => ErrorDialog(
                   content: state.failure.message,
+                  onPressed: () {
+                    context.read<UsernameCubit>().reset();
+                    context
+                        .read<UsernameCubit>()
+                        .usernameChanged(state.username);
+                    Navigator.of(context).pop();
+                  },
                 ),
               );
             }
