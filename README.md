@@ -16,8 +16,7 @@ Boxify serves as the foundation for our family of music streaming apps. The core
 
 For detailed setup and usage instructions, please refer to:
 
-- Primary documentation: [`examplify/`](examplify) directory
-- Development guide: [`examplify/README.md`](examplify/README.md)
+[`Getting Started Wiki`](https://github.com/riverscuomo/boxify/wiki)
 
 ## Python scripts for working with firebase_admin and the Firestore database
 
