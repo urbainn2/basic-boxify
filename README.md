@@ -18,10 +18,6 @@ For detailed setup and usage instructions, please refer to:
 
 [`Getting Started Wiki`](https://github.com/riverscuomo/boxify/wiki)
 
-## Python scripts for working with firebase_admin and the Firestore database
-
-If you want to work with the Firestore database directly, there is another repo called `boxify-scripts` that contains the scripts.
-
 ## Contributing
 
 If you're interested in contributing or running Boxify locally:
@@ -29,3 +25,7 @@ If you're interested in contributing or running Boxify locally:
 1. Check out the documentation in [`examplify/README.md`](examplify/README.md)
 2. Follow the setup instructions provided there
 3. Make your changes in the appropriate `boxify/lib/` subdirectory
+
+## Python scripts for working with firebase_admin and the Firestore database
+
+If you want to work with the Firestore database directly, there is another repo called `boxify-scripts` that contains the scripts.
