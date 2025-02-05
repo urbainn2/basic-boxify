@@ -64,10 +64,18 @@ class MyRouter {
               return SignupScreen();
             },
           ),
+
           GoRoute(
             path: '/username',
             builder: (BuildContext context, GoRouterState state) {
               return UsernameScreen();
+            },
+          ),
+
+          GoRoute(
+            path: '/playerDetail',
+            builder: (BuildContext context, GoRouterState state) {
+              return PlayerSmallTrackDetailScreen();
             },
           ),
 

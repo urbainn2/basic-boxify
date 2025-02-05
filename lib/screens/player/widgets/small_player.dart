@@ -1,5 +1,6 @@
 import 'package:boxify/app_core.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SmallPlayer extends StatelessWidget {
   const SmallPlayer({
@@ -33,13 +34,8 @@ class SmallPlayer extends StatelessWidget {
         children: [
           GestureDetector(
             // Define what happens when the widget is tapped
-            onTap: () => Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                // The builder returns an instance of the PlayerSmallTrackDetailScreen
-                builder: (BuildContext context) =>
-                    PlayerSmallTrackDetailScreen(),
-              ),
-            ),
+            // Push the playerDetail screen to the navigation stack
+            onTap: () => GoRouter.of(context).push('/playerDetail'),
             child: Row(children: [
               /// IMAGE
               Padding(
