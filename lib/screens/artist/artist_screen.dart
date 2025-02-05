@@ -9,7 +9,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:file_picker/file_picker.dart';
 
-
 class ArtistScreen extends StatefulWidget {
   const ArtistScreen({
     super.key,
@@ -72,6 +71,8 @@ class _ArtistScreenState extends State<ArtistScreen>
     }
 
     showDialog(
+      useRootNavigator:
+          false, // Do not push the dialog to the root navigator stack.
       context: context,
       barrierDismissible:
           true, // User can dismiss dialog by tapping anywhere outside of dialog
@@ -153,6 +154,8 @@ class _ArtistScreenState extends State<ArtistScreen>
 
   void _openBadgePreview(badge) {
     showDialog(
+      useRootNavigator:
+          false, // Do not push the dialog to the root navigator stack.
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
         title: Column(
@@ -191,6 +194,8 @@ class _ArtistScreenState extends State<ArtistScreen>
 
   Future<void> _showBundleController(BuildContext context) {
     return showDialog(
+      useRootNavigator:
+          false, // Do not push the dialog to the root navigator stack.
       context: context,
       builder: (_) {
         final profileState = context.read<ArtistBloc>().state;
@@ -270,6 +275,8 @@ class _ArtistScreenState extends State<ArtistScreen>
 
   Future _showBadgeController(BuildContext context) {
     return showDialog(
+      useRootNavigator:
+          false, // Do not push the dialog to the root navigator stack.
       context: context,
       builder: (_) {
         final user = context.read<ArtistBloc>().state.user;
@@ -335,6 +342,8 @@ class _ArtistScreenState extends State<ArtistScreen>
 
     return showDialog(
       context: context,
+      useRootNavigator:
+          false, // Do not push the dialog to the root navigator stack.
       builder: (context) {
         myFocusNode.requestFocus();
         return SizedBox(
@@ -425,6 +434,8 @@ class _ArtistScreenState extends State<ArtistScreen>
     final myBloc = BlocProvider.of<ArtistBloc>(context);
     return showDialog(
       context: context,
+      useRootNavigator:
+          false, // Do not push the dialog to the root navigator stack.
       builder: (context) {
         return BlocProvider<ArtistBloc>.value(
           value: myBloc,
