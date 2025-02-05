@@ -33,8 +33,6 @@ class SmallPlayer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            // Define what happens when the widget is tapped
-            // Push the playerDetail screen to the navigation stack
             onTap: () => GoRouter.of(context).push('/playerDetail'),
             child: Row(children: [
               /// IMAGE
