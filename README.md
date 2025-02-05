@@ -28,10 +28,4 @@ If you're interested in contributing or running Boxify locally:
 
 1. Check out the documentation in [`examplify/README.md`](examplify/README.md)
 2. Follow the setup instructions provided there
-3. Make your changes in the appropriate `lib/` subdirectory
-
-git submodule add --name boxify-scripts <https://github.com/riverscuomo/boxify> weezify/scripts/boxify_scripts
-
-## Playlists
-
-Please see `base_app.dart` `BaseApp` class for the playlist logic.
+3. Make your changes in the appropriate `boxify/lib/` subdirectory
