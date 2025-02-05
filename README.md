@@ -20,9 +20,7 @@ For detailed setup and usage instructions, please refer to:
 
 ## Python scripts for working with firebase_admin and the Firestore database
 
-- `firebase_admin.py`  
-All the code in this repo is for the front end Flutter app. If you want to work with the Firestore database directly, you'll need to use the `firebase_admin` Python library.
-There is another repo called `boxify-scripts` that contains some core scripts for working with the Firestore database.
+If you want to work with the Firestore database directly, there is another repo called `boxify-scripts` that contains the scripts.
 
 ## Contributing
 
