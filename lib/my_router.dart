@@ -64,10 +64,21 @@ class MyRouter {
               return SignupScreen();
             },
           ),
+
           GoRoute(
             path: '/username',
             builder: (BuildContext context, GoRouterState state) {
               return UsernameScreen();
+            },
+          ),
+        // Pushing the SmallTrackDetailScreen to the rootNavigator was causing unexpected behavior when popping the navigation stack. 
+        // We first tried using shellNavigatorKey.currentState (from the ShellNavigator in goRouter), but it left the PlayerWithScaffold visible. 
+        // Instead, we created a new route outside of the ShellRoute/ShellNavigator to display the track detail screen in fullscreen, as before. 
+        // This change improves flexibility and performance by giving it its own dedicated route.
+          GoRoute(
+            path: '/playerDetail',
+            builder: (BuildContext context, GoRouterState state) {
+              return PlayerSmallTrackDetailScreen();
             },
           ),
 
