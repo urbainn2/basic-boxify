@@ -54,7 +54,7 @@ class _PlayerSmallTrackDetailScreenState<Track>
               children: [
                 // const SizedBox(height: 20),
                 SmallDetailTopListTile(
-                  playlist: playlistBloc.state.viewedPlaylist,
+                  playlist: playlistBloc.state.enquedPlaylist,
                   track: track,
                   source: 'PLAYLIST',
                 ),
