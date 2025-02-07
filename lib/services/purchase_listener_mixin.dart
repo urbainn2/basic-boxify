@@ -64,6 +64,8 @@ mixin PurchaseListenerMixin<T extends StatefulWidget> on State<T> {
       } else {
         logger.f('No new purchases detected.');
       }
+    }, onError: (error) {
+      logger.e('Error listening to purchases: $error');
     });
   }
 }
