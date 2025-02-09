@@ -433,6 +433,9 @@ class Track extends Equatable {
   }
 
   static bool _getIsRateable(Map<String, dynamic> data) {
+    if (Core.app.type == AppType.advanced) {
+      return true;
+    }
     try {
       // final album = data['album'] ?? '';
       // final folder = data['folder'] ?? '';
