@@ -77,6 +77,9 @@ class _PlayerSmallTrackDetailScreenState<Track>
                         width: width - 100,
                         roundedCorners: 8,
                         onColorExtracted: (color) {
+                          // Make sure widget is mounted before setting state
+                          // This may happen if the user closes the screen before the image is loaded
+                          if (!mounted) return;
                           setState(() {
                             // Update the current background color every time a new image is loaded
                             // Also ensure that the background isnt too light or too dark
@@ -86,7 +89,6 @@ class _PlayerSmallTrackDetailScreenState<Track>
                                 maxLightness: 0.7);
                           });
                         },
-                        // roundedCorners: 8,
                       ),
                       const SizedBox(height: 20),
                       SongInfoWidget(track: track),
