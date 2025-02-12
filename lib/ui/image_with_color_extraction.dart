@@ -110,7 +110,7 @@ class _ImageWithColorExtractionState extends State<ImageWithColorExtraction> {
       for (int x = 0; x < width; x += step) {
         // Sample pixel: get the color values and add them to the running totals.
         final pixel = image.getPixel(x, y);
-        r += pixel.r; // ref
+        r += pixel.r; // red
         g += pixel.g; // green
         b += pixel.b; // blue
         samples++;

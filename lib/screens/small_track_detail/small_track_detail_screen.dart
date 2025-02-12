@@ -1,4 +1,5 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/helpers/color_helper.dart';
 import 'package:boxify/ui/image_with_color_extraction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,14 +73,17 @@ class _PlayerSmallTrackDetailScreenState<Track>
                       ImageWithColorExtraction(
                         imageUrl: imageUrl,
                         filename: imageFilename,
-                        // filename: imageFilename,
                         height: width - 100, // Notice these are both from width
                         width: width - 100,
                         roundedCorners: 8,
                         onColorExtracted: (color) {
                           setState(() {
                             // Update the current background color every time a new image is loaded
-                            _backgroundColor = color;
+                            // Also ensure that the background isnt too light or too dark
+                            _backgroundColor = ColorHelper.ensureWithinRange(
+                                color,
+                                minLightness: 0.25,
+                                maxLightness: 0.7);
                           });
                         },
                         // roundedCorners: 8,
