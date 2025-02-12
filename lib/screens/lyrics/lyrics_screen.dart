@@ -29,7 +29,11 @@ class LyricsScreen extends StatelessWidget {
           ],
         ),
         SliverToBoxAdapter(
-          child: LyricsWidget(track: track),
+          // TODO: We use track.backgroundColor because no image is directly available here,
+          // but we should extract this color from the image directly (like in small_track_detail_screen.dart)
+          // the value should probably be inherited from parents?
+          child: LyricsWidget(
+              track: track, backgroundColor: track.backgroundColor),
         ),
       ],
     );
@@ -37,9 +41,12 @@ class LyricsScreen extends StatelessWidget {
 }
 
 class LyricsWidget extends StatelessWidget {
-  const LyricsWidget({Key? key, required this.track}) : super(key: key);
+  const LyricsWidget(
+      {Key? key, required this.track, required this.backgroundColor})
+      : super(key: key);
 
   final Track track;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +66,7 @@ class LyricsWidget extends StatelessWidget {
     return Container(
       // give it rounded corners
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: track.backgroundColor,
-      ),
+          borderRadius: BorderRadius.circular(10), color: backgroundColor),
 
       child: Padding(
         padding: padding,
