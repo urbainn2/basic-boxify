@@ -52,7 +52,7 @@ class SmallPlayerTitleAndArtistWidget extends StatelessWidget {
             child: TextOrMarquee(
               text: track.artist ?? '',
               style: TextStyle(
-                color: Colors.grey[500],
+                color: Colors.white.withAlpha(150),
                 fontSize: 13,
               ),
             ),

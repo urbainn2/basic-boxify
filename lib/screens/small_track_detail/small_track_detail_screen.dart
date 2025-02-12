@@ -1,4 +1,6 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/helpers/color_helper.dart';
+import 'package:boxify/ui/image_with_color_extraction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +16,9 @@ class PlayerSmallTrackDetailScreen extends StatefulWidget {
 
 class _PlayerSmallTrackDetailScreenState<Track>
     extends State<PlayerSmallTrackDetailScreen> {
+  // Track backgroundColor, used for the gradient
+  Color _backgroundColor = Colors.grey;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PlayerBloc, MyPlayerState>(
@@ -44,7 +49,7 @@ class _PlayerSmallTrackDetailScreenState<Track>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  track.backgroundColor,
+                  _backgroundColor,
                   Core.appColor.widgetBackgroundColor,
                 ],
               ),
@@ -65,12 +70,25 @@ class _PlayerSmallTrackDetailScreenState<Track>
                   padding: const EdgeInsets.only(left: 40, right: 40),
                   child: Column(
                     children: [
-                      imageOrIcon(
+                      ImageWithColorExtraction(
                         imageUrl: imageUrl,
                         filename: imageFilename,
                         height: width - 100, // Notice these are both from width
                         width: width - 100,
                         roundedCorners: 8,
+                        onColorExtracted: (color) {
+                          // Make sure widget is mounted before setting state
+                          // This may happen if the user closes the screen before the image is loaded
+                          if (!mounted) return;
+                          setState(() {
+                            // Update the current background color every time a new image is loaded
+                            // Also ensure that the background isnt too light or too dark
+                            _backgroundColor = ColorHelper.ensureWithinRange(
+                                color,
+                                minLightness: 0.25,
+                                maxLightness: 0.7);
+                          });
+                        },
                       ),
                       const SizedBox(height: 20),
                       SongInfoWidget(track: track),
@@ -81,7 +99,8 @@ class _PlayerSmallTrackDetailScreenState<Track>
                         track: track,
                       ),
                       const SizedBox(height: 10),
-                      LyricsWidget(track: track),
+                      LyricsWidget(
+                          track: track, backgroundColor: _backgroundColor),
                     ],
                   ),
                 ),
