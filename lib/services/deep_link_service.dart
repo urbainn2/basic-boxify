@@ -1,4 +1,4 @@
-import 'package:uni_links/uni_links.dart';
+import 'package:uni_links5/uni_links.dart';
 import 'package:boxify/app_core.dart';
 
 /// A singleton service responsible for handling iOS deep links throughout the application.
