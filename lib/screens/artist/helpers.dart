@@ -16,8 +16,11 @@ double getVerySmallSectionHeight(int items) {
 }
 
 /// returns whichever is greater: 1 or the number of items divided by 4
-double getLargeSectionHeight(int items) {
+double getLargeSectionHeight(int items, int crossAxisCount) {
   const rowHeight = 350.0;
-  // basically, 8 items per row
-  return max(rowHeight, rowHeight * (items / 8).ceil().toDouble());
+
+  // dynamically calculates how many items fit in a row based on screen size
+  int rows = (items / crossAxisCount).ceil();
+  
+  return max(rowHeight, rowHeight * rows.toDouble());
 }
