@@ -566,7 +566,6 @@ class MyApp extends StatelessWidget {
           final user = userBloc.state.user;
 
           /// Problem is the user is not yet loaded with the ratings. So we need to wait for the user to be loaded before we can map the ratings to the tracks.
-
           if ((trackBloc.state.status == TrackStatus.allTracksLoaded &&
               userBloc.state.status == UserStatus.loaded)) {
             logger.i(
@@ -618,6 +617,7 @@ class MyApp extends StatelessWidget {
             //         user: user, ratings: ratings, tracks: tracks),
             //   );
             // }
+            logger.d('playlistBloc.state.status: ${playlistBloc.state.status}');
 
             final track = getInitialTrack(trackBloc, user);
             logger.i('SetDisplayedTracksWithTracks');
@@ -650,18 +650,21 @@ class MyApp extends StatelessWidget {
               LoadSettings(user: user),
             ); // moved this up out of the block below
 
-            /// I'm trying to move loadalltracks down here so I have access to the user.
-            final trackBloc = context.read<TrackBloc>();
-            final serverUpdated = (metaDataCubit.state as MetaDataLoaded)
-                .serverTimestamps['tracks']!;
-            trackBloc.add(
-              LoadAllTracks(
-                serverUpdated: serverUpdated,
-                clearCache:
-                    (marketBloc.state.status == MarketStatus.bundlePurchased),
-                user: user,
-              ),
-            );
+            // Load all tracks asynchonously after the user is loaded.
+            // This prevents the user from having to wait for the tracks to load
+            Future.microtask(() {
+              final trackBloc = context.read<TrackBloc>();
+              final serverUpdated = (metaDataCubit.state as MetaDataLoaded)
+                  .serverTimestamps['tracks']!;
+              trackBloc.add(
+                LoadAllTracks(
+                  serverUpdated: serverUpdated,
+                  clearCache:
+                      (marketBloc.state.status == MarketStatus.bundlePurchased),
+                  user: user,
+                ),
+              );
+            });
 
             // if (trackBloc.state.status == TrackStatus.allTracksLoaded) {
             //   logger.i('MapRatingsToTracks!');

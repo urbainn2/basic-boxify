@@ -63,9 +63,10 @@ class _ArtistScreenState extends State<ArtistScreen>
       logger.e('Error playing audio: $e');
     }
   }
-  // All the dialogs in the artist profile were being pushed to the root navigator, 
-  // that has a lower priority than the nested navigators used in the app and by the router. 
-  // Because of that, the dialog was popped only when the other navigators with higher priority 
+
+  // All the dialogs in the artist profile were being pushed to the root navigator,
+  // that has a lower priority than the nested navigators used in the app and by the router.
+  // Because of that, the dialog was popped only when the other navigators with higher priority
   // had an empty stack, leading to issue #21
   void _openBundlePreview(Bundle bundle) {
     final songList = bundle.songList?.split(',');
