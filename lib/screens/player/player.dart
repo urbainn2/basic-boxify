@@ -1,4 +1,5 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/screens/player/widgets/small_player_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +26,7 @@ class Player extends StatelessWidget {
           ) {
         logger.i(
             'Player - PlayerStatus == ${state.status} so returning CircularProgressIndicator()');
-        return circularProgressIndicator;
+        return SmallPlayerSkeleton();
       } else {
         /// Get the [Track] from the player.audiosource that is currently playing,
         /// or the first track in the PlayerState.queue if no track is playing
