@@ -658,6 +658,7 @@ class _ArtistScreenState extends State<ArtistScreen>
         final fontSize = isLargeScreen ? 80.0 : 50.0;
         final artistState = context.read<ArtistBloc>().state;
         final sectionPadding = EdgeInsets.all(14.0);
+        final crossAxisCount = screenWidth ~/ 250;
 
         return
             // Give the custom scroll view a non-scrolling background
@@ -752,7 +753,7 @@ class _ArtistScreenState extends State<ArtistScreen>
                             isLargeScreen
                                 ? BundlesForLargeArtist(
                                     sectionHeight: getLargeSectionHeight(
-                                        state.bundles.length),
+                                        state.bundles.length, crossAxisCount),
                                     bundles: state.bundles,
                                     openBundlePreview: _openBundlePreview,
                                   )
@@ -789,7 +790,7 @@ class _ArtistScreenState extends State<ArtistScreen>
                             isLargeScreen
                                 ? BadgesForLargeArtist(
                                     sectionHeight: getLargeSectionHeight(
-                                        state.badges.length),
+                                        state.badges.length, crossAxisCount),
                                     badges: state.badges,
                                     openBadgePreview: _openBadgePreview,
                                   )
@@ -842,7 +843,8 @@ class _ArtistScreenState extends State<ArtistScreen>
                             isLargeScreen
                                 ? PlaylistsForLargeArtist(
                                     sectionHeight: getLargeSectionHeight(
-                                        state.userPlaylists.length),
+                                        state.userPlaylists.length, crossAxisCount),
+                                        
                                     playlists: userPlaylists,
                                   )
                                 : SmallMediaSection(
