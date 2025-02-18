@@ -17,12 +17,16 @@ class MyPlayerState extends Equatable {
   final Failure failure;
   final AudioPlayer player;
   List<Track> queue;
+  final Duration? savedPosition;
+  final Track? savedTrack;
 
   MyPlayerState({
     required this.status,
     required this.failure,
     required this.player,
     required this.queue,
+    this.savedPosition,
+    this.savedTrack,
   });
 
   factory MyPlayerState.initial(
@@ -33,6 +37,8 @@ class MyPlayerState extends Equatable {
       failure: const Failure(),
       player: player,
       queue: [],
+      savedPosition: null,
+      savedTrack: null,
     );
   }
 
@@ -42,6 +48,8 @@ class MyPlayerState extends Equatable {
         failure,
         player,
         queue,
+        savedPosition,
+        savedTrack,
       ];
 
   MyPlayerState copyWith({
@@ -50,12 +58,16 @@ class MyPlayerState extends Equatable {
     AudioPlayer? player,
     ConcatenatingAudioSource? audioSource,
     List<Track>? queue,
+    Duration? savedPosition,
+    Track? savedTrack,
   }) {
     return MyPlayerState(
       status: status ?? this.status,
       failure: failure ?? this.failure,
       player: player ?? this.player,
       queue: queue ?? this.queue,
+      savedPosition: savedPosition ?? this.savedPosition,
+      savedTrack: savedTrack ?? this.savedTrack,
     );
   }
 }

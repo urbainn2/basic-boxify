@@ -10,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:equatable/equatable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 part 'player_event.dart';
 part 'my_player_state.dart';
@@ -38,6 +40,7 @@ part 'my_player_state.dart';
 class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   final AudioPlayer _audioPlayer;
   StreamSubscription<PositionDiscontinuity>? _discontinuitySubscription;
+  final _firestore = FirebaseFirestore.instance;
 
   PlayerBloc({
     required AudioPlayer audioPlayer,
@@ -62,6 +65,17 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         add(NotifyAutoAdvance());
       }
     });
+
+    // Listen for playback interruptions
+    _audioPlayer.playbackEventStream.listen((event) {
+      if (event.processingState == ProcessingState.completed ||
+          !_audioPlayer.playing) {
+        _savePlaybackState(_audioPlayer.position);
+      }
+    });
+
+    // Restore saved state on init
+    _restorePlaybackState();
   }
 
   @override
@@ -69,10 +83,10 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     _discontinuitySubscription?.cancel();
     // Check if a track is already playing
     if (state.player.playing) {
-      state.player.stop(); // Stop the current track
+      _savePlaybackState(state.player.position);
+      state.player.stop();
     }
     _audioPlayer.dispose();
-
     return super.close();
   }
 
@@ -376,6 +390,60 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
       logger.f('done setting audio source');
     } catch (e) {
       logger.e('Error setting audio source: $e');
+    }
+  }
+
+  Future<void> _savePlaybackState(Duration position) async {
+    if (!state.player.playing || state.queue.isEmpty || state.player.currentIndex == null) return;
+
+    final currentTrack = state.queue[state.player.currentIndex!];
+
+    // Save locally in bloc state
+    emit(state.copyWith(
+      savedPosition: position,
+      savedTrack: currentTrack,
+    ));
+
+    // Save to Firestore for cross-device sync
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await _firestore.collection('playback_states').doc(user.uid).set({
+          'trackId': currentTrack.id,
+          'position': position.inMilliseconds,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      logger.e('Error saving playback state: $e');
+    }
+  }
+
+  Future<void> _restorePlaybackState() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final doc = await _firestore.collection('playback_states').doc(user.uid).get();
+      if (!doc.exists) return;
+
+      final data = doc.data()!;
+      final trackId = data['trackId'] as String;
+      final position = Duration(milliseconds: data['position'] as int);
+
+      // Find track in state or load it
+      Track? track = state.queue.firstWhere((t) => t.id == trackId, orElse: () => null);
+      if (track != null) {
+        await _setAudioSource([track]);
+        await state.player.seek(position);
+        emit(state.copyWith(
+          savedPosition: position,
+          savedTrack: track,
+          queue: [track],
+        ));
+      }
+    } catch (e) {
+      logger.e('Error restoring playback state: $e');
     }
   }
 }
