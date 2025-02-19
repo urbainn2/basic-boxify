@@ -231,6 +231,8 @@ class LoginScreen extends StatelessWidget {
           final trimmedValue = value?.trim() ?? '';
           return !trimmedValue.contains('@') ? 'emailError'.translate() : null;
         },
+        autofillHints: const [AutofillHints.email],
+        keyboardType: TextInputType.emailAddress,
       ),
       sizedBox16,
       TextFormField(
@@ -239,6 +241,8 @@ class LoginScreen extends StatelessWidget {
         onChanged: (value) => context.read<LoginCubit>().passwordChanged(value),
         validator: (value) =>
             value!.length < 6 ? 'passwordError'.translate() : null,
+        autofillHints: const [AutofillHints.password],
+        keyboardType: TextInputType.visiblePassword,
       ),
       _buildTogglePasswordButton(context, state),
       sizedBox28,
