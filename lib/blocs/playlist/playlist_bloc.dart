@@ -384,6 +384,8 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     }
     emit(
       state.copyWith(
+        // Set viewed playlist before it has loaded so that the UI can show playlist info while it loads
+        viewedPlaylist: event.playlist,
         status: PlaylistStatus.viewedPlaylistLoading,
       ),
     );
@@ -394,11 +396,8 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
             (trackState) => trackState.tracksLoadStatus == LoadStatus.loaded);
       }
 
-      emit(
-        state.copyWith(
-            viewedPlaylist: event.playlist,
-            status: PlaylistStatus.viewedPlaylistLoaded),
-      );
+      // Signal that the playlist has been loaded
+      emit(state.copyWith(status: PlaylistStatus.viewedPlaylistLoaded));
     } catch (err, s) {
       logger.e('error in _selectPlaylist: $err\n$s');
       emit(

@@ -29,6 +29,7 @@ class SmallPlayerSkeleton extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(5),
           child: Shimmer.fromColors(
+            // Track image skeleton
             baseColor: SmallPlayerSkeleton.shimmerBaseColor,
             highlightColor: SmallPlayerSkeleton.shimmerHighlightColor,
             child: Container(
@@ -49,6 +50,7 @@ class SmallPlayerSkeleton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Shimmer.fromColors(
+                  // Track title skeleton
                   baseColor: SmallPlayerSkeleton.shimmerBaseColor,
                   highlightColor: SmallPlayerSkeleton.shimmerHighlightColor,
                   child: Container(
@@ -62,6 +64,7 @@ class SmallPlayerSkeleton extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Shimmer.fromColors(
+                  // Track artist skeleton
                   baseColor: SmallPlayerSkeleton.shimmerBaseColor,
                   highlightColor: SmallPlayerSkeleton.shimmerHighlightColor,
                   child: Container(

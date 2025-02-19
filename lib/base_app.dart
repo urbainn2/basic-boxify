@@ -432,6 +432,10 @@ class BaseColor {
   Color subtitleColor = const Color.fromARGB(255, 158, 158, 158);
   Color titleColor = Color.fromARGB(255, 255, 255, 255);
   Color discordColor = Color.fromARGB(255, 114, 137, 218);
+
+  // Skeletons & Shimmer effects
+  Color shimmerBaseColor = Colors.grey[300]!.withOpacity(0.3);
+  Color shimmerHighlightColor = Colors.grey[300]!.withOpacity(0.45);
 }
 
 class BaseUI {
