@@ -36,7 +36,7 @@ class TrackTouchRowSkeleton extends StatelessWidget {
                     highlightColor: Core.appColor.shimmerHighlightColor,
                     child: Container(
                       height: 14,
-                      width: MediaQuery.of(context).size.width * 0.35,
+                      width: 150,
                       decoration: BoxDecoration(
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(8),
@@ -49,7 +49,7 @@ class TrackTouchRowSkeleton extends StatelessWidget {
                     highlightColor: Core.appColor.shimmerHighlightColor,
                     child: Container(
                       height: 10,
-                      width: MediaQuery.of(context).size.width * 0.18,
+                      width: 80,
                       decoration: BoxDecoration(
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(8),

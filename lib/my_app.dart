@@ -192,6 +192,7 @@ class MyApp extends StatelessWidget {
           trackRepository: context.read<TrackRepository>(),
           metaDataRepository: context.read<MetaDataRepository>(),
           bundleRepository: context.read<BundleRepository>(),
+          trackBloc: context.read<TrackBloc>(),
         ),
       ),
       Provider<PlaylistService>(

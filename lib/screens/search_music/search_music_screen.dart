@@ -1,4 +1,5 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/enums/load_status.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,130 +25,150 @@ class _SearchMusicScreenState extends State<SearchMusicScreen> {
   Widget build(BuildContext context) {
     final searchBloc = context.read<SearchBloc>();
     final playlistBloc = context.read<PlaylistBloc>();
-    final trackBloc = context.read<TrackBloc>();
     final userBloc = context.read<UserBloc>();
+    final trackBloc = context.read<TrackBloc>();
 
     return Scaffold(
-      appBar: SearchPlayerBar(userBloc: userBloc),
-      body: BlocBuilder<SearchBloc, SearchState>(
-        builder: (context, state) {
-          final screenType = Utils.getScreenType(context);
-          final allPlaylists = playlistBloc.state.allPlaylists;
-          final songsSelected = searchBloc.state.searchTypeIndex == 0;
-          final playlistsSelected = searchBloc.state.searchTypeIndex == 1;
-          final artistsSelected = searchBloc.state.searchTypeIndex == 2;
-
-          if (playlistsSelected) {
-            // If you're already following a playlist, let's put it at the bottom of the list.
-            for (final element in allPlaylists) {
-              if (userBloc.state.user.playlistIds.contains(element.id) ||
-                  element.id == Core.app.newReleasesPlaylistId) {
-                element.sortScore = -1000;
-              } else {
-                element.sortScore = element.score;
-              }
+        appBar: SearchPlayerBar(userBloc: userBloc),
+        body: BlocListener<TrackBloc, TrackState>(
+          listenWhen: (previous, current) =>
+              previous.tracksLoadStatus != current.tracksLoadStatus,
+          listener: (context, trackState) {
+            if (trackState.tracksLoadStatus == LoadStatus.loaded) {
+              searchBloc.add(ExecutePendingSearch());
             }
-            allPlaylists
-                .sort((b, a) => (a.sortScore ?? 0).compareTo(b.sortScore ?? 0));
-          }
+          },
+          child: BlocBuilder<SearchBloc, SearchState>(
+            builder: (context, state) {
+              final screenType = Utils.getScreenType(context);
+              final allPlaylists = playlistBloc.state.allPlaylists;
+              final songsSelected = searchBloc.state.searchTypeIndex == 0;
+              final playlistsSelected = searchBloc.state.searchTypeIndex == 1;
+              final artistsSelected = searchBloc.state.searchTypeIndex == 2;
 
-          var itemCount = 0;
-          if (songsSelected) {
-            itemCount = state.searchResultsTracks.length;
-          } else if (playlistsSelected) {
-            itemCount = state.searchResultsPlaylists.length;
-          } else if (artistsSelected) {
-            itemCount = state.searchResultsUsers.length;
-          }
-          logger.i('item count: $itemCount');
+              if (playlistsSelected) {
+                // If you're already following a playlist, let's put it at the bottom of the list.
+                for (final element in allPlaylists) {
+                  if (userBloc.state.user.playlistIds.contains(element.id) ||
+                      element.id == Core.app.newReleasesPlaylistId) {
+                    element.sortScore = -1000;
+                  } else {
+                    element.sortScore = element.score;
+                  }
+                }
+                allPlaylists.sort(
+                    (b, a) => (a.sortScore ?? 0).compareTo(b.sortScore ?? 0));
+              }
 
-          MediaQueryData device;
-          device = MediaQuery.of(context);
-          final isLargeScreen =
-              device.size.width > Core.app.largeSmallBreakpoint;
-          switch (state.status) {
-            case SearchStatus.error:
-              return ErrorDialog(
-                content: state.failure.message!,
-              );
-            case SearchStatus.loading:
-              return const Center(child: CircularProgressIndicator());
-            case SearchStatus.loaded:
-              // If you have some search results already
-              if (state.searchResultsTracks.isNotEmpty ||
-                  state.searchResultsPlaylists.isNotEmpty ||
-                  state.searchResultsUsers.isNotEmpty) {
-                /// This was firing even when user was on playlist screen, not search screen. Oh maybe we're not even
-                /// accessing displayedTracks in the search screen. We're just accessing searchResultsTracks.
-                // trackBloc.add(SetDisplayedTracksWithTracks(
-                //     tracks: state.searchResultsTracks));
-                // logger.w(state.status);
-                return Stack(children: [
-                  /// Paint search results first so they will be at the bottom of the stack
-                  songsSelected && state.searchResultsTracks.isNotEmpty
-                      ? isLargeScreen && kIsWeb
-                          ? LargeTrackSearchResults(
-                              screenType: screenType,
-                              isLargeScreen: isLargeScreen,
-                              itemCount: itemCount,
-                            )
-                          :
+              var itemCount = 0;
+              if (songsSelected) {
+                itemCount = state.searchResultsTracks.length;
+              } else if (playlistsSelected) {
+                itemCount = state.searchResultsPlaylists.length;
+              } else if (artistsSelected) {
+                itemCount = state.searchResultsUsers.length;
+              }
+              logger.i('item count: $itemCount');
 
-                          /// TOUCH OR SMALL SCREEN SEARCH RESULT SONGS ROWS
-                          // If tracks selected
-                          Column(
-                              children: [
-                                SizedBox(
-                                  height: 65,
-                                ),
-                                Expanded(child: SmallTrackSearchResults()),
-                              ],
-                            )
-                      : playlistsSelected &&
-                              state.searchResultsPlaylists.isNotEmpty
-                          ? Column(
-                              children: [
-                                SizedBox(
-                                  height: 65,
-                                ),
-                                Expanded(
-                                    child: SmallPlaylistSearchResults(
-                                        itemCount: itemCount)),
-                              ],
-                            )
-                          : (artistsSelected &&
-                                  state.searchResultsUsers.isNotEmpty)
+              // Are tracks being fetched from the server?
+              final showLoadingState = state.status == SearchStatus.loading ||
+                  trackBloc.state.tracksLoadStatus == LoadStatus.notLoaded ||
+                  trackBloc.state.tracksLoadStatus == LoadStatus.loading;
+
+              MediaQueryData device;
+              device = MediaQuery.of(context);
+              final isLargeScreen =
+                  device.size.width > Core.app.largeSmallBreakpoint;
+              switch (state.status) {
+                case SearchStatus.error:
+                  return ErrorDialog(
+                    content: state.failure.message!,
+                  );
+                case SearchStatus
+                      .loading: //TODO: use skeletons instead (only use showLoadingState as a 'is-loading' flag)
+                  return const Center(child: CircularProgressIndicator());
+                case SearchStatus.loaded:
+                  // If you have some search results already
+                  if (state.searchResultsTracks.isNotEmpty ||
+                      state.searchResultsPlaylists.isNotEmpty ||
+                      state.searchResultsUsers.isNotEmpty ||
+                      showLoadingState) {
+                    /// This was firing even when user was on playlist screen, not search screen. Oh maybe we're not even
+                    /// accessing displayedTracks in the search screen. We're just accessing searchResultsTracks.
+                    // trackBloc.add(SetDisplayedTracksWithTracks(
+                    //     tracks: state.searchResultsTracks));
+                    // logger.w(state.status);
+                    return Stack(children: [
+                      /// Paint search results first so they will be at the bottom of the stack
+                      songsSelected &&
+                              (state.searchResultsTracks.isNotEmpty ||
+                                  showLoadingState)
+                          ? isLargeScreen && kIsWeb
+                              ? LargeTrackSearchResults(
+                                  screenType: screenType,
+                                  isLargeScreen: isLargeScreen,
+                                  itemCount: itemCount,
+                                  showLoadingState: showLoadingState)
+                              :
+
+                              /// TOUCH OR SMALL SCREEN SEARCH RESULT SONGS ROWS
+                              // If tracks selected
+                              Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 65,
+                                    ),
+                                    Expanded(
+                                        child: SmallTrackSearchResults(
+                                      showLoadingState: showLoadingState,
+                                    )),
+                                  ],
+                                )
+                          : playlistsSelected &&
+                                  state.searchResultsPlaylists.isNotEmpty
                               ? Column(
                                   children: [
                                     SizedBox(
                                       height: 65,
                                     ),
                                     Expanded(
-                                      child: SmallArtistsSearchResult(
-                                          itemCount: itemCount,
-                                          userBloc: userBloc),
-                                    ),
+                                        child: SmallPlaylistSearchResults(
+                                            itemCount: itemCount)),
                                   ],
                                 )
-                              : Container(),
+                              : (artistsSelected &&
+                                      state.searchResultsUsers.isNotEmpty)
+                                  ? Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 65,
+                                        ),
+                                        Expanded(
+                                          child: SmallArtistsSearchResult(
+                                              itemCount: itemCount,
+                                              userBloc: userBloc),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
 
-                  /// Search Type selector pills painted last so they will be on top
-                  SearchTypeSelectorPills(
-                      screenType: screenType,
-                      searchBloc: searchBloc,
-                      songsSelected: songsSelected,
-                      playlistsSelected: playlistsSelected,
-                      artistsSelected: artistsSelected),
-                ]);
-              } else {
-                return SizedBox.shrink();
+                      /// Search Type selector pills painted last so they will be on top
+                      SearchTypeSelectorPills(
+                          screenType: screenType,
+                          searchBloc: searchBloc,
+                          songsSelected: songsSelected,
+                          playlistsSelected: playlistsSelected,
+                          artistsSelected: artistsSelected),
+                    ]);
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                default:
+                  return const SizedBox.shrink();
               }
-            default:
-              return const SizedBox.shrink();
-          }
-        },
-      ),
-    );
+            },
+          ),
+        ));
   }
 }
 
