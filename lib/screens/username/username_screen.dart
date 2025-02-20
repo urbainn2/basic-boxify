@@ -43,7 +43,7 @@ class UsernameScreen extends StatelessWidget {
               if (state.usernameIsValid) {
                 logger
                     .i('UsernameStatus.initial but already valid so nav time');
-                GoRouter.of(context).push('/');
+                GoRouter.of(context).push('/library');
               }
             }
             if (state.status == UsernameStatus.success) {
@@ -67,7 +67,7 @@ class UsernameScreen extends StatelessWidget {
                     viewer: context.read<UserBloc>().state.user));
 
                 /// TODO: IS NOT LOADED YET
-                GoRouter.of(context).go('/');
+                GoRouter.of(context).go('/library');
               }
             }
           },
