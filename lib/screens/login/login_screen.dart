@@ -105,7 +105,7 @@ class LoginScreen extends StatelessWidget {
       logger.i(
           'authUser pressed Maybe Later  and authUser.isAnonymouse so naving to home screen');
       context.read<LoginCubit>().reset();
-      GoRouter.of(context).go('/');
+      GoRouter.of(context).go('/library');
     }
 
     /// USER PRESSED 'LOG IN'
@@ -163,7 +163,7 @@ class LoginScreen extends StatelessWidget {
 
         /// They didnt enter anything into the URL bar
         else {
-          GoRouter.of(context).go('/');
+          GoRouter.of(context).go('/library');
           // context.read<LoginCubit>().reset();
         }
       }
