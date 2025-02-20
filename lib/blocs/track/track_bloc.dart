@@ -114,10 +114,8 @@ class TrackBloc extends Bloc<TrackEvent, TrackState> {
     final start2 = DateTime.now();
 
     // check for cached tracks first
-    // REMOVED FOR TESTS: MUST NOT FORGET TO PUT BACK!
-    //final cachedTracks = await _cacheHelper.getTracks(
-    //    event.serverUpdated, _authBloc.state.user!.uid);
-    final cachedTracks = <Track>[];
+    final cachedTracks = await _cacheHelper.getTracks(
+        event.serverUpdated, _authBloc.state.user!.uid);
 
     logRunTime(start2, 'cacheHelper.getTracks');
 
