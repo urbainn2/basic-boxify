@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:bloc/bloc.dart';
 
 import 'package:boxify/app_core.dart';
@@ -9,8 +8,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:equatable/equatable.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'track_event.dart';
 part 'track_state.dart';

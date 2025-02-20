@@ -637,19 +637,16 @@ class MyApp extends StatelessWidget {
             // Load all tracks asynchonously after the user is loaded.
             // This prevents the user from having to wait for the tracks to load before accessing the UI
             Future.microtask(() {
-              // wait 30 seconds for TEST (must be removed)
-              Future.delayed(const Duration(seconds: 30), () {
-                final serverUpdated = (metaDataCubit.state as MetaDataLoaded)
-                    .serverTimestamps['tracks']!;
-                trackBloc.add(
-                  LoadAllTracks(
-                    serverUpdated: serverUpdated,
-                    clearCache: (marketBloc.state.status ==
-                        MarketStatus.bundlePurchased),
-                    user: user,
-                  ),
-                );
-              });
+              final serverUpdated = (metaDataCubit.state as MetaDataLoaded)
+                  .serverTimestamps['tracks']!;
+              trackBloc.add(
+                LoadAllTracks(
+                  serverUpdated: serverUpdated,
+                  clearCache:
+                      (marketBloc.state.status == MarketStatus.bundlePurchased),
+                  user: user,
+                ),
+              );
             });
 
             // Load all playlists synchronously (for now, asynchonously later - TODO)
