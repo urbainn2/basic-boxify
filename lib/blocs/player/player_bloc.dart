@@ -431,9 +431,10 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
       final trackId = data['trackId'] as String;
       final position = Duration(milliseconds: data['position'] as int);
 
-      // Find track in state or load it
-      Track? track = state.queue.firstWhere((t) => t.id == trackId, orElse: () => null);
-      if (track != null) {
+      // Find track in state or return early if not found
+      final tracks = state.queue.where((t) => t.id == trackId).toList();
+      if (tracks.isNotEmpty) {
+        final track = tracks.first;
         await _setAudioSource([track]);
         await state.player.seek(position);
         emit(state.copyWith(
