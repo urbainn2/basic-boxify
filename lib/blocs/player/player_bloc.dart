@@ -409,7 +409,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         await _firestore.collection('playback_states').doc(user.uid).set({
-          'trackId': currentTrack.id,
+          'trackId': currentTrack.uuid,
           'position': position.inMilliseconds,
           'timestamp': FieldValue.serverTimestamp(),
         });
@@ -432,7 +432,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
       final position = Duration(milliseconds: data['position'] as int);
 
       // Find track in state or return early if not found
-      final tracks = state.queue.where((t) => t.id == trackId).toList();
+      final tracks = state.queue.where((t) => t.uuid == trackId).toList();
       if (tracks.isNotEmpty) {
         final track = tracks.first;
         await _setAudioSource([track]);
