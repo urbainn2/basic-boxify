@@ -1,4 +1,5 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/screens/playlist/widgets/track_touch_row_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,9 +11,11 @@ class SmallTrackSearchResults extends StatelessWidget {
   const SmallTrackSearchResults({
     super.key,
     this.screenType = SearchResultType.searchScreen,
+    this.showLoadingState = false,
   });
 
   final SearchResultType screenType;
+  final bool showLoadingState;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +49,15 @@ class SmallTrackSearchResults extends StatelessWidget {
 
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
-        if (state.status == SearchStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
+        if (showLoadingState) {
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 3,
+            itemBuilder: (context, i) {
+              return TrackTouchRowSkeleton();
+            },
+          );
         }
         if (state.status == SearchStatus.error) {
           return Center(child: Text('errorLoadingTracks'.translate()));

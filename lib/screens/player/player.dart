@@ -1,4 +1,6 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/screens/player/widgets/large_player_skeleton.dart';
+import 'package:boxify/screens/player/widgets/small_player_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,6 +13,9 @@ class Player extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PlayerBloc, MyPlayerState>(builder: (context, state) {
       final index = state.player.currentIndex;
+      final width = MediaQuery.of(context).size.width;
+      final isLargeScreen = width >= Core.app.largeSmallBreakpoint;
+
       if (state.status == PlayerStatus.error) {
         logger.e('SmallPlayer.build() - PlayerStatus == error');
         return ErrorDialog(content: state.status.toString());
@@ -25,7 +30,7 @@ class Player extends StatelessWidget {
           ) {
         logger.i(
             'Player - PlayerStatus == ${state.status} so returning CircularProgressIndicator()');
-        return circularProgressIndicator;
+        return isLargeScreen ? LargePlayerSkeleton() : SmallPlayerSkeleton();
       } else {
         /// Get the [Track] from the player.audiosource that is currently playing,
         /// or the first track in the PlayerState.queue if no track is playing
@@ -45,8 +50,6 @@ class Player extends StatelessWidget {
                 assignPlaylistImageUrlToTrack(track, enquedPlaylist);
             final imageFilename =
                 assignPlaylistImageFilenameToTrack(track, enquedPlaylist);
-            final width = MediaQuery.of(context).size.width;
-            final isLargeScreen = width >= Core.app.largeSmallBreakpoint;
             return isLargeScreen
                 ? LargePlayer(
                     imageUrl: imageUrl,

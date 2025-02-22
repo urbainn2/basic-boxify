@@ -21,6 +21,8 @@ class TrackState extends Equatable {
   bool clearCache;
   // final String? trackIdPassedToUrl;
   final String? mouseClickedTrackId;
+  // Have all the tracks been loaded from the server?
+  final LoadStatus tracksLoadStatus;
 
   TrackState({
     required this.displayedTracks,
@@ -31,6 +33,7 @@ class TrackState extends Equatable {
     required this.clearCache,
     // this.trackIdPassedToUrl,
     this.mouseClickedTrackId,
+    this.tracksLoadStatus = LoadStatus.notLoaded,
   });
 
   factory TrackState.initial() {
@@ -59,11 +62,13 @@ class TrackState extends Equatable {
         failure,
         // trackIdPassedToUrl,
         mouseClickedTrackId,
+        tracksLoadStatus,
       ];
 
   TrackState copyWith({
     List<Track>? displayedTracks,
     List<Track>? displayedTracksPlayable,
+    // Plan is to slowly replace #status with #tracksLoadStatus, as it supports asynchroneous loading
     TrackStatus? status,
     Failure? failure,
     List<Track>? allTracks,
@@ -71,6 +76,7 @@ class TrackState extends Equatable {
     Track? currentTrack,
     // String? trackIdPassedToUrl,
     String? mouseClickedTrackId,
+    LoadStatus? tracksLoadStatus,
   }) {
     return TrackState(
       displayedTracks: displayedTracks ?? this.displayedTracks,
@@ -82,6 +88,7 @@ class TrackState extends Equatable {
       clearCache: clearCache ?? this.clearCache,
       // trackIdPassedToUrl: trackIdPassedToUrl ?? this.trackIdPassedToUrl,
       mouseClickedTrackId: mouseClickedTrackId ?? this.mouseClickedTrackId,
+      tracksLoadStatus: tracksLoadStatus ?? this.tracksLoadStatus,
     );
   }
 }

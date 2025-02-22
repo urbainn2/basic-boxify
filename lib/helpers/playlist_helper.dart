@@ -372,9 +372,9 @@ class PlaylistHelper {
   ) {
     logger.i('createNewReleasesPlaylist');
     try {
-    final newReleasesPlaylist = allPlaylists.firstWhere(
-        (element) => element.id == Core.app.newReleasesPlaylistId);
-    
+      final newReleasesPlaylist = allPlaylists.firstWhere(
+          (element) => element.id == Core.app.newReleasesPlaylistId);
+
       return newReleasesPlaylist;
     } catch (e) {
       logger.e('createNewReleasesPlaylist() error: $e');
@@ -508,6 +508,12 @@ class PlaylistHelper {
     if (kIsWeb) {
       return false;
     }
+
+    // If the playlist is empty, it can't be downloaded
+    if (tracks.isEmpty) {
+      return false;
+    }
+
     for (var track in tracks) {
       if (track.available == false) {
         return false;

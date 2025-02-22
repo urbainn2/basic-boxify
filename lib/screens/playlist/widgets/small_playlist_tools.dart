@@ -10,10 +10,12 @@ class SmallPlaylistTools extends StatelessWidget {
     super.key,
     required this.containsDownloaded,
     required this.containsAvailable,
+    required this.isPlaylistLoaded,
   });
 
   final bool containsDownloaded;
   final bool containsAvailable;
+  final bool isPlaylistLoaded;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +44,8 @@ class SmallPlaylistTools extends StatelessWidget {
               OverflowIconForPlaylist(playlist: playlist),
             ],
           ),
-          if (trackBloc.state.displayedTracks.isNotEmpty)
-            SmallPlaylistPlayerControls(),
+          if (trackBloc.state.displayedTracks.isNotEmpty || !isPlaylistLoaded)
+            SmallPlaylistPlayerControls(isPlaylistLoaded: isPlaylistLoaded),
         ],
       ),
     );

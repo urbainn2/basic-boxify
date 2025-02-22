@@ -99,94 +99,93 @@ class _BasePlaylistScreenState extends State<BasePlaylistScreen>
     return BlocBuilder<PlaylistBloc, PlaylistState>(
       builder: (context, state) {
         final status = state.status;
-        if (playlistStatusIsLoaded(status)) {
-          final playlistBloc = context.read<PlaylistBloc>();
-          final trackBloc = context.read<TrackBloc>();
-          final displayedTracks = trackBloc.state.displayedTracks;
+        final playlistBloc = context.read<PlaylistBloc>();
+        final trackBloc = context.read<TrackBloc>();
+        final playlist = playlistBloc.state.viewedPlaylist;
 
-          final containsDownloaded = displayedTracks.any((element) =>
-              element.downloadedUrl != null &&
-              element.downloadedUrl!
-                  .toLowerCase()
-                  .contains('file')); // Added null check for downloadedUrl
-          final containsAvailable = displayedTracks.any((element) =>
-              element.link != null &&
-              element.link!.isNotEmpty); // Added null check for link
+        final displayedTracks = trackBloc.state.displayedTracks;
+        final isPlaylistLoaded = playlistStatusIsLoaded(status);
 
-          final playlist = playlistBloc.state.viewedPlaylist;
+        final containsDownloaded = displayedTracks.any((element) =>
+            element.downloadedUrl != null &&
+            element.downloadedUrl!
+                .toLowerCase()
+                .contains('file')); // Added null check for downloadedUrl
 
-          if (playlist == null) {
-            return Container(
-              color: Core.appColor.widgetBackgroundColor,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          } else if (playlist.displayTitle == Playlist.empty.displayTitle) {
-            return ErrorPage();
-          }
+        final containsAvailable = displayedTracks.any((element) =>
+            element.link != null &&
+            element.link!.isNotEmpty); // Added null check for link
 
-          final device = MediaQuery.of(context);
-          final isSmall = device.size.width < Core.app.largeSmallBreakpoint;
+        if (playlist == null) {
+          return Container(
+            color: Core.appColor.widgetBackgroundColor,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        } else if (playlist.displayTitle == Playlist.empty.displayTitle) {
+          return ErrorPage();
+        }
 
-          final isNativePlatform = !kIsWeb;
-          final isMouse = !isNativePlatform && !isSmall;
-          List<Widget> trackMouseRowItems = [];
-          if (isMouse) {
-            final trackMouseRowHelper = TrackMouseRowHelper();
+        final device = MediaQuery.of(context);
+        final isSmall = device.size.width < Core.app.largeSmallBreakpoint;
 
-            // Fetch the list of row items with dragging logic
-            trackMouseRowItems = trackMouseRowHelper.getTrackMouseRowItems(
-              context,
-              canBeADragTarget: kIsWeb,
-              canDrag: kIsWeb,
-              trackRowType: TrackRowType.displayedTracks,
-            );
-          }
+        final isNativePlatform = !kIsWeb;
+        final isMouse = !isNativePlatform && !isSmall;
+        List<Widget> trackMouseRowItems = [];
+        if (isMouse) {
+          final trackMouseRowHelper = TrackMouseRowHelper();
 
-          return BlocProvider(
-            create: (context) => DraggingCubit(),
-            child: SafeArea(
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  isNativePlatform || isSmall
-                      ? SliverAppBarExpandable(
-                          expandedHeight: expandedHeight,
-                          appBarBackgroundOpacity: appBarBackgroundOpacity,
-                          titleOpacity: titleOpacity,
-                          imageUrl: playlist.imageUrl,
-                          title: playlist.displayTitle ?? '',
-                          imageFilename: playlist.imageFilename,
-                          color: playlist.backgroundColor,
-                        )
-                      : SliverAppBarNoExpand(
-                          type: SliverAppBarNoExpandType.playlist,
-                          expandedHeight: kToolbarHeight,
-                          appBarBackgroundOpacity: appBarBackgroundOpacity,
-                          titleOpacity: titleOpacity,
-                          title: playlist.displayTitle!,
-                          color: playlist.backgroundColor,
-                        ),
-                  if (isNativePlatform || isSmall)
-                    PlaylistTouchScreen(
-                      playlist: playlist,
-                      containsDownloaded: containsDownloaded,
-                      containsAvailable: containsAvailable,
-                    )
-                  else
-                    ...PlaylistMouseScreen.buildSlivers(
+          // Fetch the list of row items with dragging logic
+          trackMouseRowItems = trackMouseRowHelper.getTrackMouseRowItems(
+            context,
+            canBeADragTarget: kIsWeb,
+            canDrag: kIsWeb,
+            trackRowType: TrackRowType.displayedTracks,
+          );
+        }
+
+        return BlocProvider(
+          create: (context) => DraggingCubit(),
+          child: SafeArea(
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                isNativePlatform || isSmall
+                    ? SliverAppBarExpandable(
+                        expandedHeight: expandedHeight,
+                        appBarBackgroundOpacity: appBarBackgroundOpacity,
+                        titleOpacity: titleOpacity,
+                        imageUrl: playlist.imageUrl,
+                        title: playlist.displayTitle ?? '',
+                        imageFilename: playlist.imageFilename,
+                        color: playlist.backgroundColor,
+                      )
+                    : SliverAppBarNoExpand(
+                        type: SliverAppBarNoExpandType.playlist,
+                        expandedHeight: kToolbarHeight,
+                        appBarBackgroundOpacity: appBarBackgroundOpacity,
+                        titleOpacity: titleOpacity,
+                        title: playlist.displayTitle!,
+                        color: playlist.backgroundColor,
+                      ),
+                if (isNativePlatform || isSmall)
+                  PlaylistTouchScreen(
+                    playlist: playlist,
+                    containsDownloaded: containsDownloaded,
+                    containsAvailable: containsAvailable,
+                    isPlaylistLoaded: isPlaylistLoaded,
+                  )
+                else
+                  ...PlaylistMouseScreen.buildSlivers(
                       context,
                       PlaylistMouseScreen(playlist: playlist),
                       playlist,
                       trackMouseRowItems,
                       containsAvailable,
-                    ),
-                ],
-              ),
+                      isPlaylistLoaded),
+              ],
             ),
-          );
-        } else {
-          return Container();
-        }
+          ),
+        );
       },
     );
   }

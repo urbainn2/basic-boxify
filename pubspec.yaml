@@ -89,6 +89,7 @@ dependencies:
   upgrader: ^8.2.0
   validators: ^3.0.0  
   material_design_icons_flutter: 7.0.7296
+  shimmer: ^3.0.0
 
 dependency_overrides:
   modal_bottom_sheet: ^3.0.0-pre

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:boxify/app_core.dart';
+import 'package:boxify/enums/load_status.dart';
 import 'package:boxify/helpers/search_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
@@ -24,6 +25,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   // final UserHelper _userHelper;
   // final FirebaseFirestore _firebaseFirestore;
 
+  final TrackBloc _trackBloc;
+
   SearchBloc({
     required UserRepository userRepository,
     required TrackRepository trackRepository,
@@ -31,6 +34,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     required MetaDataRepository metaDataRepository,
     required StorageRepository storageRepository,
     required BundleRepository bundleRepository,
+    required TrackBloc trackBloc,
   })  :
         // _userRepository = userRepository,
         //       _trackRepository = trackRepository,
@@ -43,6 +47,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         //       _trackHelper = TrackHelper(),
         //       _userHelper = UserHelper(),
         //       _firebaseFirestore = FirebaseFirestore.instance,
+        _trackBloc = trackBloc,
         super(SearchState.initial()) {
     on<SearchPlaylists>(_onSearchPlaylists);
     on<SearchArtists>(_onSearchArtists);
@@ -51,6 +56,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<ClearSearch>(_onClearSearch);
     on<ChangeQuery>(_onChangeQuery);
     on<ResetSearch>(_onResetSearch);
+    on<ExecutePendingSearch>(_onExecutePendingSearch);
   }
 
   Future<void> _onResetSearch(
@@ -121,6 +127,18 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       logger.i('bloc _searchTracks: ${state.query}');
       var limit = 50;
       List<Track>? results = [];
+
+      // Tracks have not been loaded yet, so we can't search.
+      // Instead we set the pending query and wait for the tracks to load.
+      if (_trackBloc.state.tracksLoadStatus == LoadStatus.loading ||
+          _trackBloc.state.tracksLoadStatus == LoadStatus.notLoaded) {
+        logger.i('searchTracks bloc: tracks not loaded yet');
+        emit(state.copyWith(
+          pendingQuery: state.query,
+          status: SearchStatus.loaded,
+        ));
+        return;
+      }
 
       // Searching for tracks starting with the search query.
       final startsWithLowercaseQuery = event.tracks
@@ -211,6 +229,23 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
+  Future<void> _onExecutePendingSearch(
+    ExecutePendingSearch event,
+    Emitter<SearchState> emit,
+  ) async {
+    // If there is a pending query, execute the search.
+    if (state.pendingQuery.isEmpty) {
+      return;
+    }
+
+    // Emit the pending query and clear it.
+    emit(state.copyWith(
+      query: state.pendingQuery,
+      pendingQuery: '',
+    ));
+    add(SearchTracks(_trackBloc.state.allTracks));
+  }
+
   Future<void> _onClearSearch(
     ClearSearch event,
     Emitter<SearchState> emit,
@@ -221,7 +256,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       status: SearchStatus.loaded,
     ));
   }
-
 
   Future<void> _onSearchPlaylists(
     SearchPlaylists event,

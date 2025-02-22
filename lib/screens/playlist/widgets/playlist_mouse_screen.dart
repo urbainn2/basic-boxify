@@ -1,3 +1,4 @@
+import 'package:boxify/screens/playlist/widgets/track_mouse_row_skeleton.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ class PlaylistMouseScreen extends StatefulWidget {
     Playlist playlist,
     List<Widget> trackMouseRowItems,
     bool containsAvailable,
+    bool isPlaylistLoaded,
   ) {
     return [
       DecoratedPlaylistInfoWidgets(
@@ -34,27 +36,39 @@ class PlaylistMouseScreen extends StatefulWidget {
           endColor: Core.appColor.hoverColor,
         ),
       ),
-      SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            return trackMouseRowItems[index];
-          },
-          childCount: trackMouseRowItems.length,
-        ),
-      ),
+      isPlaylistLoaded
+          ? SliverList(
+              // List of track rows
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return trackMouseRowItems[index];
+                },
+                childCount: trackMouseRowItems.length,
+              ),
+            )
+          : SliverList(
+              // Skeletons for track rows
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return TrackMouseRowSkeleton();
+                },
+                childCount: 10,
+              ),
+            ),
       SliverToBoxAdapter(
-        child:
-            Core.app.type == AppType.advanced && playlist.isOwnPlaylist == true
-                ? LetsAddSomething()
-                : trackMouseRowItems.isEmpty
-                    ? (playlist.id == Core.app.newReleasesPlaylistId
-                        ? CenteredText('noNewReleasesMessage'.translate())
-                        : (playlist.id?.contains('_4star') == true
-                            ? CenteredText('no4StarTracks'.translate())
-                            : (playlist.id?.contains('_5star') == true
-                                ? CenteredText('no5StarTracks'.translate())
-                                : CenteredText('noTracksMessage'.translate()))))
-                    : Container(),
+        child: Core.app.type == AppType.advanced &&
+                isPlaylistLoaded &&
+                playlist.isOwnPlaylist == true
+            ? LetsAddSomething()
+            : trackMouseRowItems.isEmpty
+                ? (playlist.id == Core.app.newReleasesPlaylistId
+                    ? CenteredText('noNewReleasesMessage'.translate())
+                    : (playlist.id?.contains('_4star') == true
+                        ? CenteredText('no4StarTracks'.translate())
+                        : (playlist.id?.contains('_5star') == true
+                            ? CenteredText('no5StarTracks'.translate())
+                            : CenteredText('noTracksMessage'.translate()))))
+                : Container(),
       ),
     ];
   }
@@ -97,8 +111,8 @@ class _PlaylistMouseScreenState extends State<PlaylistMouseScreen> {
     return BlocProvider(
       create: (context) => DraggingCubit(),
       child: CustomScrollView(
-        slivers: PlaylistMouseScreen.buildSlivers(
-            context, widget, playlist, trackMouseRowItems, containsAvailable),
+        slivers: PlaylistMouseScreen.buildSlivers(context, widget, playlist,
+            trackMouseRowItems, containsAvailable, true),
       ),
     );
   }

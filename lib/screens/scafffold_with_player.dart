@@ -288,27 +288,6 @@ class ScaffoldWithPlayer extends StatelessWidget {
                                           message: state.errorMessage!,
                                           color: Colors.red);
                                     } else if (state.status ==
-                                        DownloadStatus.syncingDownloads) {
-                                      showMySnack(
-                                        context,
-                                        message: 'Syncing downloads on WiFi'
-                                            .translate(),
-                                        color: Core.appColor.primary,
-                                      );
-                                    } else if (state.status ==
-                                        DownloadStatus
-                                            .syncingDownloadsCompleted) {
-                                      // Only show "Downloads synced" if we're not currently removing downloads
-                                      if (_lastHandledStatus !=
-                                          DownloadStatus.removing) {
-                                        showMySnack(
-                                          context,
-                                          message:
-                                              'Downloads synced'.translate(),
-                                          color: Core.appColor.primary,
-                                        );
-                                      }
-                                    } else if (state.status ==
                                         DownloadStatus.completed) {
                                       showMySnack(
                                         context,
