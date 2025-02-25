@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 
 import 'package:boxify/app_core.dart';
+import 'package:boxify/services/playback_debug_logger.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,7 +49,9 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         super(MyPlayerState.initial(
           player: audioPlayer,
         )) {
-    // logger.f('playerBloc: Player hashcode = ${audioPlayer.hashCode}');
+    // Initialize debug logger
+    PlaybackDebugLogger.init();
+    PlaybackDebugLogger.debug('PlayerBloc initialized');
 
     on<PlayerReset>(_onPlayerReset);
     on<StartPlayback>(_onStartPlayback);
@@ -70,11 +73,14 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     _audioPlayer.playbackEventStream.listen((event) {
       if (event.processingState == ProcessingState.completed ||
           !_audioPlayer.playing) {
+        PlaybackDebugLogger.debug(
+            'Playback interrupted: completed=${event.processingState == ProcessingState.completed}, playing=${_audioPlayer.playing}');
         _savePlaybackState(_audioPlayer.position);
       }
     });
 
     // Restore saved state on init
+    PlaybackDebugLogger.debug('Attempting to restore playback state on init');
     _restorePlaybackState();
   }
 
@@ -250,9 +256,11 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     emit(state.copyWith(status: PlayerStatus.loading));
 
     try {
-      final r = await _setAudioSource(event.tracks);
-
+      await _setAudioSource(event.tracks);
       logger.i('done setting audio source so emitting PlayerStatus.loaded');
+
+      // Try to restore any saved state after loading tracks
+      await _restorePlaybackState();
 
       emit(
         state.copyWith(
@@ -266,7 +274,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
       emit(
         state.copyWith(
           status: PlayerStatus.error,
-          // Consider defining an appropriate error message and passing it in the Failure
           failure:
               Failure(code: err.hashCode.toString(), message: err.toString()),
         ),
@@ -394,57 +401,100 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   }
 
   Future<void> _savePlaybackState(Duration position) async {
-    if (!state.player.playing || state.queue.isEmpty || state.player.currentIndex == null) return;
+    if (!state.player.playing || state.queue.isEmpty || state.player.currentIndex == null) {
+      PlaybackDebugLogger.debug('Cannot save state: playing=${state.player.playing}, queueEmpty=${state.queue.isEmpty}, currentIndex=${state.player.currentIndex}');
+      return;
+    }
 
     final currentTrack = state.queue[state.player.currentIndex!];
+    if (currentTrack.uuid == null) {
+      PlaybackDebugLogger.debug('Cannot save state: track has no UUID');
+      return;
+    }
+
+    PlaybackDebugLogger.debug('Saving state for track: ${currentTrack.displayTitle} at position ${position.inSeconds}s');
 
     // Save locally in bloc state
     emit(state.copyWith(
       savedPosition: position,
       savedTrack: currentTrack,
     ));
+    PlaybackDebugLogger.debug('Saved to local state');
 
     // Save to Firestore for cross-device sync
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
+        PlaybackDebugLogger.debug('Saving to Firestore for user ${user.uid}');
         await _firestore.collection('playback_states').doc(user.uid).set({
           'trackId': currentTrack.uuid,
           'position': position.inMilliseconds,
           'timestamp': FieldValue.serverTimestamp(),
+          'trackTitle': currentTrack.displayTitle, // Add title for debugging
         });
+        PlaybackDebugLogger.debug('Successfully saved to Firestore');
+      } else {
+        PlaybackDebugLogger.debug('No user logged in, skipping Firestore save');
       }
     } catch (e) {
-      logger.e('Error saving playback state: $e');
+      PlaybackDebugLogger.error('Error saving to Firestore', e);
     }
   }
 
   Future<void> _restorePlaybackState() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
+      if (user == null) {
+        PlaybackDebugLogger.debug('No user logged in, cannot restore state');
+        return;
+      }
+
+      PlaybackDebugLogger.debug('Attempting to restore state for user ${user.uid}');
+      
+      // Check if we have tracks in our state
+      if (state.queue.isEmpty) {
+        PlaybackDebugLogger.debug('Queue is empty, cannot restore state');
+        return;
+      }
 
       final doc = await _firestore.collection('playback_states').doc(user.uid).get();
-      if (!doc.exists) return;
+      if (!doc.exists) {
+        PlaybackDebugLogger.debug('No saved state found in Firestore');
+        return;
+      }
 
       final data = doc.data()!;
       final trackId = data['trackId'] as String;
       final position = Duration(milliseconds: data['position'] as int);
+      final savedTitle = data['trackTitle'] as String?;
+      PlaybackDebugLogger.debug('Found saved state: trackId=$trackId, position=${position.inSeconds}s, title=$savedTitle');
 
       // Find track in state or return early if not found
       final tracks = state.queue.where((t) => t.uuid == trackId).toList();
+      PlaybackDebugLogger.debug('Found ${tracks.length} matching tracks in queue');
+      
       if (tracks.isNotEmpty) {
         final track = tracks.first;
+        PlaybackDebugLogger.debug('Found matching track: ${track.displayTitle}');
         await _setAudioSource([track]);
+        PlaybackDebugLogger.debug('Set audio source');
         await state.player.seek(position);
+        PlaybackDebugLogger.debug('Seeked to position ${position.inSeconds}s');
+        if (!state.player.playing) {
+          PlaybackDebugLogger.debug('Starting playback');
+          await state.player.play();
+        }
         emit(state.copyWith(
           savedPosition: position,
           savedTrack: track,
           queue: [track],
         ));
+        PlaybackDebugLogger.debug('State restored successfully');
+      } else {
+        PlaybackDebugLogger.debug('Track not found in current queue');
       }
     } catch (e) {
-      logger.e('Error restoring playback state: $e');
+      PlaybackDebugLogger.error('Error restoring playback state', e);
     }
   }
 }
