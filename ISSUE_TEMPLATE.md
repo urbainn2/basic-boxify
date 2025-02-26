@@ -1,4 +1,4 @@
-I appreciate dead simple Steps To Reproduce like this:
+I appreciate Steps To Reproduce like this:
 
 ## Steps To Reproduce
 
