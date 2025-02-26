@@ -279,15 +279,20 @@ class Playlist extends Equatable {
       return data['roles'];
     } else if (data.containsKey('name')) {
       List<String> roles = [];
-      if (data['name'].contains(Core.app.collaboratorsPath)) {
-        roles.add('collaborator');
+      String name = data['name'].toString().toLowerCase();
+      
+      // Convert folder paths to compound roles
+      if (name.contains(Core.app.collaboratorsPath)) {
+        roles.add('collaborators/all');
       }
-      if (data['name'].contains(Core.app.weezerPath) ||
-          data['name'].contains(Core.app.pinkAlbumPath)) {
-        roles.add('weezer');
+      if (name.contains(Core.app.weezerPath)) {
+        roles.add('weezer/all');
       }
-      if (data['name'].contains(Core.app.adminPath)) {
-        roles.add('admin');
+      if (name.contains(Core.app.pinkAlbumPath)) {
+        roles.add('weezer/pink_album');
+      }
+      if (name.contains(Core.app.adminPath)) {
+        roles.add('admin/all');
       }
       return roles;
     } else {

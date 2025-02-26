@@ -123,14 +123,6 @@ class PlaylistHelper {
       return !userRatings.any((rating) => rating.trackUuid == track.uuid);
     }).toList();
 
-    // // For everyone, remove the Vetro tracks from the unrated playlist
-    // unratedTracks = unratedTracks.where((track) {
-    //   return track.album == null ||
-    //       !track.album!.toLowerCase().contains('vetro');
-    // }).toList();
-
-    unratedTracks = filterTracksByRole(unratedTracks, user);
-
     final unratedTrackIds = unratedTracks.map((track) => track.uuid!).toList();
 
     unratedTrackIds.shuffle();
@@ -146,31 +138,6 @@ class PlaylistHelper {
       playlistId: '${user.id}_unrated',
       imageUrl: user.profileImageUrl,
     );
-  }
-
-// For RiverTunes
-  List<Track> filterTracksByRole(List<Track> unratedTracks, User user) {
-    // For non-collaborators, remove the Collaborators tracks from the unrated playlist
-    if (!user.roles!.contains('collaborator')) {
-      unratedTracks = unratedTracks.where((track) {
-        return !track.localpath!.contains(Core.app.collaboratorsPath);
-      }).toList();
-    }
-
-    // For non-admins, remove the admin tracks from the unrated playlist
-    if (!user.roles!.contains('admin') && Core.app.adminPath != null) {
-      unratedTracks = unratedTracks.where((track) {
-        return !track.localpath!.contains(Core.app.adminPath);
-      }).toList();
-    }
-
-    // For non-Weezer, remove the Weezer tracks from the unrated playlist
-    if (!user.roles!.contains('weezer')) {
-      unratedTracks = unratedTracks.where((track) {
-        return !track.localpath!.contains(Core.app.weezerPath);
-      }).toList();
-    }
-    return unratedTracks;
   }
 
   Playlist instantiatePlaylist({
