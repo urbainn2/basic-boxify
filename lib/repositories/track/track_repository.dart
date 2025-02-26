@@ -67,20 +67,20 @@ class TrackRepository extends BaseTrackRepository {
           'AppType.Advanced does not have access to private tracks. Use fetchTracksFromRCServerAPI instead');
     }
     final firebaseFirestore = FirebaseFirestore.instance;
-    QuerySnapshot tracksSnap;
     final roles = user.roles;
 
     // Get tracks whose role property is in the list of user roles
     if (roles != null && roles.isNotEmpty) {
-      tracksSnap = await firebaseFirestore
+      final tracksSnap = await firebaseFirestore
           .collection(Paths.tracks)
           .where('role', whereIn: roles)
           .get();
+      final tracks = tracksSnap.docs.map(Track.fromDocumentNoFuture).toList();
+      return tracks;
     } else {
-      tracksSnap = await firebaseFirestore.collection(Paths.tracks).get();
+      // If user has no roles, return empty list for security
+      return [];
     }
-    final tracks = tracksSnap.docs.map(Track.fromDocumentNoFuture).toList();
-    return tracks;
   }
 
   @override
