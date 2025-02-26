@@ -272,7 +272,6 @@ class CacheHelper {
 
       if (lastUpdatedString != null) {
         final DateTime lastUpdated = DateTime.parse(lastUpdatedString);
-
         if (lastUpdated.isBefore(serverTimestamp)) {
           logger.i(
               'Cached tracks are older than server data; re-fetch required.');
@@ -281,19 +280,18 @@ class CacheHelper {
 
         logger.i('Using cached tracks.');
 
-        final Iterable<MapEntry<dynamic, dynamic>> entries =
-            box.toMap().entries.where(
-                  (entry) =>
-                      entry.key != 'last_updated_tracks' &&
-                      entry.key != 'cache_version',
-                );
+        final entries = box.toMap().entries.where(
+              (entry) =>
+                  entry.key != 'last_updated_tracks' &&
+                  entry.key != 'cache_version',
+            );
 
         if (kIsWeb) {
-          // On Web, deserialize from Map<String, dynamic>
-          final List<Track> cachedTracks = entries
-              .map((entry) =>
-                  Track.fromJson(entry.value as Map<String, dynamic>))
-              .toList();
+          // On Web, properly convert LinkedMap to Map<String, dynamic>
+          final List<Track> cachedTracks = entries.map((entry) {
+            final Map<String, dynamic> jsonMap = Map<String, dynamic>.from(entry.value as Map);
+            return Track.fromJson(jsonMap);
+          }).toList();
           return cachedTracks;
         } else {
           // On Mobile/Desktop, retrieve stored Track objects
@@ -315,8 +313,7 @@ class CacheHelper {
   Future<void> saveTracks(List<Track> tracks, String userId) async {
     logger.i('saveTracks cache');
     final key = keyForTracks(userId);
-    final box = await Hive.openBox<dynamic>(
-        key); // Open as dynamic to store different types
+    final box = await Hive.openBox<dynamic>(key); // Open as dynamic to store different types
 
     await box.clear(); // Clear existing data
 
