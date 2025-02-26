@@ -264,6 +264,9 @@ class LogOutButton extends StatelessWidget {
       onPressed: () {
         logger.f('logout');
 
+        // Reset player state before logging out
+        context.read<PlayerBloc>().add(PlayerReset());
+        
         context.read<AuthBloc>().add(AuthLogoutRequested());
 
         GoRouter.of(context).go(
