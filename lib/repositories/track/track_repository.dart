@@ -60,6 +60,18 @@ class TrackRepository extends BaseTrackRepository {
   }
 
   @override
+  /// Fetches tracks from Firestore based on the user's roles.
+  /// This method is only used in the basic app type.
+  /// (Advanced app type uses fetchTracksFromRCServerAPI instead)
+  /// 
+  /// This is the primary implementation of role-based access control for the basic app:
+  /// - If user has roles: Only fetches tracks where track.role is in user.roles
+  /// - If user has no roles: Returns empty list (no access)
+  /// 
+  /// The role system is entirely data-driven through Firestore:
+  /// - No hard-coded roles in the application code
+  /// - Access control happens at the database level
+  /// - New roles can be added just by updating Firestore documents
   Future<List<Track>> fetchPrivateTracksFromFirestore(User user) async {
     logger.e('fetchPrivateTracksFromFirestore');
     if (Core.app.type == AppType.advanced) {
