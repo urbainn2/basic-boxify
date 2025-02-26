@@ -58,33 +58,3 @@ class SongInfoWidget extends StatelessWidget {
     );
   }
 }
-
-// class BaseTrackInfo extends StatelessWidget {
-//   const BaseTrackInfo({
-//     super.key,
-//     required this.track,
-//   });
-
-//   final Track track;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start, // or whatever fits your UI
-//       children: [
-//         Text(
-//           track.privateReleaseDate.toString(),
-//           overflow: TextOverflow.ellipsis,
-//           style: const TextStyle(
-//             color: Colors.grey,
-//             fontSize: 10,
-//           ),
-//         ),
-//         const SizedBox(height: 5),
-//         Text(
-//           track.artist ?? 'Rivers',
-//         ),
-//       ],
-//     );
-//   }
-// }
