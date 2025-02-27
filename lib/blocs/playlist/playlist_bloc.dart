@@ -207,7 +207,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     );
   }
 
- List<Playlist> filterPlaylistsByRole(
+  List<Playlist> filterPlaylistsByRole(
       List<String>? roles, List<Playlist> playlists) {
     if (!roles!.contains('collaborator')) {
       playlists = playlists

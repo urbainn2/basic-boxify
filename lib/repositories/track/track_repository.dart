@@ -65,9 +65,7 @@ class TrackRepository extends BaseTrackRepository {
   /// (Advanced app type uses fetchTracksFromRCServerAPI instead)
   /// 
   /// Role-based access control for compound roles:
-  /// - Roles are derived from folder paths after \Boxify\ (e.g. "weezer/movie")
   /// - A role must exactly match the track's role
-  /// - Example: Role "weezer/movie" only gives access to tracks with role "weezer/movie"
   Future<List<Track>> fetchPrivateTracksFromFirestore(User user) async {
     logger.e('fetchPrivateTracksFromFirestore');
     if (Core.app.type == AppType.advanced) {
