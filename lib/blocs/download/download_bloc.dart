@@ -163,8 +163,8 @@ class DownloadBloc extends Bloc<DownloadEvent, DownloadState> {
 
       // Check if the file already exists
       if (file.existsSync()) {
-        logger.i(
-            '_downloadTracks: File for track ${track.uuid} already exists, skipping download.');
+        // logger.i(
+        //     '_downloadTracks: File for track ${track.uuid} already exists, skipping download.');
 
         // Add the existing track to the downloaded state
         final updatedTrack = track.copyWith(
