@@ -273,31 +273,34 @@ class Playlist extends Equatable {
   }
 
   static List<String> getRoles(Map<String, dynamic> data) {
+    // First check if roles are already stored in Firestore
     if (data.containsKey('roles') &&
         data['roles'] is List &&
         data['roles'].isNotEmpty) {
-      return data['roles'];
+      return List<String>.from(data['roles']);
     } else if (data.containsKey('name')) {
-      List<String> roles = [];
-      String name = data['name'].toString().toLowerCase();
+      String name = data['name'].toString();
       
-      // Convert folder paths to compound roles
-      if (name.contains(Core.app.collaboratorsPath)) {
-        roles.add('collaborators/all');
+      // Split the path into components and normalize slashes
+      List<String> pathComponents = name
+          .replaceAll('\\', '/')  // Convert Windows backslashes to forward slashes
+          .split('/')
+          .where((s) => s.isNotEmpty)  // Remove empty strings
+          .map((s) => s.toLowerCase())  // Normalize case
+          .toList();
+      
+      // Remove 'demos' from the start if present
+      if (pathComponents.isNotEmpty && pathComponents[0] == 'demos') {
+        pathComponents.removeAt(0);
       }
-      if (name.contains(Core.app.weezerPath)) {
-        roles.add('weezer/all');
+      
+      // Only generate the full path role if we have components
+      if (pathComponents.isNotEmpty) {
+        return [pathComponents.join('/')];
       }
-      if (name.contains(Core.app.pinkAlbumPath)) {
-        roles.add('weezer/pink_album');
-      }
-      if (name.contains(Core.app.adminPath)) {
-        roles.add('admin/all');
-      }
-      return roles;
-    } else {
-      return [];
     }
+    
+    return [];
   }
 
   static parsePlaylistDescription(Map<String, dynamic> data) {
