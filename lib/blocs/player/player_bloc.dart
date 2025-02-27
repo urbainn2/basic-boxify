@@ -344,7 +344,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
                     : track.downloadedUrl;
 
             // url = url!.split('?')[0]; // remove query params from url
-            // logger.i(url);
+            logger.i(url);
             // String cleanedUrl = cleanUrlKeepRaw();
             // logger.d(cleanedUrl);
 

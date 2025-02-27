@@ -279,28 +279,21 @@ class Playlist extends Equatable {
         data['roles'].isNotEmpty) {
       return List<String>.from(data['roles']);
     } else if (data.containsKey('name')) {
-      String name = data['name'].toString();
-      
-      // Split the path into components and normalize slashes
-      List<String> pathComponents = name
-          .replaceAll('\\', '/')  // Convert Windows backslashes to forward slashes
-          .split('/')
-          .where((s) => s.isNotEmpty)  // Remove empty strings
-          .map((s) => s.toLowerCase())  // Normalize case
-          .toList();
-      
-      // Remove 'demos' from the start if present
-      if (pathComponents.isNotEmpty && pathComponents[0] == 'demos') {
-        pathComponents.removeAt(0);
+      List<String> roles = [];
+      if (data['name'].contains(Core.app.collaboratorsPath)) {
+        roles.add('collaborator');
       }
-      
-      // Only generate the full path role if we have components
-      if (pathComponents.isNotEmpty) {
-        return [pathComponents.join('/')];
+      if (data['name'].contains(Core.app.weezerPath) ||
+          data['name'].contains(Core.app.pinkAlbumPath)) {
+        roles.add('weezer');
       }
+      if (data['name'].contains(Core.app.adminPath)) {
+        roles.add('admin');
+      }
+      return roles;
+    } else {
+      return [];
     }
-    
-    return [];
   }
 
   static parsePlaylistDescription(Map<String, dynamic> data) {

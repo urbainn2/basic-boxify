@@ -207,56 +207,28 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     );
   }
 
-  /// For RiverTunes
-  /// Filters playlists based on compound role paths.
-  /// 
-  /// Roles are derived from folder paths and use forward slashes as separators.
-  /// A user's role gives access to playlists where:
-  /// 1. The playlist's role exactly matches the user's role
-  /// 2. The playlist's role starts with the user's role (subfolder access)
-  /// 
-  /// Examples:
-  /// - User role "weezer/movie" gives access to:
-  ///   "weezer/movie" (exact match)
-  ///   "weezer/movie/scene1" (subfolder)
-  ///   "weezer" (parent folder, no access)
-  ///   "weezer/other" (different subfolder, no access)
-  /// 
-  /// - Multiple user roles are supported:
-  ///   User with roles ["weezer/movie", "admin/all"] can access:
-  ///   "weezer/movie/*" (any subfolder under movie)
-  ///   "admin/all/*" (any subfolder under admin/all)
   List<Playlist> filterPlaylistsByRole(
       List<String>? roles, List<Playlist> playlists) {
-    if (roles == null || roles.isEmpty) {
-      return [];
+    if (!roles!.contains('collaborator')) {
+      playlists = playlists
+          .where((playlist) => !playlist.roles.contains('collaborator'))
+          .toList();
     }
 
-    return playlists.where((playlist) {
-      // For each playlist role, check if the user has access to that role path
-      return playlist.roles.any((playlistRole) {
-        // Check if any of the user's roles match or are parent paths of the playlist role
-        return roles.any((userRole) {
-          // Convert both roles to path segments for comparison
-          List<String> playlistPathParts = playlistRole.split('/');
-          List<String> userPathParts = userRole.split('/');
-          
-          // If user path is longer than playlist path, it can't be a parent
-          if (userPathParts.length > playlistPathParts.length) {
-            return false;
-          }
-          
-          // Check if user path matches the start of playlist path
-          for (int i = 0; i < userPathParts.length; i++) {
-            if (userPathParts[i] != playlistPathParts[i]) {
-              return false;
-            }
-          }
-          
-          return true;
-        });
-      });
-    }).toList();
+    // If the user is not a weezer, exclude the 'weezer' playlists
+    if (!roles.contains('weezer')) {
+      playlists = playlists
+          .where((playlist) => !playlist.roles.contains('weezer'))
+          .toList();
+    }
+
+    // If the user is not an admin, exclude the 'admin' playlists
+    if (!roles.contains('admin')) {
+      playlists = playlists
+          .where((playlist) => !playlist.roles.contains('admin'))
+          .toList();
+    }
+    return playlists;
   }
 
   List<Playlist> sortBasicPlaylists(List<Playlist> playlists) {

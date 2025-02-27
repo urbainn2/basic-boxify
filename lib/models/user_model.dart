@@ -33,11 +33,6 @@ class User extends Equatable {
   /// 2. Tracks have a role field in their Firestore document
   /// 3. Users can only access tracks where the track's role matches one of their roles
   /// 4. If a user has no roles, they cannot access any tracks
-  /// 
-  /// To add a new role (basic app type only):
-  /// 1. Add the role to the user's roles array in Firestore
-  /// 2. Set the role field on the relevant tracks in Firestore
-  /// No code changes are required as the role system is data-driven
   final List<String>? roles;
 
   User({
