@@ -16,12 +16,16 @@ class MyPlayerState extends Equatable {
   final PlayerStatus status;
   final Failure failure;
   final AudioPlayer player;
+  // Background color, extracted from the track's cover image
+  // We use HSLColor so operations to adjust lightness are more efficient (avoids unecessary conversions)
+  final HSLColor backgroundColor;
   List<Track> queue;
 
   MyPlayerState({
     required this.status,
     required this.failure,
     required this.player,
+    required this.backgroundColor,
     required this.queue,
   });
 
@@ -32,6 +36,7 @@ class MyPlayerState extends Equatable {
       status: PlayerStatus.initial,
       failure: const Failure(),
       player: player,
+      backgroundColor: HSLColor.fromColor(Core.appColor.primary),
       queue: [],
     );
   }
@@ -41,6 +46,7 @@ class MyPlayerState extends Equatable {
         status,
         failure,
         player,
+        backgroundColor,
         queue,
       ];
 
@@ -49,12 +55,14 @@ class MyPlayerState extends Equatable {
     Failure? failure,
     AudioPlayer? player,
     ConcatenatingAudioSource? audioSource,
+    HSLColor? backgroundColor,
     List<Track>? queue,
   }) {
     return MyPlayerState(
       status: status ?? this.status,
       failure: failure ?? this.failure,
       player: player ?? this.player,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
       queue: queue ?? this.queue,
     );
   }

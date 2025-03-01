@@ -66,6 +66,13 @@ class SeekToNext extends PlayerEvent {
   List<Object?> get props => [];
 }
 
+class UpdateTrackBackgroundColor extends PlayerEvent {
+  final HSLColor backgroundColor;
+  const UpdateTrackBackgroundColor({required this.backgroundColor});
+  @override
+  List<Object?> get props => [backgroundColor];
+}
+
 // class LogListen extends PlayerEvent {
 //   const LogListen();
 //   @override
