@@ -1,6 +1,7 @@
 import 'package:boxify/app_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class UserHelper {
   UserHelper();
@@ -13,6 +14,10 @@ class UserHelper {
     if (userState.user.isAnonymous) {
       // Reroute to the login screen.
       GoRouter.of(context).go('/login');
+
+      /// If you don't log out first, the authStatus will never be unauthenticated
+      /// and the resetting of the blocs will never be triggered in the myapp.authBloc listener
+      context.read<AuthBloc>().add(AuthLogoutRequested());
 
       // Show a snackbar.
       ScaffoldMessenger.of(context)
