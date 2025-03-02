@@ -34,9 +34,10 @@ class Player extends StatelessWidget {
       } else {
         /// Get the [Track] from the player.audiosource that is currently playing,
         /// or the first track in the PlayerState.queue if no track is playing
-        Track track;
+        Track track = state.queue[index ?? 0];
 
-        track = state.queue[index ?? 0];
+        // Get current track's backgroundColor
+        final backgroundColor = state.backgroundColor;
 
         logger.d(
             'state.player.currentIndex on Player: ${state.player.currentIndex}');
@@ -58,7 +59,9 @@ class Player extends StatelessWidget {
                 : SmallPlayer(
                     imageUrl: imageUrl,
                     imageFilename: imageFilename,
-                    track: track);
+                    track: track,
+                    backgroundColor: backgroundColor,
+                  );
           },
         );
       }

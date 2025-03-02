@@ -3,35 +3,44 @@ import 'package:boxify/helpers/color_helper.dart';
 import 'package:boxify/ui/image_with_color_extraction.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SmallPlayer extends StatefulWidget {
-  const SmallPlayer({
-    Key? key,
-    this.imageUrl,
-    this.imageFilename,
-    required this.track,
-  }) : super(key: key);
+  const SmallPlayer(
+      {Key? key,
+      this.imageUrl,
+      this.imageFilename,
+      required this.track,
+      required this.backgroundColor})
+      : super(key: key);
 
   final String? imageUrl;
   final String? imageFilename;
   final Track track;
+  final HSLColor backgroundColor;
 
   @override
   State<SmallPlayer> createState() => _SmallPlayerState();
 }
 
 class _SmallPlayerState extends State<SmallPlayer> {
-  // Background color, extracted from the track's cover image
-  // use theme default color if not available
-  Color trackBackgroundColor =
-      ColorHelper.dimColor(Core.appColor.primary, dimFactor: 0.25);
-
   @override
   Widget build(BuildContext context) {
+    final playerBloc = context.read<PlayerBloc>();
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: trackBackgroundColor,
+        // Dim the color a bit to make the text more readable
+        color: ColorHelper.dimColorHsl(
+                // Ensure color isn't too dark to avoid interfering with the UI
+                ColorHelper.ensureWithinRangeHsl(
+                  widget.backgroundColor,
+                  minLightness: 0.5,
+                  maxLightness: 0.7,
+                ),
+                dimFactor: 0.25)
+            .toColor(),
         boxShadow: const [
           BoxShadow(
             blurRadius: 2,
@@ -58,12 +67,8 @@ class _SmallPlayerState extends State<SmallPlayer> {
                   roundedCorners: 8,
                   onColorExtracted: (color) {
                     setState(() {
-                      // Dim the color a bit to make the text more readable
-                      trackBackgroundColor = ColorHelper.dimColor(
-                          // Ensure the color isn't too dark to avoid interfering with the UI
-                          ColorHelper.ensureWithinRange(color,
-                              minLightness: 0.6, maxLightness: 1),
-                          dimFactor: 0.25);
+                      playerBloc.add(UpdateTrackBackgroundColor(
+                          backgroundColor: HSLColor.fromColor(color)));
                     });
                   },
                 ),

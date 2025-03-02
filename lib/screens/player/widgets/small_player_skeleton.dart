@@ -15,7 +15,10 @@ class SmallPlayerSkeleton extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: ColorHelper.dimColor(Core.appColor.primary, dimFactor: 0.25),
+        color: ColorHelper.dimColor(
+            ColorHelper.ensureWithinRange(Core.appColor.primary,
+                maxLightness: 0.7, minLightness: 0.5),
+            dimFactor: 0.25),
         boxShadow: const [
           BoxShadow(
             blurRadius: 2,
