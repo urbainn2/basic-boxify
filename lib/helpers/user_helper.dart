@@ -1,7 +1,27 @@
 import 'package:boxify/app_core.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class UserHelper {
   UserHelper();
+
+  /// Returns true if the user is logged in, or reroutes to the login screen if not (and return false).
+  /// Will also show a snackbar if the user is not logged in. If no snackbar message is provided, it will show a generic message.
+  static bool isLoggedInOrReroute(UserState userState, BuildContext context,
+      {String? snackbarMessage}) {
+    // Is the user logged in?
+    if (userState.user.isAnonymous) {
+      // Reroute to the login screen.
+      GoRouter.of(context).go('/login');
+
+      // Show a snackbar.
+      ScaffoldMessenger.of(context)
+          .showSnackBar(buildSnackbar('youMustBeLoggedIn'.translate()));
+
+      return false;
+    }
+    return true;
+  }
 
   /// Returns [bundleCount, trackCount, userBundleCount, userTrackCount]
   /// to display the counts at the top of the Market screen.
