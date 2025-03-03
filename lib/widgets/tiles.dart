@@ -18,20 +18,17 @@ class AddTrackToPlaylistTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        final userState = context.read<UserBloc>().state;
+        logger.i('Add to playlist tile tapped');
 
-        // Ensure user is logged in
-        if (UserHelper.isLoggedInOrReroute(userState, context)) {
-          // close the overflow screen
+        // close the overflow screen
+        context.pop();
+
+        // If you're on the small track detail screen, pop it
+        if (context.canPop()) {
           context.pop();
-
-          // If you're on the small track detail screen, pop it
-          if (context.canPop()) {
-            context.pop();
-          }
-
-          context.push('/smallAddToPlaylist');
         }
+
+        context.push('/smallAddToPlaylist');
       },
       leading: const Icon(
         Icons.add,
@@ -504,19 +501,16 @@ class StopFollowingPlaylistTile extends StatelessWidget {
       leading: const Icon(Icons.close, color: Colors.blueAccent),
       title: Text('stopFollowing'.translate()),
       onTap: () {
-        // Ensure user is logged in
-        if (UserHelper.isLoggedInOrReroute(userBloc.state, context)) {
-          libraryBloc.add(
-            RemovePlaylist(
-              playlist: playlist,
-              user: userBloc.state.user,
-            ),
-          );
-          context.pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            buildSnackbar('removedFromLibrary'.translate()),
-          );
-        }
+        libraryBloc.add(
+          RemovePlaylist(
+            playlist: playlist,
+            user: userBloc.state.user,
+          ),
+        );
+        context.pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          buildSnackbar('removedFromLibrary'.translate()),
+        );
       },
     );
   }
@@ -552,28 +546,22 @@ class ToggleAddRemovePlaylistFromYourLibraryTile extends StatelessWidget {
         : !playlistIsAlreadyFollowed
             ? ListTile(
                 onTap: () {
-                  // Ensure user is logged in
-                  if (UserHelper.isLoggedInOrReroute(userBloc.state, context)) {
-                    context.pop();
-                    libraryBloc.add(AddPlaylistToLibrary(
-                        playlistId: playlist.id!, user: userBloc.state.user));
-                    showMySnack(context,
-                        message: 'addedToYourLibrary'.translate());
-                  }
+                  context.pop();
+                  libraryBloc.add(AddPlaylistToLibrary(
+                      playlistId: playlist.id!, user: userBloc.state.user));
+                  showMySnack(context,
+                      message: 'addedToYourLibrary'.translate());
                 },
                 leading: const Icon(Icons.add, color: Colors.blueAccent),
                 title: Text('addToYourLibrary'.translate()),
               )
             : ListTile(
                 onTap: () {
-                  // Ensure user is logged in
-                  if (UserHelper.isLoggedInOrReroute(userBloc.state, context)) {
-                    context.pop();
-                    libraryBloc.add(RemovePlaylist(
-                        playlist: playlist, user: userBloc.state.user));
-                    showMySnack(context,
-                        message: 'removedFromLibrary'.translate());
-                  }
+                  context.pop();
+                  libraryBloc.add(RemovePlaylist(
+                      playlist: playlist, user: userBloc.state.user));
+                  showMySnack(context,
+                      message: 'removedFromLibrary'.translate());
                 },
                 leading: const Icon(Icons.close, color: Colors.blueAccent),
                 title: Text('removeFromLibrary'.translate()),
