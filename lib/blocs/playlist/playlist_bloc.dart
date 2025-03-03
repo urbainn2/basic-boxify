@@ -61,8 +61,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     InitialPlaylistState event,
     Emitter<PlaylistState> emit,
   ) async {
-    // Reset PlaylistState to its initial state
-    emit(PlaylistState.initial());
+    emit(state.copyWith(status: PlaylistStatus.initial));
   }
 
   /// Loads the likedSongsPlaylist asynchronously.

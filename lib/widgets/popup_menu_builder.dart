@@ -86,7 +86,10 @@ class PopupMenuBuilder {
       onTap: () {
         final userBloc = context.read<UserBloc>();
         final libraryBloc = context.read<LibraryBloc>();
-        if (UserHelper.isLoggedInOrReroute(userBloc.state, context)) {
+        if (userBloc.state.user.isAnonymous) {
+          ScaffoldMessenger.of(context).showSnackBar(buildSnackbar(
+              'Please login to remove playlist from your library'));
+        } else {
           libraryBloc.add(
               RemovePlaylist(playlist: playlist, user: userBloc.state.user));
         }

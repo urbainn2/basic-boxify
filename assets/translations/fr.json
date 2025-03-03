@@ -148,6 +148,5 @@
     "confirmDelete": "Supprimer",
     "connectToDiscord": "Se connecter à Discord.",
     "logout": "Déconnexion",
-    "userId": "Identifiant de l'utilisateur",
-    "youMustBeLoggedIn": "Vous devez être connecté pour faire ça."
+    "userId": "Identifiant de l'utilisateur"
 }
