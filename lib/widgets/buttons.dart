@@ -266,7 +266,7 @@ class LogOutButton extends StatelessWidget {
 
         // Reset player state before logging out
         context.read<PlayerBloc>().add(PlayerReset());
-        
+
         context.read<AuthBloc>().add(AuthLogoutRequested());
 
         GoRouter.of(context).go(
@@ -1218,6 +1218,11 @@ class ToggleFollowUnfollowButton extends StatelessWidget {
     final playlistBloc = context.read<PlaylistBloc>();
     final userBloc = context.read<UserBloc>();
     final playlist = playlistBloc.state.viewedPlaylist!;
+
+    // Do not display the button if the user isn't logged in
+    if (userBloc.state.user.isAnonymous) {
+      return Container();
+    }
 
     /// Now I'm worried this will mess up weezify button update because it's not
     /// listening to the bloc

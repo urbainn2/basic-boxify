@@ -67,7 +67,7 @@ class PopupMenuActions {
         // if (deletePlaylist == true)
         if (removeTrackFromPlaylist == true)
           PopupMenuBuilder.buildRemoveTrackFromPlaylistPopupMenuItem(
-              context, playlist!, 0),
+              context, playlist, 0),
         // if (stopFollowing == true)
       ],
       elevation: 8,
@@ -173,7 +173,7 @@ class PopupMenuActions {
     final playlists = context.read<PlaylistBloc>().state.followedPlaylists;
     final playlistIds = playlists.map((playlist) => playlist.id).toList();
 
-    final isAnonymous = context.read<UserBloc>().state.user.id == '';
+    final userState = context.read<UserBloc>().state;
 
     playlistIds.contains(playlist.id)
         ? await showMenu(
@@ -183,10 +183,8 @@ class PopupMenuActions {
               PopupMenuBuilder.buildSharePopupMenuItem(playlist.id!, context),
               PopupMenuItem<String>(
                 onTap: () {
-                  if (isAnonymous) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        buildSnackbar('pleaseLoginToSave'.translate()));
-                  } else {
+                  // Check if the user is logged in.
+                  if (UserHelper.isLoggedInOrReroute(userState, context)) {
                     context.read<LibraryBloc>().add(RemovePlaylist(
                         playlist: playlist,
                         user: context.read<UserBloc>().state.user));
@@ -217,10 +215,9 @@ class PopupMenuActions {
               ),
               PopupMenuItem<String>(
                 onTap: () {
-                  if (isAnonymous) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        buildSnackbar('pleaseLoginToSave'.translate()));
-                  } else {
+                  if (UserHelper.isLoggedInOrReroute(userState, context,
+                      snackbarMessage: 'pleaseLoginToSave'.translate())) {
+                    // The user is logged in. Save the playlist to the library.
                     context.read<LibraryBloc>().add(AddPlaylistToLibrary(
                         playlistId: playlist.id!,
                         user: context.read<UserBloc>().state.user));
