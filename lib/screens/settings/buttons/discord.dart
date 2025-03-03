@@ -50,7 +50,7 @@ class DiscordFormField extends StatelessWidget {
           border: const OutlineInputBorder(),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Core.appColor.focusBorder,
+              color: Core.appColor.focusedBorder,
               width: 2.0
             ),
           ),

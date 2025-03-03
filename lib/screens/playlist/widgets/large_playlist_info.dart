@@ -97,11 +97,11 @@ class _LargePlaylistInfoState extends State<LargePlaylistInfo>
                     child: TextFormField(
                       // initialValue: titleController.text,
                       controller: titleController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         border: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white, // couldn't use Core in const
+                            color: Core.appColor.focusedBorder,
                             width: 2.0
                           ),
                         ),
@@ -116,11 +116,11 @@ class _LargePlaylistInfoState extends State<LargePlaylistInfo>
                     child: TextFormField(
                       // initialValue: descriptionController.text,
                       controller: descriptionController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white, // couldn't use core in const
+                            color: Core.appColor.focusedBorder, 
                             width: 2.0
                           ),
                         ),

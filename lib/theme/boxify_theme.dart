@@ -50,7 +50,7 @@ class BoxifyTheme {
       inputDecorationTheme: InputDecorationTheme(
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: Core.appColor.focusBorder, 
+            color: Core.appColor.focusedBorder, 
             width: 2.0
           ),
         ),
