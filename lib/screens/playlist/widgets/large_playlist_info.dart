@@ -97,8 +97,14 @@ class _LargePlaylistInfoState extends State<LargePlaylistInfo>
                     child: TextFormField(
                       // initialValue: titleController.text,
                       controller: titleController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Core.appColor.focusedBorder,
+                            width: 2.0
+                          ),
+                        ),
                         // hintText: state.viewedPlaylist!.name,
                       ),
                     ),
@@ -110,8 +116,14 @@ class _LargePlaylistInfoState extends State<LargePlaylistInfo>
                     child: TextFormField(
                       // initialValue: descriptionController.text,
                       controller: descriptionController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Core.appColor.focusedBorder, 
+                            width: 2.0
+                          ),
+                        ),
                         hintText: 'Add an optional description',
                       ),
                     ),
@@ -303,3 +315,4 @@ class _LargePlaylistInfoState extends State<LargePlaylistInfo>
     );
   }
 }
+
