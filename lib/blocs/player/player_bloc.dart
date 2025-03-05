@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 
 import 'package:boxify/app_core.dart';
-import 'package:boxify/services/playback_debug_logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -50,10 +49,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         super(MyPlayerState.initial(
           player: audioPlayer,
         )) {
-    // Initialize debug logger
-    PlaybackDebugLogger.init();
-    PlaybackDebugLogger.debug('PlayerBloc initialized');
-
     on<PlayerReset>(_onPlayerReset);
     on<StartPlayback>(_onStartPlayback);
     on<LoadPlayer>(_onLoadPlayer);
@@ -79,8 +74,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
                          (_lastPlayingState != null && _lastPlayingState != _audioPlayer.playing);
         
         if (needsSave) {
-          PlaybackDebugLogger.debug(
-              'Saving state on playback event: playing=${_audioPlayer.playing}, processingState=${event.processingState}');
           _savePlaybackState(_audioPlayer.position);
         }
         
@@ -207,12 +200,10 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
 
     try {
       // Try to restore state first
-      PlaybackDebugLogger.debug('Attempting to restore state before loading new tracks');
       await _restorePlaybackState();
       
       // If restoration didn't work (no state or empty queue), use provided tracks
       if (state.queue.isEmpty) {
-        PlaybackDebugLogger.debug('No saved state found or empty queue, using provided tracks');
         await _setAudioSource(event.tracks);
         emit(state.copyWith(
           queue: event.tracks,
@@ -361,22 +352,22 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   Future<void> _savePlaybackState(Duration position) async {
     // Only save state if we have a valid queue and track - don't check playing state
     if (state.queue.isEmpty || state.player.currentIndex == null) {
-      PlaybackDebugLogger.debug('Cannot save state: queueEmpty=${state.queue.isEmpty}, currentIndex=${state.player.currentIndex}');
+      logger.d('Cannot save state: queueEmpty=${state.queue.isEmpty}, currentIndex=${state.player.currentIndex}');
       return;
     }
 
     if (state.player.currentIndex! >= state.queue.length) {
-      PlaybackDebugLogger.debug('Cannot save state: invalid current index ${state.player.currentIndex}');
+      logger.d('Cannot save state: invalid current index ${state.player.currentIndex}');
       return;
     }
 
     final currentTrack = state.queue[state.player.currentIndex!];
     if (currentTrack.uuid == null) {
-      PlaybackDebugLogger.debug('Cannot save state: track has no UUID');
+      logger.d('Cannot save state: track has no UUID');
       return;
     }
 
-    PlaybackDebugLogger.debug('Saving state for track: ${currentTrack.displayTitle} at position ${position.inSeconds}s');
+    logger.d('Saving state for track: ${currentTrack.displayTitle} at position ${position.inSeconds}s');
 
     // Save locally in bloc state
     emit(state.copyWith(
@@ -388,7 +379,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        PlaybackDebugLogger.debug('Saving to Firestore for user ${user.uid}');
+        logger.d('Saving to Firestore for user ${user.uid}');
         
         // Save full queue data for proper restoration
         final queueData = state.queue.map((track) => {
@@ -410,10 +401,10 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
           'currentIndex': state.player.currentIndex,
           'queue': queueData,
         });
-        PlaybackDebugLogger.debug('Successfully saved state to Firestore');
+        logger.d('Successfully saved state to Firestore');
       }
     } catch (e) {
-      PlaybackDebugLogger.error('Error saving to Firestore', e);
+      logger.e('Error saving to Firestore: $e');
     }
   }
 
@@ -421,13 +412,13 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        PlaybackDebugLogger.debug('No user logged in, cannot restore state');
+        logger.d('No user logged in, cannot restore state');
         return;
       }
 
       final doc = await _firestore.collection('playback_states').doc(user.uid).get();
       if (!doc.exists) {
-        PlaybackDebugLogger.debug('No saved state found in Firestore');
+        logger.d('No saved state found in Firestore');
         return;
       }
 
@@ -447,7 +438,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         )).toList();
 
         if (restoredTracks.isEmpty) {
-          PlaybackDebugLogger.debug('Restored queue is empty');
+          logger.d('Restored queue is empty');
           return;
         }
 
@@ -457,7 +448,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         final trackIndex = restoredTracks.indexWhere((t) => t.uuid == trackId);
         
         if (trackIndex >= 0) {
-          PlaybackDebugLogger.debug('Restoring queue and seeking to saved track');
+          logger.d('Restoring queue and seeking to saved track');
           await _setAudioSource(restoredTracks);
           await state.player.seek(position, index: trackIndex);
           
@@ -467,11 +458,11 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
             savedTrack: restoredTracks[trackIndex],
           ));
           
-          PlaybackDebugLogger.debug('State restored successfully');
+          logger.d('State restored successfully');
         }
       }
     } catch (e) {
-      PlaybackDebugLogger.error('Error restoring playback state', e);
+      logger.e('Error restoring playback state: $e');
     }
   }
 }
