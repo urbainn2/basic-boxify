@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:boxify/app_core.dart';
+import 'package:boxify/enums/load_status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 // ignore: depend_on_referenced_packages
@@ -11,6 +12,7 @@ part 'playlist_state.dart';
 
 class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
   final AuthBloc _authBloc;
+  final TrackBloc _trackBloc;
 
   final PlaylistRepository _playlistRepository;
   final UserRepository _userRepository;
@@ -19,6 +21,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
 
   PlaylistBloc({
     required AuthBloc authBloc,
+    required TrackBloc trackBloc,
     required UserRepository userRepository,
     required TrackRepository trackRepository,
     required PlaylistRepository playlistRepository,
@@ -26,6 +29,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     required StorageRepository storageRepository,
     required BundleRepository bundleRepository,
   })  : _authBloc = authBloc,
+        _trackBloc = trackBloc,
         _playlistRepository = playlistRepository,
         _userRepository = userRepository,
         _playlistHelper = PlaylistHelper(),
@@ -203,7 +207,6 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     );
   }
 
-// For RiverTunes
   List<Playlist> filterPlaylistsByRole(
       List<String>? roles, List<Playlist> playlists) {
     if (!roles!.contains('collaborator')) {
@@ -380,15 +383,20 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     }
     emit(
       state.copyWith(
+        // Set viewed playlist before it has loaded so that the UI can show playlist info while it loads
+        viewedPlaylist: event.playlist,
         status: PlaylistStatus.viewedPlaylistLoading,
       ),
     );
     try {
-      emit(
-        state.copyWith(
-            viewedPlaylist: event.playlist,
-            status: PlaylistStatus.viewedPlaylistLoaded),
-      );
+      // If tracks have not been loaded, wait for them to be loaded and ready
+      if (_trackBloc.state.tracksLoadStatus != LoadStatus.loaded) {
+        await _trackBloc.stream.firstWhere(
+            (trackState) => trackState.tracksLoadStatus == LoadStatus.loaded);
+      }
+
+      // Signal that the playlist has been loaded
+      emit(state.copyWith(status: PlaylistStatus.viewedPlaylistLoaded));
     } catch (err, s) {
       logger.e('error in _selectPlaylist: $err\n$s');
       emit(

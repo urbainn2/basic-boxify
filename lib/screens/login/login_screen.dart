@@ -105,7 +105,7 @@ class LoginScreen extends StatelessWidget {
       logger.i(
           'authUser pressed Maybe Later  and authUser.isAnonymouse so naving to home screen');
       context.read<LoginCubit>().reset();
-      GoRouter.of(context).go('/');
+      GoRouter.of(context).go('/library');
     }
 
     /// USER PRESSED 'LOG IN'
@@ -163,7 +163,7 @@ class LoginScreen extends StatelessWidget {
 
         /// They didnt enter anything into the URL bar
         else {
-          GoRouter.of(context).go('/');
+          GoRouter.of(context).go('/library');
           // context.read<LoginCubit>().reset();
         }
       }
@@ -231,6 +231,8 @@ class LoginScreen extends StatelessWidget {
           final trimmedValue = value?.trim() ?? '';
           return !trimmedValue.contains('@') ? 'emailError'.translate() : null;
         },
+        autofillHints: const [AutofillHints.email],
+        keyboardType: TextInputType.emailAddress,
       ),
       sizedBox16,
       TextFormField(
@@ -239,6 +241,8 @@ class LoginScreen extends StatelessWidget {
         onChanged: (value) => context.read<LoginCubit>().passwordChanged(value),
         validator: (value) =>
             value!.length < 6 ? 'passwordError'.translate() : null,
+        autofillHints: const [AutofillHints.password],
+        keyboardType: TextInputType.visiblePassword,
       ),
       _buildTogglePasswordButton(context, state),
       sizedBox28,

@@ -13,9 +13,10 @@ class SearchState extends Equatable {
   final Failure failure;
   int searchTypeIndex; // Player Search: 0 for tracks, 1 for playlists, 2 for artists
   List<Track> searchResultsTracks; // or List<Track>?
-  String query;
   List<Playlist> searchResultsPlaylists;
   List<User> searchResultsUsers;
+  String query;
+  String pendingQuery; // Pending query (while tracks are loading)
 
   SearchState({
     required this.status,
@@ -25,6 +26,7 @@ class SearchState extends Equatable {
     required this.searchResultsPlaylists,
     required this.searchResultsUsers,
     this.query = '',
+    this.pendingQuery = '',
   });
 
   factory SearchState.initial() {
@@ -36,6 +38,7 @@ class SearchState extends Equatable {
       searchResultsPlaylists: const [],
       searchResultsUsers: const [],
       query: '',
+      pendingQuery: 'EMPTY',
     );
   }
 
@@ -47,7 +50,8 @@ class SearchState extends Equatable {
         searchResultsTracks,
         searchResultsPlaylists,
         searchResultsUsers,
-        query
+        query,
+        pendingQuery
       ];
 
   SearchState copyWith({
@@ -58,6 +62,7 @@ class SearchState extends Equatable {
     List<Playlist>? searchResultsPlaylists,
     List<User>? searchResultsUsers,
     String? query,
+    String? pendingQuery,
   }) {
     return SearchState(
       status: status ?? this.status,
@@ -68,6 +73,7 @@ class SearchState extends Equatable {
           searchResultsPlaylists ?? this.searchResultsPlaylists,
       searchResultsUsers: searchResultsUsers ?? this.searchResultsUsers,
       query: query ?? this.query,
+      pendingQuery: pendingQuery ?? this.pendingQuery,
     );
   }
 

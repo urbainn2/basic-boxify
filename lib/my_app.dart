@@ -1,4 +1,5 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/enums/load_status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -138,9 +139,19 @@ class MyApp extends StatelessWidget {
           audioPlayer: audioPlayer,
         ),
       ),
+      BlocProvider<TrackBloc>(
+        create: (context) => TrackBloc(
+          authBloc: context.read<AuthBloc>(),
+          userRepository: context.read<UserRepository>(),
+          trackRepository: context.read<TrackRepository>(),
+          storageRepository: context.read<StorageRepository>(),
+          metaDataRepository: context.read<MetaDataRepository>(),
+        ),
+      ),
       BlocProvider<PlaylistBloc>(
         create: (context) => PlaylistBloc(
           authBloc: context.read<AuthBloc>(),
+          trackBloc: context.read<TrackBloc>(),
           userRepository: context.read<UserRepository>(),
           trackRepository: context.read<TrackRepository>(),
           playlistRepository: context.read<PlaylistRepository>(),
@@ -181,15 +192,7 @@ class MyApp extends StatelessWidget {
           trackRepository: context.read<TrackRepository>(),
           metaDataRepository: context.read<MetaDataRepository>(),
           bundleRepository: context.read<BundleRepository>(),
-        ),
-      ),
-      BlocProvider<TrackBloc>(
-        create: (context) => TrackBloc(
-          authBloc: context.read<AuthBloc>(),
-          userRepository: context.read<UserRepository>(),
-          trackRepository: context.read<TrackRepository>(),
-          storageRepository: context.read<StorageRepository>(),
-          metaDataRepository: context.read<MetaDataRepository>(),
+          trackBloc: context.read<TrackBloc>(),
         ),
       ),
       Provider<PlaylistService>(
@@ -559,14 +562,13 @@ class MyApp extends StatelessWidget {
         listener: (context, state) {
           // logger.i('TrackBloc listener called with ${state.status}');
           final downloadBloc = context.read<DownloadBloc>();
-          final playerBloc = context.read<PlayerBloc>();
           // final playlistBloc = context.read<PlaylistBloc>();
           final trackBloc = context.read<TrackBloc>();
           final userBloc = context.read<UserBloc>();
+          final playerBloc = context.read<PlayerBloc>();
           final user = userBloc.state.user;
 
           /// Problem is the user is not yet loaded with the ratings. So we need to wait for the user to be loaded before we can map the ratings to the tracks.
-
           if ((trackBloc.state.status == TrackStatus.allTracksLoaded &&
               userBloc.state.status == UserStatus.loaded)) {
             logger.i(
@@ -590,39 +592,20 @@ class MyApp extends StatelessWidget {
               );
               // }
             }
-          } else if ((state.status == TrackStatus.ratingsMapped &&
-                  userBloc.state.status != UserStatus.updatedRating)
-              // &&
-
-              // /// If the user is loading a playlist from the url, then do not proceed
-              // playlistBloc.state.playlistIdPassedToUrl == null
-              ) {
-            final playlistBloc = context.read<PlaylistBloc>();
-            if (playlistBloc.state.status == PlaylistStatus.initial) {
-              final metaDataLoaded =
-                  context.read<MetaDataCubit>().state as MetaDataLoaded;
-
-              logger.i('loadAllPlaylists!');
-              playlistBloc.add(LoadAllPlaylists(
-                userId: user.id,
-                serverPlaylistsUpdated:
-                    metaDataLoaded.serverTimestamps['playlists'],
-              ));
-            }
-
-            // if (Core.app.type == AppType.basic) {
-            //   final tracks = trackBloc.state.allTracks;
-            //   final ratings = userBloc.state.ratings;
-            //   playlistBloc.add(
-            //     LoadUnratedPlaylist(
-            //         user: user, ratings: ratings, tracks: tracks),
-            //   );
-            // }
-
+          } else if (state.tracksLoadStatus == LoadStatus.loaded &&
+              playerBloc.state.status == PlayerStatus.initial) {
+            // Once tracks are loaded, initialize the player with the initial track
             final track = getInitialTrack(trackBloc, user);
             logger.i('SetDisplayedTracksWithTracks');
+
             if (track != null) {
-              trackBloc.add(SetDisplayedTracksWithTracks(tracks: [track]));
+              // Only set the displayed tracks if no playlist is being viewed
+              // This may happen if the user clicked on a playlist while tracks were being loaded
+              final playlistBloc = context.read<PlaylistBloc>();
+              if (playlistBloc.state.viewedPlaylist == null) {
+                trackBloc.add(SetDisplayedTracksWithTracks(tracks: [track]));
+              }
+
               logger.i('LoadPlayer!');
               playerBloc.add(
                 LoadPlayer([track]),
@@ -642,6 +625,7 @@ class MyApp extends StatelessWidget {
           final metaDataCubit = context.read<MetaDataCubit>();
           final playlistBloc = context.read<PlaylistBloc>();
           final settingsBloc = context.read<SettingsBloc>();
+          final trackBloc = context.read<TrackBloc>();
           final userBloc = context.read<UserBloc>();
           final user = userBloc.state.user;
 
@@ -650,40 +634,35 @@ class MyApp extends StatelessWidget {
               LoadSettings(user: user),
             ); // moved this up out of the block below
 
-            /// I'm trying to move loadalltracks down here so I have access to the user.
-            final trackBloc = context.read<TrackBloc>();
-            final serverUpdated = (metaDataCubit.state as MetaDataLoaded)
-                .serverTimestamps['tracks']!;
-            trackBloc.add(
-              LoadAllTracks(
-                serverUpdated: serverUpdated,
-                clearCache:
-                    (marketBloc.state.status == MarketStatus.bundlePurchased),
-                user: user,
-              ),
-            );
+            // Load all tracks asynchonously after the user is loaded.
+            // This prevents the user from having to wait for the tracks to load before accessing the UI
+            Future.microtask(() {
+              final serverUpdated = (metaDataCubit.state as MetaDataLoaded)
+                  .serverTimestamps['tracks']!;
+              trackBloc.add(
+                LoadAllTracks(
+                  serverUpdated: serverUpdated,
+                  clearCache:
+                      (marketBloc.state.status == MarketStatus.bundlePurchased),
+                  user: user,
+                ),
+              );
+            });
 
-            // if (trackBloc.state.status == TrackStatus.allTracksLoaded) {
-            //   logger.i('MapRatingsToTracks!');
+            // Load all playlists synchronously (for now, asynchonously later - TODO)
+            if (playlistBloc.state.status == PlaylistStatus.initial) {
+              final metaDataLoaded =
+                  context.read<MetaDataCubit>().state as MetaDataLoaded;
 
-            //   final ratings = userBloc.state.ratings;
+              logger.i('loadAllPlaylists!');
+              playlistBloc.add(LoadAllPlaylists(
+                userId: user.id,
+                serverPlaylistsUpdated:
+                    metaDataLoaded.serverTimestamps['playlists'],
+              ));
+            }
 
-            //   /// So yes, this in here twice, because there are 2 possible flows:
-            //   /// 1. The user is loaded after the tracks
-            //   /// 2. The tracks are loaded after the user
-            //   trackBloc.add(
-            //     MapRatingsToTracks(trackBloc.state.allTracks, ratings),
-            //   );
-            // }
-            // if (playlistBloc.state.status == PlaylistStatus.initial) {
-            //   final metaDataLoaded = metaDataCubit.state as MetaDataLoaded;
-            //   logger.i('loadAllPlaylists!');
-            //   playlistBloc.add(LoadAllPlaylists(
-            //     userId: user.id,
-            //     serverPlaylistsUpdated:
-            //         metaDataLoaded.serverTimestamps['playlists'],
-            //   ));
-            // }
+            // Load market
             if (Core.app.type == AppType.advanced) {
               // logger.i('loadMarket!');
               final marketBloc = context.read<MarketBloc>();

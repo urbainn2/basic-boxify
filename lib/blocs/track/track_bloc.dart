@@ -1,15 +1,13 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:bloc/bloc.dart';
 
 import 'package:boxify/app_core.dart';
+import 'package:boxify/enums/load_status.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:equatable/equatable.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'track_event.dart';
 part 'track_state.dart';
@@ -104,7 +102,9 @@ class TrackBloc extends Bloc<TrackEvent, TrackState> {
   ) async {
     final start = DateTime.now();
     logger.i('_onLoadAllTracks');
-    emit(state.copyWith(status: TrackStatus.allTracksLoading));
+    emit(state.copyWith(
+        status: TrackStatus.allTracksLoading,
+        tracksLoadStatus: LoadStatus.loading));
 
     if (event.clearCache == true) {
       await _cacheHelper
@@ -120,13 +120,14 @@ class TrackBloc extends Bloc<TrackEvent, TrackState> {
     logRunTime(start2, 'cacheHelper.getTracks');
 
     // If there are cached tracks, use them
-    if (cachedTracks != null && cachedTracks.isNotEmpty) {  
+    if (cachedTracks != null && cachedTracks.isNotEmpty) {
       logger.i('there are cachedTracks!');
       final userId = _authBloc.state.user!.uid;
       _trackHelper.updateTrackLinksBulk(cachedTracks, userId);
       emit(state.copyWith(
         allTracks: cachedTracks,
         status: TrackStatus.allTracksLoaded,
+        tracksLoadStatus: LoadStatus.loaded,
       ));
       logRunTime(start, 'load all tracks');
       return;
@@ -161,6 +162,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackState> {
     emit(state.copyWith(
       allTracks: tracks,
       status: TrackStatus.allTracksLoaded,
+      tracksLoadStatus: LoadStatus.loaded,
     ));
     // logger.f('Time to load all tracks: ${DateTime.now().difference(start)}');
     logRunTime(start, 'load all tracks');
@@ -292,7 +294,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackState> {
       final displayedTracksPlayable = event.tracks.where((track) {
         return track.available == true;
       }).toList();
-      
+
       emit(
         state.copyWith(
             displayedTracks: event.tracks,

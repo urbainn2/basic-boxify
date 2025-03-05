@@ -5,14 +5,20 @@ allprojects {
     }
 }
 
-rootProject.buildDir = "../build"
+// This section sets the build directory for the rootProject to build.
+rootProject.buildDir = '../build'
+
+// Here we are defining user-defined configurations for all sub-projects.
 subprojects {
+    // This gives each subproject a separate space under rootProject's build directory.
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(":app")
+    // Establishes a dependency that says other projects should evaluate after your ':app' module is evaluated.
+    project.evaluationDependsOn(':app')
 }
 
+// A task named 'clean' that, when run, will delete the build directory.
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+

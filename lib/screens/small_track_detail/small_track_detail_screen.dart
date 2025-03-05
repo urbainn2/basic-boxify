@@ -16,17 +16,13 @@ class PlayerSmallTrackDetailScreen extends StatefulWidget {
 
 class _PlayerSmallTrackDetailScreenState<Track>
     extends State<PlayerSmallTrackDetailScreen> {
-  // Track backgroundColor, used for the gradient
-  Color _backgroundColor = Colors.grey;
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PlayerBloc, MyPlayerState>(
       builder: (context, state) {
-        final playerBlocState = context.read<PlayerBloc>().state;
+        final playerBloc = context.read<PlayerBloc>();
         final playlistBloc = context.read<PlaylistBloc>();
-        final track =
-            playerBlocState.queue[playerBlocState.player.currentIndex!];
+        final track = state.queue[state.player.currentIndex!];
 
         final enquedPlaylist = playlistBloc.state.enquedPlaylist;
 
@@ -49,7 +45,10 @@ class _PlayerSmallTrackDetailScreenState<Track>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  _backgroundColor,
+                  // Ensure the background color (extracted from track image) is neither too light nor too dark
+                  ColorHelper.ensureWithinRangeHsl(state.backgroundColor,
+                          minLightness: 0.25, maxLightness: 0.7)
+                      .toColor(),
                   Core.appColor.widgetBackgroundColor,
                 ],
               ),
@@ -80,14 +79,10 @@ class _PlayerSmallTrackDetailScreenState<Track>
                           // Make sure widget is mounted before setting state
                           // This may happen if the user closes the screen before the image is loaded
                           if (!mounted) return;
-                          setState(() {
-                            // Update the current background color every time a new image is loaded
-                            // Also ensure that the background isnt too light or too dark
-                            _backgroundColor = ColorHelper.ensureWithinRange(
-                                color,
-                                minLightness: 0.25,
-                                maxLightness: 0.7);
-                          });
+
+                          // Update track's backgroundColor
+                          playerBloc.add(UpdateTrackBackgroundColor(
+                              backgroundColor: HSLColor.fromColor(color)));
                         },
                       ),
                       const SizedBox(height: 20),
@@ -100,7 +95,7 @@ class _PlayerSmallTrackDetailScreenState<Track>
                       ),
                       const SizedBox(height: 10),
                       LyricsWidget(
-                          track: track, backgroundColor: _backgroundColor),
+                          track: track, backgroundColor: state.backgroundColor),
                     ],
                   ),
                 ),

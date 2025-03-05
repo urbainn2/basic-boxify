@@ -1,4 +1,5 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/helpers/color_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +34,8 @@ class LyricsScreen extends StatelessWidget {
           // but we should extract this color from the image directly (like in small_track_detail_screen.dart)
           // the value should probably be inherited from parents?
           child: LyricsWidget(
-              track: track, backgroundColor: track.backgroundColor),
+              track: track,
+              backgroundColor: HSLColor.fromColor(track.backgroundColor)),
         ),
       ],
     );
@@ -46,7 +48,7 @@ class LyricsWidget extends StatelessWidget {
       : super(key: key);
 
   final Track track;
-  final Color backgroundColor;
+  final HSLColor backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,11 @@ class LyricsWidget extends StatelessWidget {
     return Container(
       // give it rounded corners
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: backgroundColor),
+        borderRadius: BorderRadius.circular(10),
+        color: ColorHelper.ensureWithinRangeHsl(backgroundColor,
+                minLightness: 0.35, maxLightness: 0.6)
+            .toColor(),
+      ),
 
       child: Padding(
         padding: padding,

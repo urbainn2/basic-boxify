@@ -273,10 +273,11 @@ class Playlist extends Equatable {
   }
 
   static List<String> getRoles(Map<String, dynamic> data) {
+    // First check if roles are already stored in Firestore
     if (data.containsKey('roles') &&
         data['roles'] is List &&
         data['roles'].isNotEmpty) {
-      return data['roles'];
+      return List<String>.from(data['roles']);
     } else if (data.containsKey('name')) {
       List<String> roles = [];
       if (data['name'].contains(Core.app.collaboratorsPath)) {
@@ -396,10 +397,12 @@ class Playlist extends Equatable {
       'total': total,
       'tracks': trackIds,
       'updated': updated?.millisecondsSinceEpoch,
-      'created': created?.millisecondsSinceEpoch,
       'followerCount': followerCount,
       'score': score,
-      'sortScore': sortScore,
+      'isDeleteable': isDeleteable,
+      'isRemoveable': isRemoveable,
+      'roles': roles,  // Add roles to the JSON output
+      'created': created?.millisecondsSinceEpoch,
     };
     return json;
   }

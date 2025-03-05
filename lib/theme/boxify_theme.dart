@@ -32,6 +32,9 @@ class BoxifyTheme {
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(color: Core.appColor.text),
       ),
+      snackBarTheme: SnackBarThemeData(
+        actionTextColor: Core.appColor.text,
+      ),
     );
   }
 }

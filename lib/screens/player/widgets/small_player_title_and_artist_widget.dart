@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:boxify/app_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Used in [SmallPlayer]
 class SmallPlayerTitleAndArtistWidget extends StatelessWidget {
@@ -16,10 +15,6 @@ class SmallPlayerTitleAndArtistWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playerBloc = BlocProvider.of<PlayerBloc>(context);
-    final state = playerBloc.state;
-    final status = state.status;
-
     final imageSize = 50;
     final buttonSize = 44;
     final width = MediaQuery.of(context).size.width - (imageSize + buttonSize);

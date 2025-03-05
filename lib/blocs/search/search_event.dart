@@ -22,6 +22,12 @@ class ChangeQuery extends SearchEvent {
   List<Object?> get props => [query];
 }
 
+class ExecutePendingSearch extends SearchEvent {
+  const ExecutePendingSearch();
+  @override
+  List<Object?> get props => [];
+}
+
 class ClearSearch extends SearchEvent {
   const ClearSearch();
   @override

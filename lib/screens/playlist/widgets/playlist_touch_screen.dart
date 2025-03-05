@@ -1,4 +1,5 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/screens/playlist/widgets/track_touch_row_skeleton.dart';
 import 'package:charcode/charcode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,16 +7,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'small_playlist_tools.dart';
 
 class PlaylistTouchScreen extends StatefulWidget {
-  const PlaylistTouchScreen({
-    super.key,
-    required this.playlist,
-    required this.containsDownloaded,
-    required this.containsAvailable,
-  });
+  const PlaylistTouchScreen(
+      {super.key,
+      required this.playlist,
+      required this.containsDownloaded,
+      required this.containsAvailable,
+      required this.isPlaylistLoaded});
 
   final Playlist playlist;
   final bool containsDownloaded;
   final bool containsAvailable;
+  final bool isPlaylistLoaded;
 
   @override
   State<PlaylistTouchScreen> createState() => _PlaylistTouchScreenState();
@@ -70,6 +72,7 @@ class _PlaylistTouchScreenState extends State<PlaylistTouchScreen> {
             SmallPlaylistTools(
               containsDownloaded: containsDownloaded,
               containsAvailable: containsAvailable,
+              isPlaylistLoaded: widget.isPlaylistLoaded,
             ),
 
             // TrackTouchRowS
@@ -79,53 +82,64 @@ class _PlaylistTouchScreenState extends State<PlaylistTouchScreen> {
                 /// so that we can highlight the currently playing track.
                 var indexWithinPlayableTracks = -1;
                 return
+                    // Are tracks in the playlist loaded?
+                    widget.isPlaylistLoaded
+                        ? state.displayedTracks.isEmpty && // Is playlist empty?
+                                playlist.id == Core.app.newReleasesPlaylistId
+                            ? CenteredText('noNewReleasesMessage'.translate())
+                            : state.displayedTracks.isEmpty
+                                ? CenteredText('noTracksMessage'.translate())
+                                : ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: state.displayedTracks.length,
+                                    itemBuilder: (context, index) {
+                                      final track =
+                                          state.displayedTracks[index];
 
-                    ///  FINAL CHECK TO SEE IF YOU CAN DISPLAY TrackTouchRowS
-                    state.displayedTracks.isEmpty &&
-                            playlist.id == Core.app.newReleasesPlaylistId
-                        ? CenteredText('noNewReleasesMessage'.translate())
-                        : state.displayedTracks.isEmpty
-                            ? CenteredText('noTracksMessage'.translate())
-                            : ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: state.displayedTracks.length,
-                                itemBuilder: (context, index) {
-                                  final track = state.displayedTracks[index];
-
-                                  if (track.available!) {
-                                    indexWithinPlayableTracks++;
-                                  }
-
-                                  return TrackTouchRow(
-                                    i: index,
-                                    indexWithinPlayableTracks:
-                                        indexWithinPlayableTracks,
-                                    track: track,
-                                    playlist: playlist,
-                                    onTap: () async {
-                                      final canPlay = context
-                                          .read<PlayerService>()
-                                          .handlePlay(
-                                            tracks: state.displayedTracks,
-                                            index: index,
-                                            playlist: playlist,
-                                          );
-                                      if (!canPlay) {
-                                        showTrackSnack(
-                                            context, track.bundleName!);
+                                      if (track.available!) {
+                                        indexWithinPlayableTracks++;
                                       }
+
+                                      return TrackTouchRow(
+                                        i: index,
+                                        indexWithinPlayableTracks:
+                                            indexWithinPlayableTracks,
+                                        track: track,
+                                        playlist: playlist,
+                                        onTap: () async {
+                                          final canPlay = context
+                                              .read<PlayerService>()
+                                              .handlePlay(
+                                                tracks: state.displayedTracks,
+                                                index: index,
+                                                playlist: playlist,
+                                              );
+                                          if (!canPlay) {
+                                            showTrackSnack(
+                                                context, track.bundleName!);
+                                          }
+                                        },
+                                        showBundleArtistText: true,
+                                        showOverflowScreen: true,
+                                      );
                                     },
-                                    showBundleArtistText: true,
-                                    showOverflowScreen: true,
-                                  );
-                                },
-                              );
+                                  )
+                        : ListView.builder(
+                            // Tracks in the playlist are not loaded; display skeletonized tracks
+                            itemCount: 6,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return TrackTouchRowSkeleton();
+                            });
               },
             ),
 
             /// LET'S ADD SOMETHING TO YOUR PLAYLIST
             if (Core.app.type == AppType.advanced &&
+                widget.isPlaylistLoaded &&
                 isOwnPlaylist(playlist, context.read<UserBloc>().state.user))
               LetsAddSomethingTouch()
             else if (playlist.type == PlaylistType.single) ...[
@@ -274,26 +288,46 @@ class PlaylistImage extends StatelessWidget {
 
 /// Returns a [Row] with a [ShuffleButton] and a [PlayButtonInCircle]
 class SmallPlaylistPlayerControls extends StatelessWidget {
-  const SmallPlaylistPlayerControls({super.key});
+  const SmallPlaylistPlayerControls(
+      {super.key, required this.isPlaylistLoaded});
+
+  final bool isPlaylistLoaded;
 
   @override
   Widget build(BuildContext context) {
     final playlistBloc = context.read<PlaylistBloc>();
     final trackBloc = context.read<TrackBloc>();
 
-    if (trackBloc.state.displayedTracks.isEmpty) {
+    if (trackBloc.state.displayedTracks.isEmpty && isPlaylistLoaded) {
       return Container();
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         ShuffleButton(),
-        // PLAY
-        PlayButtonInCircle(
-          playlist: playlistBloc.state.viewedPlaylist,
-          size: 60,
-          type: CircleButtonType.playlist,
-        ),
+        isPlaylistLoaded
+            ? PlayButtonInCircle(
+                // PLAY button
+                playlist: playlistBloc.state.viewedPlaylist,
+                size: 60,
+                type: CircleButtonType.playlist,
+              )
+            : Container(
+                // Loading indicator
+                height: 50,
+                width: 50,
+                padding: const EdgeInsets.all(13),
+                margin: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Core.appColor.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Core.appColor.primaryColor,
+                  ),
+                ),
+              ),
       ],
     );
   }

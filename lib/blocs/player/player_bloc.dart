@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:boxify/app_core.dart';
 import 'package:boxify/services/playback_debug_logger.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -61,6 +62,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     on<SeekToPrevious>(_onSeekToPrevious);
     on<SeekToIndex>(_onSeekToIndex);
     on<NotifyAutoAdvance>(_onNotifyAutoAdvance);
+    on<UpdateTrackBackgroundColor>(_onUpdateTrackBackgroundColor);
 
     _discontinuitySubscription =
         _audioPlayer.positionDiscontinuityStream.listen((discontinuity) {
@@ -312,7 +314,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
                     : track.downloadedUrl;
 
             // url = url!.split('?')[0]; // remove query params from url
-            // logger.i(url);
+            logger.i(url);
             // String cleanedUrl = cleanUrlKeepRaw();
             // logger.d(cleanedUrl);
 
@@ -345,6 +347,15 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     } catch (e) {
       logger.e('Error setting audio source: $e');
     }
+  }
+
+  /// Updates the background color of the player based on the track's cover image.
+  Future<void> _onUpdateTrackBackgroundColor(
+    UpdateTrackBackgroundColor event,
+    Emitter<MyPlayerState> emit,
+  ) async {
+    logger.i('_onUpdateTrackBackgroundColor');
+    emit(state.copyWith(backgroundColor: event.backgroundColor));
   }
 
   Future<void> _savePlaybackState(Duration position) async {
