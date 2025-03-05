@@ -46,9 +46,7 @@ class StarRating extends StatelessWidget {
               color: Core.appColor.primary,
             ),
             onRatingUpdate: (v) {
-              if (v > 0 &&
-                  UserHelper.isLoggedInOrReroute(state, context,
-                      'actionRateTracks'.translate(), Icons.star_rounded)) {
+              if (v > 0) {
                 // If we wanted to keep using the track.userRating, we would need to update it here, or somehow have this cascade down to the track.userRating
                 context
                     .read<UserBloc>()
@@ -66,7 +64,8 @@ class StarRating extends StatelessWidget {
                       onTap: () {
                         // Show the 'you must be logged in' dialog
                         UserHelper.isLoggedInOrReroute(state, context,
-                            'actionRateTracks'.translate(), Icons.star_rounded);
+                            'actionRateTracks'.translate(), Icons.star_rounded,
+                            useRootNavigator: false);
                       },
                       child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 2),
