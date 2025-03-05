@@ -67,7 +67,7 @@ class PopupMenuActions {
         // if (deletePlaylist == true)
         if (removeTrackFromPlaylist == true)
           PopupMenuBuilder.buildRemoveTrackFromPlaylistPopupMenuItem(
-              context, playlist, 0),
+              context, playlist!, 0),
         // if (stopFollowing == true)
       ],
       elevation: 8,
@@ -173,7 +173,7 @@ class PopupMenuActions {
     final playlists = context.read<PlaylistBloc>().state.followedPlaylists;
     final playlistIds = playlists.map((playlist) => playlist.id).toList();
 
-    final userState = context.read<UserBloc>().state;
+    final isAnonymous = context.read<UserBloc>().state.user.id == '';
 
     playlistIds.contains(playlist.id)
         ? await showMenu(
