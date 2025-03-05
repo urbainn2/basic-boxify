@@ -145,5 +145,12 @@
     "yourDownloadsWontBeRemoved": "Your downloads won't be removed.",
     "youHaventRatedYet": "You Haven't Rated These Songs Yet",
     "yourPlaylists": "Your playlists",
-    "youMustBeLoggedIn": "You must be logged in to do that."
+    "mustLogInDialogTitle": "Ready to {actionName}?",
+    "mustLogInDialogMessage": "Create an account or log in to rate tracks, create playlists, and more.",
+    "actionRateTracks": "rate tracks",
+    "actionCreatePlaylists": "create playlists",
+    "actionManageLibrary": "manage your library",
+    "actionBuyBundles": "buy bundles",
+    "logInOrSignUp": "LOG IN OR SIGN UP",
+    "notNow": "NOT NOW"
 }

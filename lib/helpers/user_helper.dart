@@ -1,4 +1,5 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/widgets/must_login_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -6,22 +7,35 @@ import 'package:provider/provider.dart';
 class UserHelper {
   UserHelper();
 
-  /// Returns true if the user is logged in, or reroutes to the login screen if not (and return false).
-  /// Will also show a snackbar if the user is not logged in. If no snackbar message is provided, it will show a generic message.
+  /// Returns true if the user is logged in, or prompts the user to log in if not (and returns false).
+  /// The action name passed as a parameter is displayed in the dialog (e.g. 'rate tracks', 'create playlists', etc..).
   static bool isLoggedInOrReroute(UserState userState, BuildContext context,
       {String? snackbarMessage}) {
     // Is the user logged in?
     if (userState.user.isAnonymous) {
-      // Reroute to the login screen.
-      GoRouter.of(context).go('/login');
+      // Show 'you must be logged in' dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return LoginRequiredDialog(
+            icon: Icons.music_note,
+            action: 'test',
+            onLogin: () {
+              // User has chosen to log in/sign up
+              // Reroute to the login screen.
+              GoRouter.of(context).go('/login');
 
-      /// If you don't log out first, the authStatus will never be unauthenticated
-      /// and the resetting of the blocs will never be triggered in the myapp.authBloc listener
-      context.read<AuthBloc>().add(AuthLogoutRequested());
-
-      // Show a snackbar.
-      ScaffoldMessenger.of(context)
-          .showSnackBar(buildSnackbar('youMustBeLoggedIn'.translate()));
+              /// If you don't log out first, the authStatus will never be unauthenticated
+              /// and the resetting of the blocs will never be triggered in the myapp.authBloc listener
+              context.read<AuthBloc>().add(AuthLogoutRequested());
+            },
+            onCancel: () {
+              // User dismissed the dialog (clicked 'NOT NOW')
+              Navigator.of(context).pop();
+            },
+          );
+        },
+      );
 
       return false;
     }
