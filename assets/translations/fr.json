@@ -153,7 +153,7 @@
     "mustLogInDialogMessage": "Créez un compte ou connectez-vous pour noter des morceaux, créer des playlists et plus encore.",
     "actionRateTracks": "noter des morceaux",
     "actionCreatePlaylists": "créer des playlists",
-    "actionManageLibrary": "gérer votre bibliothèque",
+    "actionEditLibrary": "gérer votre bibliothèque",
     "actionBuyBundles": "acheter des packs",
     "logInOrSignUp": "SE CONNECTER OU S'INSCRIRE",
     "notNow": "PAS MAINTENANT"

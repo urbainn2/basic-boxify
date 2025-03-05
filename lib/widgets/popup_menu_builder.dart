@@ -86,7 +86,8 @@ class PopupMenuBuilder {
       onTap: () {
         final userBloc = context.read<UserBloc>();
         final libraryBloc = context.read<LibraryBloc>();
-        if (UserHelper.isLoggedInOrReroute(userBloc.state, context)) {
+        if (UserHelper.isLoggedInOrReroute(userBloc.state, context,
+            'actionEditLibrary'.translate(), Icons.playlist_remove)) {
           libraryBloc.add(
               RemovePlaylist(playlist: playlist, user: userBloc.state.user));
         }

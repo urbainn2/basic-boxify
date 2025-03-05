@@ -183,8 +183,10 @@ class PopupMenuActions {
               PopupMenuBuilder.buildSharePopupMenuItem(playlist.id!, context),
               PopupMenuItem<String>(
                 onTap: () {
-                  // Check if the user is logged in.
-                  if (UserHelper.isLoggedInOrReroute(userState, context)) {
+                  // Ensure that the user is logged in.
+                  if (UserHelper.isLoggedInOrReroute(userState, context,
+                      'actionEditLibrary'.translate(), Icons.playlist_remove)) {
+                    // The user is logged in. Remove the playlist from the library.
                     context.read<LibraryBloc>().add(RemovePlaylist(
                         playlist: playlist,
                         user: context.read<UserBloc>().state.user));
@@ -216,7 +218,7 @@ class PopupMenuActions {
               PopupMenuItem<String>(
                 onTap: () {
                   if (UserHelper.isLoggedInOrReroute(userState, context,
-                      snackbarMessage: 'pleaseLoginToSave'.translate())) {
+                      'actionManageLibrary'.translate(), Icons.playlist_add)) {
                     // The user is logged in. Save the playlist to the library.
                     context.read<LibraryBloc>().add(AddPlaylistToLibrary(
                         playlistId: playlist.id!,

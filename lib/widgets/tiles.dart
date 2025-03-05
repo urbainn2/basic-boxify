@@ -21,7 +21,8 @@ class AddTrackToPlaylistTile extends StatelessWidget {
         final userState = context.read<UserBloc>().state;
 
         // Ensure user is logged in
-        if (UserHelper.isLoggedInOrReroute(userState, context)) {
+        if (UserHelper.isLoggedInOrReroute(userState, context,
+            'actionCreatePlaylists'.translate(), Icons.playlist_add)) {
           // close the overflow screen
           context.pop();
 
@@ -505,7 +506,8 @@ class StopFollowingPlaylistTile extends StatelessWidget {
       title: Text('stopFollowing'.translate()),
       onTap: () {
         // Ensure user is logged in
-        if (UserHelper.isLoggedInOrReroute(userBloc.state, context)) {
+        if (UserHelper.isLoggedInOrReroute(userBloc.state, context,
+            'actionEditLibrary'.translate(), Icons.playlist_remove)) {
           libraryBloc.add(
             RemovePlaylist(
               playlist: playlist,
@@ -553,7 +555,8 @@ class ToggleAddRemovePlaylistFromYourLibraryTile extends StatelessWidget {
             ? ListTile(
                 onTap: () {
                   // Ensure user is logged in
-                  if (UserHelper.isLoggedInOrReroute(userBloc.state, context)) {
+                  if (UserHelper.isLoggedInOrReroute(userBloc.state, context,
+                      'actionEditLibrary'.translate(), Icons.playlist_add)) {
                     context.pop();
                     libraryBloc.add(AddPlaylistToLibrary(
                         playlistId: playlist.id!, user: userBloc.state.user));
@@ -567,7 +570,8 @@ class ToggleAddRemovePlaylistFromYourLibraryTile extends StatelessWidget {
             : ListTile(
                 onTap: () {
                   // Ensure user is logged in
-                  if (UserHelper.isLoggedInOrReroute(userBloc.state, context)) {
+                  if (UserHelper.isLoggedInOrReroute(userBloc.state, context,
+                      'actionEditLibrary'.translate(), Icons.playlist_remove)) {
                     context.pop();
                     libraryBloc.add(RemovePlaylist(
                         playlist: playlist, user: userBloc.state.user));

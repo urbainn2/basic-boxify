@@ -149,7 +149,7 @@
     "mustLogInDialogMessage": "Create an account or log in to rate tracks, create playlists, and more.",
     "actionRateTracks": "rate tracks",
     "actionCreatePlaylists": "create playlists",
-    "actionManageLibrary": "manage your library",
+    "actionEditLibrary": "manage your library",
     "actionBuyBundles": "buy bundles",
     "logInOrSignUp": "LOG IN OR SIGN UP",
     "notNow": "NOT NOW"

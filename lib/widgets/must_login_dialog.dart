@@ -10,15 +10,18 @@ class LoginRequiredDialog extends StatelessWidget {
   /// The icon to display in the dialog.
   final IconData icon;
 
+  // The callback to execute when the user chooses to log in or sign up.
   final VoidCallback onLogin;
-  final VoidCallback onCancel;
+
+  // The callback to execute when the user dismisses the dialog.
+  final VoidCallback onDismiss;
 
   const LoginRequiredDialog({
     super.key,
     required this.action,
     required this.icon,
     required this.onLogin,
-    required this.onCancel,
+    required this.onDismiss,
   });
 
   @override
@@ -55,7 +58,10 @@ class LoginRequiredDialog extends StatelessWidget {
           // Title text (with action name)
           Text(
             'mustLogInDialogTitle'.translate(namedArgs: {'actionName': action}),
-            style: Core.appStyle.medium,
+            // If the action name is long, use a slightly smaller font size
+            style: action.length > 18
+                ? Core.appStyle.medium.bold
+                : Core.appStyle.header,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -86,7 +92,7 @@ class LoginRequiredDialog extends StatelessWidget {
 
           // 'Not Now' button
           ElevatedButton(
-            onPressed: onLogin,
+            onPressed: onDismiss,
             style: ElevatedButton.styleFrom(
               minimumSize: const Size.fromHeight(50),
               shape: RoundedRectangleBorder(
