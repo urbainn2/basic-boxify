@@ -82,7 +82,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     });
   }
 
-  // Track the last playing state to detect play/pause
   bool? _lastPlayingState;
 
   @override
@@ -121,8 +120,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     }
     state.player.play();
     emit(state.copyWith(player: state.player, status: PlayerStatus.loaded));
-
-    // logger.i('done play ${state.player.currentIndex}');
   }
 
   Future<void> _onNotifyAutoAdvance(
