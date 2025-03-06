@@ -35,7 +35,7 @@ class LargeTitleAndArtist extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 4),
               child: HoverText(
-                text: track.artist ?? 'Unknown Artist', // Added null safety check
+                text: track.artist ?? 'Unknown Artist',
                 fontSize: 10,
                 underlineOnHover: true,
                 changeColorOnHover: false,
