@@ -22,8 +22,11 @@ class BundleManager {
     }
   }
 
-  // Get bundle by ID (O(1) access)
-  Bundle? getBundle(String id) {
-    return _bundles[id];
+  // Get bundle by ID
+  Bundle? getBundle(String? id) {
+    if (_bundles.containsKey(id)) {
+      return _bundles[id];
+    }
+    return null;
   }
 }

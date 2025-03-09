@@ -1,4 +1,5 @@
 import 'package:boxify/app_core.dart';
+import 'package:boxify/services/bundles_manager.dart';
 import 'package:flutter/material.dart';
 
 const fireUrl = "https://www.dropbox.com/s/wfycymz8txb9zcp/fire.jpg?raw=1";
@@ -57,23 +58,31 @@ String? assignPlaylistImageFilenameToTrack(Track track, Playlist? playlist) {
 /// then use the playlist imageUrl.
 /// For By The People playlist, never use the playlist image because we want to use the
 /// individual track images instead. They have the user's profileImageUrl.
-String? assignPlaylistImageUrlToTrack(Track track, Playlist? playlist,
-    {Bundle? bundle}) {
-  if (bundle != null && bundle.image != null) {
-    // Return bundle image
-    return bundle.image;
-  } else if (track.imageUrl != null &&
+String? assignPlaylistImageUrlToTrack(Track track, Playlist? playlist) {
+  if (track.imageUrl != null &&
       track.imageUrl != '' &&
       track.imageUrl != Core.app.defaultImageUrl) {
     return track.imageUrl;
   } else if (playlist == null) {
-    // Track doesn't have an image and isn't in a bundle or a playlist
-    return null;
+    // Track doesn't have an image and isn't in a playlist
+    // Try returning bundle image
+    return assignBundleImageUrlToTrack(track);
   } else if (playlist.imageUrl != null &&
       playlist.imageUrl != '' &&
       playlist.imageUrl != Core.app.defaultImageUrl) {
     return playlist.imageUrl;
   } else {
-    return null;
+    // Track is in a playlist but doesn't have an image
+    // Try returning bundle image
+    return assignBundleImageUrlToTrack(track);
   }
+}
+
+/// Returns the imageUrl of the track's bundle.
+///
+/// If the track isn't part of a bundle or the bundle doesn't have any image, null will be returned.
+String? assignBundleImageUrlToTrack(Track track) {
+  final bundle = BundleManager().getBundle(track.bundleId);
+  if (bundle == null || bundle.image == null) return null;
+  return bundle.image;
 }
