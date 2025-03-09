@@ -2,6 +2,7 @@ import 'package:boxify/app_core.dart';
 import 'package:boxify/screens/playlist/widgets/track_touch_row_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:collection/collection.dart';
 
 /// Returns a [ListView] of [TrackTouchRow]s. Used by [SmallSearchScreen] and [PlaylistTouchScreen].
 /// On the Small Search Screen, each [TrackTouchRow] should have an [overflowScreen].
@@ -21,13 +22,23 @@ class SmallTrackSearchResults extends StatelessWidget {
   Widget build(BuildContext context) {
     final searchBloc = context.read<SearchBloc>();
     final playlistBloc = context.read<PlaylistBloc>();
+    final marketBloc = context.read<MarketBloc>(); // used to get bundle details
     final trackBloc = context.read<TrackBloc>();
     var indexWithinPlayableTracks = -1;
 
     Widget buildTrackRow(BuildContext context, int i, Track track) {
+      // Get track's bundle, if any.
+      // TODO (important) this isn't efficient, we should create a map with a O(1) lookup complexity
+      // the current code uses a O(n) lookup. for now this is fine since there are only a few bundles.
+      final bundle = track.bundleId != null
+          ? marketBloc.state.allBundles
+              .firstWhereOrNull((bundle) => bundle.id == track.bundleId)
+          : null;
+
       if (track.available == true) {
         indexWithinPlayableTracks++;
       }
+
       return TrackTouchRow(
         i: i,
         indexWithinPlayableTracks: indexWithinPlayableTracks,
@@ -44,6 +55,7 @@ class SmallTrackSearchResults extends StatelessWidget {
         showOverflowScreen: screenType == SearchResultType.searchScreen,
         showAddButton: screenType == SearchResultType.addToPlaylist,
         canLongPress: screenType == SearchResultType.searchScreen,
+        bundle: bundle,
       );
     }
 

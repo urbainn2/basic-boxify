@@ -57,17 +57,18 @@ String? assignPlaylistImageFilenameToTrack(Track track, Playlist? playlist) {
 /// then use the playlist imageUrl.
 /// For By The People playlist, never use the playlist image because we want to use the
 /// individual track images instead. They have the user's profileImageUrl.
-String? assignPlaylistImageUrlToTrack(Track track, Playlist? playlist) {
-  if (playlist == null) {
-    return null;
-  }
-  // if (playlist.id == Core.app.byThePeoplePlaylistId) {
-  //   return track.imageUrl;
-  // }
-  if (track.imageUrl != null &&
+String? assignPlaylistImageUrlToTrack(Track track, Playlist? playlist,
+    {Bundle? bundle}) {
+  if (bundle != null && bundle.image != null) {
+    // Return bundle image
+    return bundle.image;
+  } else if (track.imageUrl != null &&
       track.imageUrl != '' &&
       track.imageUrl != Core.app.defaultImageUrl) {
     return track.imageUrl;
+  } else if (playlist == null) {
+    // Track doesn't have an image and isn't in a bundle or a playlist
+    return null;
   } else if (playlist.imageUrl != null &&
       playlist.imageUrl != '' &&
       playlist.imageUrl != Core.app.defaultImageUrl) {

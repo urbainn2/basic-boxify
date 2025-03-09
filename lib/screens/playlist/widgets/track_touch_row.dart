@@ -15,6 +15,10 @@ class TrackTouchRow extends StatelessWidget {
   final bool showAddButton;
   final bool canLongPress;
 
+  /// Bundle the track is part of. Should only be provided when outside of a playlist
+  /// when playing directly from a bundle (search included).
+  final Bundle? bundle;
+
   TrackTouchRow({
     required this.i,
     required this.indexWithinPlayableTracks,
@@ -26,6 +30,7 @@ class TrackTouchRow extends StatelessWidget {
     this.showBundleArtistText = true,
     this.showAddButton = false,
     this.canLongPress = true,
+    this.bundle,
   });
 
   @override
@@ -41,7 +46,8 @@ class TrackTouchRow extends StatelessWidget {
         return ListTile(
           tileColor: Core.appColor.widgetBackgroundColor,
           leading: imageOrIcon(
-            imageUrl: assignPlaylistImageUrlToTrack(track, playlist),
+            imageUrl:
+                assignPlaylistImageUrlToTrack(track, playlist, bundle: bundle),
             filename: assignPlaylistImageFilenameToTrack(track, playlist),
             height: Core.app.smallRowImageSize,
             width: Core.app.smallRowImageSize,
