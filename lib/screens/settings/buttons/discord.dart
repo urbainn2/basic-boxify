@@ -22,7 +22,7 @@ class DiscordFormField extends StatelessWidget {
         onFieldSubmitted: (String value) {
           var discordId = value;
 
-          if (value!.length < 10) {
+          if (value.length < 10) {
             showMySnack(
               context,
               color: Core.appColor.discordColor,
@@ -49,10 +49,8 @@ class DiscordFormField extends StatelessWidget {
           hintMaxLines: 3,
           border: const OutlineInputBorder(),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Core.appColor.focusedBorder,
-              width: 2.0
-            ),
+            borderSide:
+                BorderSide(color: Core.appColor.focusedBorder, width: 2.0),
           ),
           hintText: user.discordId.isNotEmpty
               ? user.discordId

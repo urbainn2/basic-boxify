@@ -3,12 +3,12 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:boxify/app_core.dart';
+import 'package:boxify/services/bundles_manager.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
-
 
 part 'artist_event.dart';
 part 'artist_state.dart';
@@ -96,45 +96,7 @@ class ArtistBloc extends Bloc<ArtistEvent, ArtistState> {
       List<MyBadge>? userBadges;
 
       if (Core.app.type == AppType.advanced) {
-        try {
-          allBundles = await _userRepository.getBundlesApi();
-        } catch (err) {
-          logger.i('artist_bloc _onloadArtist $err');
-          emit(
-            state.copyWith(
-              status: ArtistStatus.error,
-              failure: Failure(
-                message:
-                    '$err. _userRepository.getBundlesApi. So I was unable to load your bundles in pbloc. The flask server might have crashed. view heroku logs.',
-              ),
-            ),
-          );
-        }
-
-        try {
-          allBundles = await _userRepository.getBundlesApi();
-        } catch (err) {
-          logger.i('artist_bloc _onloadArtist $err');
-          emit(
-            state.copyWith(
-              status: ArtistStatus.error,
-              failure: Failure(
-                message:
-                    '$err. _userRepository.getBundlesApi. So I was unable to load your bundles in pbloc. The flask server might have crashed. view heroku logs.',
-              ),
-            ),
-          );
-        }
-        // MARK bundle.ISOWNED
-        for (final bundleId in Core.app.marketBundleIds) {
-          if (state.user.bundleIds.contains(bundleId)) {
-            final myListFiltered = allBundles.where((e) => e.id == bundleId);
-            if (myListFiltered.isNotEmpty) {
-              allBundles.firstWhere((bundle) => bundle.id == bundleId).isOwned =
-                  true;
-            }
-          }
-        }
+        allBundles = BundleManager().bundlesList;
 
         userBundles = allBundles
             .where((i) => user.bundleIds.contains(i.id.toString()))
@@ -172,7 +134,6 @@ class ArtistBloc extends Bloc<ArtistEvent, ArtistState> {
       emit(
         state.copyWith(
           user: user,
-          allBundles: allBundles,
           bundles: userBundles,
           userPlaylists: userPlaylists,
           badges: userBadges,
@@ -229,18 +190,11 @@ class ArtistBloc extends Bloc<ArtistEvent, ArtistState> {
 
     final user = await _userRepository.getUserWithId(userId: userId);
 
-    for (final bundleId in Core.app.marketBundleIds) {
-      if (state.user.bundleIds.contains(bundleId)) {
-        final myListFiltered = state.allBundles.where((e) => e.id == bundleId);
-        if (myListFiltered.isNotEmpty) {
-          state.allBundles
-              .firstWhere((bundle) => bundle.id == bundleId)
-              .isOwned = true;
-        }
-      }
-    }
+    // Get bundle list from BundleManager
+    final allBundles = BundleManager().bundlesList;
+
     var userBundles = <Bundle>[];
-    userBundles = state.allBundles
+    userBundles = allBundles
         .where((i) => user.bundleIds.contains(i.id.toString()))
         .toList();
     userBundles.isNotEmpty
@@ -248,10 +202,15 @@ class ArtistBloc extends Bloc<ArtistEvent, ArtistState> {
             .sort((a, b) => Utils.compareString(true, a.years, b.years))
         : null;
     CacheHelper().saveUser(user);
+
+    // If the current user is being updated, update BundleManager
+    if (state.isCurrentUser) {
+      BundleManager().setOwnedBundleIds(user.bundleIds);
+    }
+
     emit(
       state.copyWith(
         user: user,
-        allBundles: state.allBundles,
         bundles: userBundles,
         status: ArtistStatus.loaded,
       ),

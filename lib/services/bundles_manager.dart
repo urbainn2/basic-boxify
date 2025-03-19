@@ -1,6 +1,7 @@
 import 'package:boxify/app_core.dart';
 
-/// Stores and manages the list of bundles available in the app.
+/// Stores and manages the list of bundles available in the app,
+/// and stores which bundles the user has purchased.
 class BundleManager {
   // Singleton instance (for static access across the app)
   static final BundleManager _instance = BundleManager._internal();
@@ -8,6 +9,9 @@ class BundleManager {
   BundleManager._internal();
 
   final Map<String, Bundle> _bundles = {};
+
+  // List of owned bundle IDs
+  final List<String> _ownedBundleIds = [];
 
   // Public accessor for bundles
   Map<String, Bundle> get bundles => Map.unmodifiable(_bundles);
@@ -31,5 +35,18 @@ class BundleManager {
       return _bundles[id];
     }
     return null;
+  }
+
+  // Is the bundle owned by the user?
+  bool isOwned(String? id) {
+    if (id == null) return false;
+    return _ownedBundleIds.contains(id);
+  }
+
+  // Set owned bundle IDs
+  void setOwnedBundleIds(List<String> ids) {
+    logger.i('setOwnedBundleIds: $ids');
+    _ownedBundleIds.clear();
+    _ownedBundleIds.addAll(ids);
   }
 }

@@ -21,7 +21,6 @@ class Bundle extends Equatable {
   final int? sortOrder;
   final bool? available;
   final bool? isNew;
-  bool? isOwned;
   final String? priceString;
   int? count;
   final String? category;
@@ -44,7 +43,6 @@ class Bundle extends Equatable {
     this.sortOrder,
     this.available,
     this.isNew,
-    this.isOwned,
     this.priceString,
     this.count,
     this.category,
@@ -69,7 +67,6 @@ class Bundle extends Equatable {
         sortOrder,
         available,
         isNew,
-        isOwned,
         priceString,
         count,
         category,
@@ -91,7 +88,6 @@ class Bundle extends Equatable {
       years: data['years'] as String?, //?? '2000-test',
       available: data['available'] as bool?, // ?? false,
       isNew: data['new'] as bool?, // ?? false,
-      isOwned: data['purchased'] as bool?, //?? false,
       priceString: data['price_string'] as String?, //?? '0',
       count: data['count'] as int?, // ?? 0,
       category: data['category'] as String?,
@@ -116,7 +112,6 @@ class Bundle extends Equatable {
   //     years: data['years'] as String, //?? '2000-test',
   //     available: data['available'] as bool, // ?? false,
   //     isNew: data['new'] as bool, // ?? false,
-  //     isOwned: data['purchased'] as bool, //?? false,
   //     priceString: data['price_string'] as String, //?? '0',
   //     count: data['count'] as int, // ?? 0,
   //     category: data['category'] as String,
@@ -143,7 +138,6 @@ class Bundle extends Equatable {
       years: data['years'] as String? ?? '2000-test',
       available: data['available'] as bool? ?? false,
       isNew: data['new'] as bool? ?? false,
-      isOwned: data['purchased'] as bool? ?? false,
       priceString: data['price_string'] as String? ?? '0',
       count: data['count'] as int? ?? 0,
       category: data['category'] as String? ?? '',
@@ -170,7 +164,6 @@ class Bundle extends Equatable {
   //     // sortOrder: (data['sortOrder'] ?? 100),
   //     available: (data['available'] ?? false),
   //     isNew: (data['new'] ?? false),
-  //     isOwned: (data['purchased'] ?? false),
   //     priceString: (data['price_string'] ?? 0),
   //     count: (data['count'] ?? 0),
   //     category: (data['category'] ?? ''),
@@ -191,7 +184,6 @@ class Bundle extends Equatable {
       'years': years,
       'available': available,
       'new': isNew,
-      'purchased': isOwned,
       'price_string': priceString,
       'count': count,
       'category': category,
@@ -216,7 +208,6 @@ class Bundle extends Equatable {
     int? sortOrder,
     bool? available,
     bool? isNew,
-    bool? isOwned,
     String? priceString,
     int? count,
     String? category,
@@ -239,7 +230,6 @@ class Bundle extends Equatable {
       sortOrder: sortOrder ?? this.sortOrder,
       available: available ?? this.available,
       isNew: isNew ?? this.isNew,
-      isOwned: isOwned ?? this.isOwned,
       priceString: priceString ?? this.priceString,
       count: count ?? this.count,
       category: category ?? this.category,
