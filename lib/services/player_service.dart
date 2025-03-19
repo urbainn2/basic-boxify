@@ -60,7 +60,7 @@ class PlayerService {
     List<Track>? tracks,
     Playlist? playlist,
     int? index,
-    required String source,
+    required PlayerSource source,
   }) {
     /// If you're simply toggling the play button for the current track
     if (tracks == null) {

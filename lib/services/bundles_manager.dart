@@ -12,6 +12,9 @@ class BundleManager {
   // Public accessor for bundles
   Map<String, Bundle> get bundles => Map.unmodifiable(_bundles);
 
+  // List of all bundles
+  List<Bundle> get bundlesList => _bundles.values.toList();
+
   // Update bundle list with new data. Will clear the existing data.
   Future<void> updateBundles(List<Bundle> bundles) async {
     _bundles.clear();

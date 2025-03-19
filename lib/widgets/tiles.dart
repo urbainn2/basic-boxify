@@ -18,7 +18,7 @@ class AddTrackToPlaylistTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        logger.i('Add to playlist tile tapped');
+        final userState = context.read<UserBloc>().state;
 
         // Ensure user is logged in
         if (UserHelper.isLoggedInOrReroute(userState, context,
@@ -31,12 +31,8 @@ class AddTrackToPlaylistTile extends StatelessWidget {
             context.pop();
           }
 
-        // If you're on the small track detail screen, pop it
-        if (context.canPop()) {
-          context.pop();
+          context.push('/smallAddToPlaylist');
         }
-
-        context.push('/smallAddToPlaylist');
       },
       leading: const Icon(
         Icons.add,

@@ -156,5 +156,9 @@
     "actionEditLibrary": "gérer votre bibliothèque",
     "actionBuyBundles": "acheter des packs",
     "logInOrSignUp": "SE CONNECTER OU S'INSCRIRE",
-    "notNow": "PAS MAINTENANT"
+    "notNow": "PAS MAINTENANT",
+    "playingFromSource": "LECTURE DEPUIS {sourceName}",
+    "playlistSourceName": "PLAYLIST",
+    "searchSourceName": "RECHERCHE",
+    "initialSourceName": "INITIAL"
 }

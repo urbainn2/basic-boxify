@@ -27,7 +27,7 @@ class Play extends PlayerEvent {
 class StartPlayback extends PlayerEvent {
   final int? index;
   final List<Track> tracks;
-  final String? source;
+  final PlayerSource? source;
 
   const StartPlayback({required this.index, required this.tracks, this.source});
 

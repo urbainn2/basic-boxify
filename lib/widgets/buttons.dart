@@ -544,7 +544,7 @@ class MyPlayButton extends StatelessWidget {
                 tracks: context.read<TrackBloc>().state.displayedTracks,
                 playlist: context.read<PlaylistBloc>().state.viewedPlaylist,
                 index: index,
-                source: 'PLAYLIST',
+                source: PlayerSource.playlist,
               );
         },
         child: Icon(
@@ -603,7 +603,7 @@ class PlayButton extends StatelessWidget {
                       // tracks: context.read<TrackBloc>().state.displayedTracks,
                       // playlist:
                       //     context.read<PlaylistBloc>().state.viewedPlaylist,
-                      source: 'PLAYLIST',
+                      source: PlayerSource.playlist,
                     );
               });
         } else if (processingState != ProcessingState.completed) {
@@ -771,7 +771,7 @@ class _PlayButtonInCircleState extends State<PlayButtonInCircle> {
     final canPlay = context.read<PlayerService>().handlePlay(
           tracks: tracks,
           playlist: widget.playlist,
-          source: 'PLAYLIST',
+          source: PlayerSource.playlist,
         );
 
     if (!canPlay && Core.app.type == AppType.advanced) {

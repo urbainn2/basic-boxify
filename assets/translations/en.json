@@ -152,5 +152,9 @@
     "actionEditLibrary": "manage your library",
     "actionBuyBundles": "buy bundles",
     "logInOrSignUp": "LOG IN OR SIGN UP",
-    "notNow": "NOT NOW"
+    "notNow": "NOT NOW",
+    "playingFromSource": "PLAYING FROM {sourceName}",
+    "playlistSourceName": "PLAYLIST",
+    "searchSourceName": "SEARCH",
+    "initialSourceName": "INITIAL"
 }

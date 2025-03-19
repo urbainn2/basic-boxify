@@ -1,29 +1,5 @@
 import 'package:boxify/app_core.dart';
 import 'package:boxify/services/bundles_manager.dart';
-import 'package:flutter/material.dart';
-
-const fireUrl = "https://www.dropbox.com/s/wfycymz8txb9zcp/fire.jpg?raw=1";
-const summerUrl = fireUrl;
-const ramsayUrl =
-    "https://www.dropbox.com/s/4labks7ga1ymswb/494px-Hugh_Ramsay_-_The_four_seasons_-_Google_Art_Project.jpg?raw=1";
-const springUrl = 'https://www.dropbox.com/s/ncahf99tx3fn5ud/unnamed.jpg?raw=1';
-const autumDancersUrls =
-    'https://www.dropbox.com/s/j0igjm7f6negshq/Evgh_WaWgAAYYqt.jpg?raw=1';
-const autumnUrl = 'https://www.dropbox.com/s/dzxu01syuvhbk1y/autumn.jpg?raw=1';
-const winterUrl =
-    'https://www.dropbox.com/s/zwvi42bhcjx08gr/saint-man-white-robe-looking-sadly-camera-upset-humanity-mistakes-saint-man-white-robe-looking-sadly-camera-upset-157312502.jpg?raw=1';
-
-Image rcImage =
-    Image.asset('images/boxify.jpg', height: 60, width: 60, fit: BoxFit.cover);
-Image rcImage132 = Image.asset(
-  'images/boxify.png',
-  height: 132,
-  width: 132,
-  fit: BoxFit.cover,
-);
-
-Image funkoImage =
-    Image.asset('images/funko.jpg', height: 60, width: 60, fit: BoxFit.cover);
 
 /// Returns the imageFilename for the track from the playlist if any.
 ///
