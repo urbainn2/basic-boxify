@@ -7,8 +7,6 @@ abstract class BaseUserRepository {
   void connectDiscord({required User user, required String discordId});
   Future<List<User>> getAllArtists();
   Future<User> getUserWithId({required String userId});
-  Future<List<Bundle>> getBundlesApi();
-  Future<List<Bundle>> getUserBundlesApi({required List<String> bundleIds});
   Future<void> updateUser({required User user});
   Future<List<User>> searchUsers({required String query});
   Future<List<User>> fetchUsersApi();

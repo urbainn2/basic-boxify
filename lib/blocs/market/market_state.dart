@@ -15,7 +15,6 @@ class MarketState extends Equatable {
   final MarketStatus status;
   final Failure failure;
 
-  List<Bundle> allBundles;
   List<Bundle> unpurchasedBundles;
   final int trackCount;
   final int userTrackCount;
@@ -26,7 +25,6 @@ class MarketState extends Equatable {
   MarketState({
     required this.status,
     required this.failure,
-    required this.allBundles,
     required this.unpurchasedBundles,
     required this.trackCount,
     required this.userTrackCount,
@@ -39,7 +37,6 @@ class MarketState extends Equatable {
     return MarketState(
       status: MarketStatus.initial,
       failure: const Failure(),
-      allBundles: const [],
       unpurchasedBundles: const [],
       trackCount: 0,
       userTrackCount: 0,
@@ -55,7 +52,6 @@ class MarketState extends Equatable {
         failure,
         status,
         failure,
-        allBundles,
         unpurchasedBundles,
         trackCount,
         userTrackCount,
@@ -67,7 +63,6 @@ class MarketState extends Equatable {
   MarketState copyWith({
     MarketStatus? status,
     Failure? failure,
-    List<Bundle>? allBundles,
     List<Bundle>? unpurchasedBundles,
     int? trackCount,
     int? userTrackCount,
@@ -78,7 +73,6 @@ class MarketState extends Equatable {
     return MarketState(
       status: status ?? this.status,
       failure: failure ?? this.failure,
-      allBundles: allBundles ?? this.allBundles,
       unpurchasedBundles: unpurchasedBundles ?? this.unpurchasedBundles,
       trackCount: trackCount ?? this.trackCount,
       userTrackCount: userTrackCount ?? this.userTrackCount,

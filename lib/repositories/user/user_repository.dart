@@ -218,50 +218,6 @@ class UserRepository extends BaseUserRepository {
   // }
 
   @override
-  Future<List<Bundle>> getBundlesApi() async {
-    final uri = Uri.parse(Core.app.bundlesAPIUrl);
-    logger.i('getBundlesApi: $uri');
-    try {
-      final response = await http.get(
-        uri,
-        headers: {
-          'TOKEN': Core.app.serverToken,
-          'userId': '8',
-        },
-      );
-      if (response.body.isEmpty) {
-        logger.e('user_repo getBundlesApi error: response.body.isEmpty');
-        return [];
-      }
-
-      // Notice how you have to call body from the response if you are using http to retrieve json
-      final body = json.decode(response.body) as Map<String, dynamic>;
-      if (body.containsKey('error')) {
-        logger.e('user_repo getBundlesApi error: ${body['message']}');
-        return [];
-      }
-      final data = body['bundles'] as List<dynamic>;
-      final lastUpdated = body['last_updated'].toString();
-      logger.i('Bundles last updated at: $lastUpdated');
-      final bundles = data.map(Bundle.fromJson).toList();
-      return bundles;
-    } catch (err) {
-      logger.e('user_repo getBundlesApi error: $err');
-      return [];
-    }
-  }
-
-  @override
-  Future<List<Bundle>> getUserBundlesApi({
-    required List<String> bundleIds,
-  }) async {
-    final allBundles = await getBundlesApi();
-    final userBundles =
-        allBundles.where((i) => bundleIds.contains(i.id.toString())).toList();
-    return userBundles;
-  }
-
-  @override
   Future<void> updateUser({required User? user}) async {
     await _firebaseFirestore
         .collection(Paths.users)

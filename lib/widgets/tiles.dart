@@ -18,17 +18,21 @@ class AddTrackToPlaylistTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        logger.i('Add to playlist tile tapped');
+        final userState = context.read<UserBloc>().state;
 
-        // close the overflow screen
-        context.pop();
-
-        // If you're on the small track detail screen, pop it
-        if (context.canPop()) {
+        // Ensure user is logged in
+        if (UserHelper.isLoggedInOrReroute(userState, context,
+            'actionCreatePlaylists'.translate(), Icons.playlist_add)) {
+          // close the overflow screen
           context.pop();
-        }
 
-        context.push('/smallAddToPlaylist');
+          // If you're on the small track detail screen, pop it
+          if (context.canPop()) {
+            context.pop();
+          }
+
+          context.push('/smallAddToPlaylist');
+        }
       },
       leading: const Icon(
         Icons.add,
@@ -501,16 +505,20 @@ class StopFollowingPlaylistTile extends StatelessWidget {
       leading: const Icon(Icons.close, color: Colors.blueAccent),
       title: Text('stopFollowing'.translate()),
       onTap: () {
-        libraryBloc.add(
-          RemovePlaylist(
-            playlist: playlist,
-            user: userBloc.state.user,
-          ),
-        );
-        context.pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          buildSnackbar('removedFromLibrary'.translate()),
-        );
+        // Ensure user is logged in
+        if (UserHelper.isLoggedInOrReroute(userBloc.state, context,
+            'actionEditLibrary'.translate(), Icons.playlist_remove)) {
+          libraryBloc.add(
+            RemovePlaylist(
+              playlist: playlist,
+              user: userBloc.state.user,
+            ),
+          );
+          context.pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            buildSnackbar('removedFromLibrary'.translate()),
+          );
+        }
       },
     );
   }
@@ -546,22 +554,30 @@ class ToggleAddRemovePlaylistFromYourLibraryTile extends StatelessWidget {
         : !playlistIsAlreadyFollowed
             ? ListTile(
                 onTap: () {
-                  context.pop();
-                  libraryBloc.add(AddPlaylistToLibrary(
-                      playlistId: playlist.id!, user: userBloc.state.user));
-                  showMySnack(context,
-                      message: 'addedToYourLibrary'.translate());
+                  // Ensure user is logged in
+                  if (UserHelper.isLoggedInOrReroute(userBloc.state, context,
+                      'actionEditLibrary'.translate(), Icons.playlist_add)) {
+                    context.pop();
+                    libraryBloc.add(AddPlaylistToLibrary(
+                        playlistId: playlist.id!, user: userBloc.state.user));
+                    showMySnack(context,
+                        message: 'addedToYourLibrary'.translate());
+                  }
                 },
                 leading: const Icon(Icons.add, color: Colors.blueAccent),
                 title: Text('addToYourLibrary'.translate()),
               )
             : ListTile(
                 onTap: () {
-                  context.pop();
-                  libraryBloc.add(RemovePlaylist(
-                      playlist: playlist, user: userBloc.state.user));
-                  showMySnack(context,
-                      message: 'removedFromLibrary'.translate());
+                  // Ensure user is logged in
+                  if (UserHelper.isLoggedInOrReroute(userBloc.state, context,
+                      'actionEditLibrary'.translate(), Icons.playlist_remove)) {
+                    context.pop();
+                    libraryBloc.add(RemovePlaylist(
+                        playlist: playlist, user: userBloc.state.user));
+                    showMySnack(context,
+                        message: 'removedFromLibrary'.translate());
+                  }
                 },
                 leading: const Icon(Icons.close, color: Colors.blueAccent),
                 title: Text('removeFromLibrary'.translate()),

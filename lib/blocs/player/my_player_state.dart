@@ -12,6 +12,13 @@ enum PlayerStatus {
   error, // When an error occurs within the player (e.g., loading or playback fails).
 }
 
+enum PlayerSource {
+  initial, // When the player is first created or reset.
+  playlist, // playing from a playlist
+  search, // playing from a search result
+  bundle, // playing from a bundle
+}
+
 class MyPlayerState extends Equatable {
   final PlayerStatus status;
   final Failure failure;
@@ -23,12 +30,17 @@ class MyPlayerState extends Equatable {
   final Duration? savedPosition;
   final Track? savedTrack;
 
+  /// Source of the current track being played (where is the track playing from?)
+  /// Examples: PLAYLIST, SEARCH or BUNDLE
+  final PlayerSource source;
+
   MyPlayerState({
     required this.status,
     required this.failure,
     required this.player,
     required this.backgroundColor,
     required this.queue,
+    required this.source,
     this.savedPosition,
     this.savedTrack,
   });
@@ -42,6 +54,7 @@ class MyPlayerState extends Equatable {
       player: player,
       backgroundColor: HSLColor.fromColor(Core.appColor.primary),
       queue: [],
+      source: PlayerSource.initial,
       savedPosition: null,
       savedTrack: null,
     );
@@ -54,6 +67,7 @@ class MyPlayerState extends Equatable {
         player,
         backgroundColor,
         queue,
+        source,
         savedPosition,
         savedTrack,
       ];
@@ -65,6 +79,7 @@ class MyPlayerState extends Equatable {
     ConcatenatingAudioSource? audioSource,
     HSLColor? backgroundColor,
     List<Track>? queue,
+    PlayerSource? source,
     Duration? savedPosition,
     Track? savedTrack,
   }) {
@@ -74,6 +89,7 @@ class MyPlayerState extends Equatable {
       player: player ?? this.player,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       queue: queue ?? this.queue,
+      source: source ?? this.source,
       savedPosition: savedPosition ?? this.savedPosition,
       savedTrack: savedTrack ?? this.savedTrack,
     );

@@ -485,6 +485,7 @@ class TrackMouseRowHelper {
           index: i,
           tracks: context.read<TrackBloc>().state.displayedTracks,
           playlist: playlistBloc.state.viewedPlaylist,
+          source: PlayerSource.playlist,
         );
 
     if (!canPlay) {

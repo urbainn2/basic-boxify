@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:boxify/app_core.dart';
+import 'package:boxify/services/bundles_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -130,7 +131,7 @@ class _ArtistScreenState extends State<ArtistScreen>
                 Navigator.of(dialogContext).pop();
               },
             ),
-            if (kIsWeb && !bundle.isOwned! == false)
+            if (kIsWeb && !BundleManager().isOwned(bundle.id))
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Core.appColor.primary,
@@ -203,10 +204,12 @@ class _ArtistScreenState extends State<ArtistScreen>
       context: context,
       builder: (_) {
         final profileState = context.read<ArtistBloc>().state;
-        final allBundles = profileState.allBundles;
         final user = profileState.user;
         final username = user.username;
         var updated = false;
+
+        final allBundles = BundleManager().bundlesList;
+
         return AlertDialog(
           title: DialogTitle(itemName: 'Packs', username: username),
           content: Align(
@@ -844,8 +847,8 @@ class _ArtistScreenState extends State<ArtistScreen>
                             isLargeScreen
                                 ? PlaylistsForLargeArtist(
                                     sectionHeight: getLargeSectionHeight(
-                                        state.userPlaylists.length, crossAxisCount),
-                                        
+                                        state.userPlaylists.length,
+                                        crossAxisCount),
                                     playlists: userPlaylists,
                                   )
                                 : SmallMediaSection(

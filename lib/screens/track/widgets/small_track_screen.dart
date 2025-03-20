@@ -42,10 +42,9 @@ class _SmallTrackScreenState extends State<SmallTrackScreen> {
       // trackBloc.add(SetDisplayedTracksWithTracks(tracks: [track]));
 
       // if (width < Core.app.largeSmallBreakpoint) {
-      final canPlay = context.read<PlayerService>().handlePlay(
-        index: 0,
-        tracks: [track],
-      );
+      final canPlay = context
+          .read<PlayerService>()
+          .handlePlay(index: 0, tracks: [track], source: PlayerSource.playlist);
       if (!canPlay) {
         showTrackSnack(context, track.bundleName!);
       }

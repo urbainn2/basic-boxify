@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:boxify/app_core.dart';
+import 'package:boxify/services/bundles_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,7 +90,7 @@ class _BundleCardForMarketScreenState extends State<BundleCardForMarketScreen> {
       if (isSuccess) {
         final email = authBloc.state.user!.email!;
         marketBloc.add(
-            PurchaseBundle(id: widget.bundle.id, user: userBloc.state.user));
+            PurchaseBundle(id: widget.bundle.id!, user: userBloc.state.user));
         // final message =
         //     "You now have access to all the tracks in '${widget.bundle.title!}'. Please check $email for a download link (check spam, if necessary). Email assistant@riverscuomo.com with any problems.";
         // showMySnack(context, message: message);
@@ -132,6 +133,7 @@ class _BundleCardForMarketScreenState extends State<BundleCardForMarketScreen> {
   _openBundlePreview(Bundle bundle) {
     _play(bundle.preview!);
     final songList = bundle.songList?.split(',');
+    final userState = context.read<UserBloc>().state;
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
@@ -192,7 +194,7 @@ class _BundleCardForMarketScreenState extends State<BundleCardForMarketScreen> {
               Navigator.of(dialogContext).pop(); // Corrected this line
             },
           ),
-          if (bundle.isOwned == false)
+          if (BundleManager().isOwned(bundle.id))
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
@@ -200,14 +202,8 @@ class _BundleCardForMarketScreenState extends State<BundleCardForMarketScreen> {
               onPressed: () async {
                 info('openBundlePreview:buy');
                 audioPlayer.stop();
-
-                final user = context.read<UserBloc>().state.user;
-
-                if (user.isAnonymous) {
-                  GoRouter.of(context).go('/login');
-                  // context.read<AuthBloc>().add(AuthLogoutRequested());
-                  showMySnack(context, message: 'loginToBuy'.translate());
-                } else {
+                if (UserHelper.isLoggedInOrReroute(userState, context,
+                    'actionBuyBundles'.translate(), Icons.music_note_rounded)) {
                   await buy(context)
                       .then((value) => GoRouter.of(context).pop());
                 }
@@ -254,7 +250,7 @@ class _BundleCardForMarketScreenState extends State<BundleCardForMarketScreen> {
                 color: Colors.grey[300],
               ),
             ),
-            if (widget.bundle.isOwned == true)
+            if (BundleManager().isOwned(widget.bundle.id))
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text(
@@ -274,11 +270,12 @@ class _BundleCardForMarketScreenState extends State<BundleCardForMarketScreen> {
                     backgroundColor: Colors.blue,
                   ),
                   onPressed: () async {
-                    final user = context.read<UserBloc>().state.user;
-                    if (user.isAnonymous) {
-                      GoRouter.of(context).go('/login');
-                      showMySnack(context, message: 'loginToBuy'.translate());
-                    } else {
+                    final userState = context.read<UserBloc>().state;
+                    if (UserHelper.isLoggedInOrReroute(
+                        userState,
+                        context,
+                        'actionBuyBundles'.translate(),
+                        Icons.music_note_rounded)) {
                       await buy(context);
                     }
                   },

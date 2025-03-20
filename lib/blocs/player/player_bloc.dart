@@ -143,7 +143,8 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     Emitter<MyPlayerState> emit,
   ) async {
     logger.i('_onStartPlayback PlayerStatus.playPressed');
-    emit(state.copyWith(status: PlayerStatus.playPressed));
+    emit(
+        state.copyWith(status: PlayerStatus.playPressed, source: event.source));
 
     final trackIndexMapping = createTrackIndexMapping(event.tracks);
     final audioSourceIndex = trackIndexMapping[event.index];

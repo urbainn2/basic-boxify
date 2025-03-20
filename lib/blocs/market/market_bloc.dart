@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:boxify/app_core.dart';
+import 'package:boxify/services/bundles_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -64,6 +65,10 @@ class MarketBloc extends Bloc<MarketEvent, MarketState> {
       counts = _userHelper.calculateCounts(event.user, allBundles);
     }
 
+    // Initialize the bundles manager
+    BundleManager().updateBundles(allBundles);
+    BundleManager().setOwnedBundleIds(event.user.bundleIds);
+
     final unpurchasedBundles = allBundles
         .where((bundle) => !event.user.bundleIds.contains(bundle.id))
         .toList();
@@ -74,7 +79,6 @@ class MarketBloc extends Bloc<MarketEvent, MarketState> {
       trackCount: counts[1],
       userBundleCount: counts[2],
       userTrackCount: counts[3],
-      allBundles: allBundles,
       unpurchasedBundles: unpurchasedBundles,
     ));
     // final end = DateTime.now();
@@ -90,43 +94,40 @@ class MarketBloc extends Bloc<MarketEvent, MarketState> {
 
       // Update the user bundleIds in firestore
       _userRepository.addRemoveUserBundles(
-        bundleId: event.id!,
+        bundleId: event.id,
         user: event.user,
         switchOff: false,
       );
 
+      // Add new bundleId to the user's owned bundleIds
+      final newOwnedBundleIds = List<String>.from(event.user.bundleIds);
+      newOwnedBundleIds.add(event.id);
+
       // Create a copy of the event's user with the updated bundleIds
       final updatedUser = event.user.copyWith(
-        bundleIds: event.user.bundleIds..add(event.id!),
+        bundleIds: newOwnedBundleIds,
       );
 
-      // Create a new list for allBundles with the updated isOwned flag
-      final updatedAllBundles = state.allBundles.map((Bundle bundle) {
-        if (updatedUser.bundleIds.contains(bundle.id)) {
-          return bundle.copyWith(isOwned: true);
-        }
-        return bundle;
-      }).toList();
+      // Update the BundleManager with the new bundleIds
+      BundleManager().setOwnedBundleIds(updatedUser.bundleIds);
+
+      // Get all bundles from the BundleManager
+      final allBundles = BundleManager().bundlesList;
 
       // Email the bundle to the user
-      final purchasedBundle =
-          state.allBundles.firstWhere((bundle) => bundle.id == event.id);
+      final purchasedBundle = BundleManager().getBundle(event.id);
       _bundleRepository.emailBundleAndSavePurchaseToFirestore(
-          event.user, purchasedBundle);
+          event.user, purchasedBundle!);
 
       // Remove the purchased bundle from the available market bundles
-      final unpurchasedBundles = state.allBundles
+      final unpurchasedBundles = allBundles
           .where((bundle) => !updatedUser.bundleIds.contains(bundle.id))
           .toList();
-
-      // todo: update the user
-      // todo: update the tracks
 
       emit(
         state.copyWith(
           unpurchasedBundles: unpurchasedBundles,
           purchasedBundle: purchasedBundle,
-          allBundles: updatedAllBundles,
           status: MarketStatus.bundlePurchased,
         ),
       );
