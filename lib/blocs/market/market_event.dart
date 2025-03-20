@@ -17,7 +17,7 @@ class LoadMarket extends MarketEvent {
 }
 
 class PurchaseBundle extends MarketEvent {
-  final String? id;
+  final String id;
   final User user;
   const PurchaseBundle({required this.id, required this.user});
 

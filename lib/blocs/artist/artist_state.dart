@@ -14,7 +14,6 @@ class ArtistState extends Equatable {
   final User user;
   final User viewer;
   final List<Bundle> bundles;
-  final List<Bundle> allBundles;
   final List<MyBadge> allBadges;
   final List<Playlist> userPlaylists;
   final List<MyBadge> badges;
@@ -35,7 +34,6 @@ class ArtistState extends Equatable {
     required this.user,
     required this.viewer,
     required this.bundles,
-    required this.allBundles,
     required this.allBadges,
     required this.userPlaylists,
     required this.badges,
@@ -58,7 +56,6 @@ class ArtistState extends Equatable {
       user: User.empty,
       viewer: User.empty,
       bundles: [],
-      allBundles: [],
       allBadges: [],
       userPlaylists: [],
       badges: [],
@@ -82,7 +79,6 @@ class ArtistState extends Equatable {
         user,
         viewer,
         bundles,
-        allBundles,
         allBadges,
         userPlaylists,
         badges,
@@ -105,7 +101,6 @@ class ArtistState extends Equatable {
     User? viewer,
     List<Bundle>? bundles,
     List<MyBadge>? badges,
-    List<Bundle>? allBundles,
     List<MyBadge>? allBadges,
     List<Playlist>? userPlaylists,
     bool? isCurrentUser,
@@ -125,7 +120,6 @@ class ArtistState extends Equatable {
       user: user ?? this.user,
       viewer: viewer ?? this.viewer,
       bundles: bundles ?? this.bundles,
-      allBundles: allBundles ?? this.allBundles,
       allBadges: allBadges ?? this.allBadges,
       userPlaylists: userPlaylists ?? this.userPlaylists,
       badges: badges ?? this.badges,

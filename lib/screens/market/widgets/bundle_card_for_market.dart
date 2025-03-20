@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:boxify/app_core.dart';
+import 'package:boxify/services/bundles_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,7 +90,7 @@ class _BundleCardForMarketScreenState extends State<BundleCardForMarketScreen> {
       if (isSuccess) {
         final email = authBloc.state.user!.email!;
         marketBloc.add(
-            PurchaseBundle(id: widget.bundle.id, user: userBloc.state.user));
+            PurchaseBundle(id: widget.bundle.id!, user: userBloc.state.user));
         // final message =
         //     "You now have access to all the tracks in '${widget.bundle.title!}'. Please check $email for a download link (check spam, if necessary). Email assistant@riverscuomo.com with any problems.";
         // showMySnack(context, message: message);
@@ -193,7 +194,7 @@ class _BundleCardForMarketScreenState extends State<BundleCardForMarketScreen> {
               Navigator.of(dialogContext).pop(); // Corrected this line
             },
           ),
-          if (bundle.isOwned == false)
+          if (BundleManager().isOwned(bundle.id))
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
@@ -249,7 +250,7 @@ class _BundleCardForMarketScreenState extends State<BundleCardForMarketScreen> {
                 color: Colors.grey[300],
               ),
             ),
-            if (widget.bundle.isOwned == true)
+            if (BundleManager().isOwned(widget.bundle.id))
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text(
