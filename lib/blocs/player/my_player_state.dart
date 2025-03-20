@@ -12,6 +12,13 @@ enum PlayerStatus {
   error, // When an error occurs within the player (e.g., loading or playback fails).
 }
 
+enum PlayerSource {
+  initial, // When the player is first created or reset.
+  playlist, // playing from a playlist
+  search, // playing from a search result
+  bundle, // playing from a bundle
+}
+
 class MyPlayerState extends Equatable {
   final PlayerStatus status;
   final Failure failure;
@@ -23,7 +30,7 @@ class MyPlayerState extends Equatable {
 
   /// Source of the current track being played (where is the track playing from?)
   /// Examples: PLAYLIST, SEARCH or BUNDLE
-  final String source;
+  final PlayerSource source;
 
   MyPlayerState({
     required this.status,
@@ -43,7 +50,7 @@ class MyPlayerState extends Equatable {
       player: player,
       backgroundColor: HSLColor.fromColor(Core.appColor.primary),
       queue: [],
-      source: 'INITIAL',
+      source: PlayerSource.initial,
     );
   }
 
@@ -64,7 +71,7 @@ class MyPlayerState extends Equatable {
     ConcatenatingAudioSource? audioSource,
     HSLColor? backgroundColor,
     List<Track>? queue,
-    String? source,
+    PlayerSource? source,
   }) {
     return MyPlayerState(
       status: status ?? this.status,

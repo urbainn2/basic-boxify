@@ -94,7 +94,7 @@ class SmallTrackSearchResults extends StatelessWidget {
     final canPlay = context.read<PlayerService>().handlePlay(
           index: i,
           tracks: searchBloc.state.searchResultsTracks,
-          source: 'SEARCH',
+          source: PlayerSource.search,
         );
     if (!canPlay) {
       showTrackSnack(context, track.bundleName ?? '?');

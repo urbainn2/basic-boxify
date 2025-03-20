@@ -1,6 +1,5 @@
 import 'package:boxify/app_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 /// A widget representing a [ListTile] particularly for showing playlist.
@@ -8,20 +7,21 @@ import 'package:go_router/go_router.dart';
 /// It includes a back IconButton as leading, a text 'PLAYING FROM PLAYLIST' as
 /// title and playlist's name as subtitle.
 class SmallDetailTopListTile extends StatelessWidget {
-  final String? source;
+  final PlayerSource source;
   final Track track;
   final Playlist? playlist;
 
   const SmallDetailTopListTile({
     super.key,
-    this.source = 'UNKNOWN',
+    required this.source,
     required this.track,
     this.playlist,
   });
 
   @override
   Widget build(BuildContext context) {
-    final title = 'PLAYING FROM $source';
+    final title = 'playingFromSource'
+        .translate(namedArgs: {'sourceName': source.name}).toUpperCase();
     return ListTile(
       leading: IconButton(
         onPressed: () {
