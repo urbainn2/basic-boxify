@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 
@@ -11,8 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:equatable/equatable.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'player_event.dart';
 part 'my_player_state.dart';
@@ -41,7 +42,7 @@ part 'my_player_state.dart';
 class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   final AudioPlayer _audioPlayer;
   StreamSubscription<PositionDiscontinuity>? _discontinuitySubscription;
-  final _firestore = FirebaseFirestore.instance;
+  static const String _playerStateKey = 'player_state';
 
   PlayerBloc({
     required AudioPlayer audioPlayer,
@@ -373,11 +374,12 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
       savedTrack: currentTrack,
     ));
 
-    // Save to Firestore for cross-device sync
+    // Save to SharedPreferences for device-local persistence
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        logger.d('Saving to Firestore for user ${user.uid}');
+        final prefs = await SharedPreferences.getInstance();
+        logger.d('Saving to SharedPreferences for user ${user.uid}');
         
         // Save full queue data for proper restoration
         final queueData = state.queue.map((track) => {
@@ -390,19 +392,22 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
           'available': track.available,
         }).toList();
 
-        await _firestore.collection('playback_states').doc(user.uid).set({
+        final playerStateData = {
           'trackId': currentTrack.uuid,
           'position': position.inMilliseconds,
-          'timestamp': FieldValue.serverTimestamp(),
+          'timestamp': DateTime.now().millisecondsSinceEpoch,
           'trackTitle': currentTrack.displayTitle,
           'playing': state.player.playing,
           'currentIndex': state.player.currentIndex,
           'queue': queueData,
-        });
-        logger.d('Successfully saved state to Firestore');
+          'userId': user.uid,
+        };
+
+        await prefs.setString(_playerStateKey, jsonEncode(playerStateData));
+        logger.d('Successfully saved state to SharedPreferences');
       }
     } catch (e) {
-      logger.e('Error saving to Firestore: $e');
+      logger.e('Error saving to SharedPreferences: $e');
     }
   }
 
@@ -414,13 +419,20 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         return;
       }
 
-      final doc = await _firestore.collection('playback_states').doc(user.uid).get();
-      if (!doc.exists) {
-        logger.d('No saved state found in Firestore');
+      final prefs = await SharedPreferences.getInstance();
+      final savedStateStr = prefs.getString(_playerStateKey);
+
+      if (savedStateStr == null) {
+        logger.d('No saved state found in SharedPreferences');
         return;
       }
 
-      final data = doc.data()!;
+      final data = jsonDecode(savedStateStr) as Map<String, dynamic>;
+
+      if (data['userId'] != user.uid) {
+        logger.d('Saved state belongs to a different user');
+        return;
+      }
       
       // Restore queue first
       if (data['queue'] != null) {
