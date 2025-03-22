@@ -75,11 +75,20 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
                          (_lastPlayingState != null && _lastPlayingState != _audioPlayer.playing);
         
         if (needsSave) {
-          _savePlaybackState(_audioPlayer.position);
+          _savePlaybackState();
         }
         
         _lastPlayingState = _audioPlayer.playing;
       }
+    });
+    
+    // Add a separate listener for player state changes to ensure pauses are captured properly
+    _audioPlayer.playerStateStream.listen((playerState) {
+      // Save when transitioning from playing to paused
+      if (playerState.playing == false && _lastPlayingState == true) {
+        _savePlaybackState();
+      }
+      _lastPlayingState = playerState.playing;
     });
   }
 
@@ -90,7 +99,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     _discontinuitySubscription?.cancel();
     // Check if a track is already playing
     if (state.player.playing) {
-      _savePlaybackState(state.player.position);
+      _savePlaybackState();
       state.player.stop();
     }
     _audioPlayer.dispose();
@@ -348,7 +357,10 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     emit(state.copyWith(backgroundColor: event.backgroundColor));
   }
 
-  Future<void> _savePlaybackState(Duration position) async {
+  Future<void> _savePlaybackState() async {
+    // Get the current ACTUAL position from the player directly
+    final currentPosition = await state.player.position;
+    
     // Only save state if we have a valid queue and track - don't check playing state
     if (state.queue.isEmpty || state.player.currentIndex == null) {
       logger.d('Cannot save state: queueEmpty=${state.queue.isEmpty}, currentIndex=${state.player.currentIndex}');
@@ -366,11 +378,11 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
       return;
     }
 
-    logger.d('Saving state for track: ${currentTrack.displayTitle} at position ${position.inSeconds}s');
+    logger.d('Saving state for track: ${currentTrack.displayTitle} at position ${currentPosition.inSeconds}s');
 
     // Save locally in bloc state
     emit(state.copyWith(
-      savedPosition: position,
+      savedPosition: currentPosition,
       savedTrack: currentTrack,
     ));
 
@@ -392,17 +404,19 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
           'available': track.available,
         }).toList();
 
+        // Create a map with all player state data
         final playerStateData = {
           'trackId': currentTrack.uuid,
-          'position': position.inMilliseconds,
+          'position': currentPosition.inMilliseconds,
           'timestamp': DateTime.now().millisecondsSinceEpoch,
           'trackTitle': currentTrack.displayTitle,
           'playing': state.player.playing,
           'currentIndex': state.player.currentIndex,
           'queue': queueData,
-          'userId': user.uid,
+          'userId': user.uid, // Keep track of which user this belongs to
         };
 
+        // Convert to JSON string and save
         await prefs.setString(_playerStateKey, jsonEncode(playerStateData));
         logger.d('Successfully saved state to SharedPreferences');
       }
@@ -421,14 +435,15 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
 
       final prefs = await SharedPreferences.getInstance();
       final savedStateStr = prefs.getString(_playerStateKey);
-
+      
       if (savedStateStr == null) {
         logger.d('No saved state found in SharedPreferences');
         return;
       }
 
       final data = jsonDecode(savedStateStr) as Map<String, dynamic>;
-
+      
+      // Verify this state belongs to the current user
       if (data['userId'] != user.uid) {
         logger.d('Saved state belongs to a different user');
         return;
@@ -458,7 +473,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         final trackIndex = restoredTracks.indexWhere((t) => t.uuid == trackId);
         
         if (trackIndex >= 0) {
-          logger.d('Restoring queue and seeking to saved track');
+          logger.d('Restoring queue and seeking to saved track at position ${position.inSeconds}s');
           await _setAudioSource(restoredTracks);
           await state.player.seek(position, index: trackIndex);
           
