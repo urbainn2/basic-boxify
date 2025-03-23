@@ -151,8 +151,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     List<String>? roles;
 
     if (Core.app.type == AppType.basic) {
-      final user = await _userRepository.getUserWithId(
-          userId: _authBloc.state.user!.uid);
+      final user = await _userRepository.getSelfUser(_authBloc.state.user!.uid);
       roles = user.roles;
     }
 
@@ -298,8 +297,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
         _playlistHelper.getRecommendedPlaylists(event.user, state.allPlaylists);
 
     if (Core.app.type == AppType.basic) {
-      final user = await _userRepository.getUserWithId(
-          userId: _authBloc.state.user!.uid);
+      final user = await _userRepository.getSelfUser(_authBloc.state.user!.uid);
       final roles = user.roles;
       followedPlaylists = filterPlaylistsByRole(roles, followedPlaylists);
       recommendedPlaylists = filterPlaylistsByRole(roles, recommendedPlaylists);
