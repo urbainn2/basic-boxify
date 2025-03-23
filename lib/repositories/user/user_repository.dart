@@ -131,14 +131,8 @@ class UserRepository extends BaseUserRepository {
   ///
   /// This method will update the user's last seen timestamp in Firestore
   /// and cache the user data, unlike the [getUserWithId] method.
-  ///
-  /// If [prioritizeCache] is true, cache data will be returned if available,
-  /// otherwise will fetch from Firestore.
   @override
-  Future<User> getSelfUser(
-    String userId, {
-    bool prioritizeCache = false,
-  }) async {
+  Future<User> getSelfUser(String userId) async {
     logger.i('getSelfUser: $userId');
 
     if (ConnectivityManager.instance.currentStatus == ConnectivityResult.none) {

@@ -152,17 +152,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       User? user = await _userRepository.getUserFromCache(userId);
       final isSelfCached = user != null;
 
-      // User couldn't be found in the cache, so we need to fetch it right away
+      // User couldn't be found in the cache, so we need to fetch it right away (synchronously)
       if (!isSelfCached) {
         user = await _userRepository.getSelfUser(userId);
-      } else {
-        // Asynchronously fetch the user from the server
-        _userRepository.getSelfUser(userId).then((fetchedUser) {
-          // Update state with the fetched user
-          emit(state.copyWith(user: fetchedUser));
-        }).catchError((error) {
-          logger.e('Error fetching user from server: $error');
-        });
       }
 
       final ratings =
@@ -180,6 +172,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         allArtists: allArtists,
         status: UserStatus.loaded,
       ));
+
+      logRunTime(startTime, 'load user');
+
+      // Now, if the user wasn't cached previously, fetch the user from Firestore.
+      // this is done once UserStatus.loaded is emitted so this is not blocking the UI
+      if (isSelfCached) {
+        user = await _userRepository.getSelfUser(userId);
+        emit(state.copyWith(user: user));
+      }
     } on NoConnectionException catch (e) {
       logger.e('NoConnectionException: $e');
       emit(state.copyWith(
@@ -205,8 +206,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         ),
       ));
     }
-
-    logRunTime(startTime, 'UserBloc: _loadAdvancedUser');
   }
 
   Future<void> _onBundlePurchaseSuccess(
