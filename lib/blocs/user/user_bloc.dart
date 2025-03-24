@@ -93,7 +93,17 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
 
     try {
-      final user = await _userRepository.getUserWithId(userId: userId);
+      // Is there a cached user available?
+      // We use the cached user first as it's much faster to load
+      // then we can fetch the updated user from the server
+      User? user = await _userRepository.getUserFromCache(userId);
+      final isSelfCached = user != null;
+
+      // User couldn't be found in the cache, so we need to fetch it right away (synchronously)
+      if (!isSelfCached) {
+        user = await _userRepository.getSelfUser(userId);
+      }
+
       final ratings =
           await _trackRepository.getUserRatings(userId, _firebaseFirestore);
 
@@ -102,6 +112,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         ratings: ratings,
         status: UserStatus.loaded,
       ));
+
+      // Now, if the user wasn't cached previously, fetch the user from Firestore.
+      // this is done once UserStatus.loaded is emitted so this is not blocking the UI
+      if (isSelfCached) {
+        user = await _userRepository.getSelfUser(userId);
+        emit(state.copyWith(user: user));
+      }
     } on NoConnectionException catch (e) {
       logger.e('NoConnectionException: $e');
       emit(state.copyWith(
