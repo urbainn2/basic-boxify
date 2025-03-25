@@ -42,7 +42,12 @@ part 'my_player_state.dart';
 class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   final AudioPlayer _audioPlayer;
   StreamSubscription<PositionDiscontinuity>? _discontinuitySubscription;
-  static const String _playerStateKey = 'player_state';
+  static const String _basePlayerStateKey = 'player_state';
+
+  String get _playerStateKey {
+    final user = FirebaseAuth.instance.currentUser;
+    return user != null ? '${_basePlayerStateKey}_${user.uid}' : _basePlayerStateKey;
+  }
 
   PlayerBloc({
     required AudioPlayer audioPlayer,
