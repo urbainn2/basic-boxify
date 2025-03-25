@@ -118,6 +118,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       if (isSelfCached) {
         user = await _userRepository.getSelfUser(userId);
         emit(state.copyWith(user: user));
+
+        // Check if the user roles have changed between cached and server user
+        if (event.onRolesUpdated != null && user.roles != state.user.roles) {
+          event.onRolesUpdated!();
+        }
       }
     } on NoConnectionException catch (e) {
       logger.e('NoConnectionException: $e');
