@@ -34,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
 
-    namespace 'com.boxify.dev'
+    namespace 'com.boxify.basic'
 
     compileSdkVersion 34
 
@@ -57,7 +57,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.boxify.dev"
+        applicationId "com.boxify.basic"
         minSdkVersion 24
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()

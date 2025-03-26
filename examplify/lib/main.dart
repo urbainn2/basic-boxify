@@ -1,7 +1,7 @@
 import 'package:boxify/app_core.dart';
 import 'package:flutter/material.dart';
-import 'package:examplify/config/firebase_options.dart';
-import 'package:examplify/core/app.dart';
+import 'package:basic_examplify/config/firebase_options.dart';
+import 'package:basic_examplify/core/app.dart';
 
 void main() async {
   info('Examplify main');
@@ -14,7 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Core.init(
-      appName: 'Examplify',
+      appName: 'Basic Examplify',
       firebaseOptions: firebaseOptions,
       baseApp: App(),
       baseColor: AppColor());

@@ -18,10 +18,10 @@ import 'package:boxify/screens/market/api/purchase_api.dart';
 /// }
 class App extends BaseApp {
   @override
-  String get name => "Examplify";
+  String get name => "Basic Examplify";
 
   @override
-  AppType get type => AppType.advanced;
+  AppType get type => AppType.basic;
 
   @override
   String get serverToken =>
@@ -36,9 +36,8 @@ class App extends BaseApp {
   @override
   int get playlistScoreCutoff => -1;
 
-
 // PLAYLISTS
-/// Please see the notes in the BaseApp class for more information
+  /// Please see the notes in the BaseApp class for more information
   @override
   String get preWeezerPlaylistId => 'Xih5mmsI9PVYttdiCvbE';
   @override

@@ -1,8 +1,8 @@
 
-# EXAMPLIFY
+# BASIC EXAMPLIFY
 
-  This folder contains the working demo of Boxify (similar to the private Weezify repository).  
-  If you want to run or contribute to Boxify, **this** is where to start!
+  This folder contains the working demo of the Basic App version of [Rivers Cuomo](https://github.com/riverscuomo)'s [Boxify](https://github.com/riverscuomo/boxify).\
+  This repository is mainly used as a testing ground to see how changes may impact the Basic App.
 
 ## Table of Contents
 
@@ -88,13 +88,14 @@ If this is your first time using Flutter, make sure you can run the Flutter exam
 
 ### Firebase Setup
 
-  This example requires a **Firebase project** (development/staging).  
+  This example requires a **Firebase project** (development/staging).
+  > This project uses a **different** Firebase project than the one used by Boxify! Contact @urbainn / `ubrainfr(at)gmail.com` to be added.
 
   1. **Contact the maintainer** to be added to the 'boxify-dev' Firebase console.
   2. **Download**:
      - `google-services.json` into `android/app` from the Firebase console <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/android:com.boxify.dev>
      - `GoogleService-Info.plist` into `ios/Runner` (if you'll be developing on iOS)
-     - Go to <https://console.firebase.google.com/u/0/project/boxify-dev-96c50/settings/general/web:ZmNlM2QyYjQtMGRlNC00N2QzLWJkZDktYjYwOWE1NzZhZWYz> and click on Config. Copy the code. Create a new file called `firebase_options.dart` in `lib/config/`. Use the example file for instructions on how to paste the information you copied.
+     - Go to <https://console.firebase.google.com/u/0/project/basic-examplify/settings/general/web:N2E3OTYyMzgtZmRkOS00NjExLTkzYTQtNmU1Zjk5ZTE4ZjNk> and click on Config. Copy the code. Create a new file called `firebase_options.dart` in `lib/config/`. Use the example file for instructions on how to paste the information you copied.
   3. Make sure those files **are not** committed to GitHub if they contain sensitive info. Check `.gitignore`.
 
 ### Running the App
@@ -150,6 +151,6 @@ If this is your first time using Flutter, make sure you can run the Flutter exam
 
 ## Contact
 
-- **Maintainer:** Rivers
-- **Email:** <rivers@riverscuomo.com>
-- **Discord:** <https://discord.com/channels/@me/1325992565278900285>
+- **Maintainer:** urbainn
+- **Email:** <ubrainfr@gmail.com>
+- **Discord:** wharg

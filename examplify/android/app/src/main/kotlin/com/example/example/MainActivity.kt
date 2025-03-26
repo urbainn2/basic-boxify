@@ -1,4 +1,4 @@
-package com.boxify.dev
+package com.boxify.basic
 
 import io.flutter.embedding.android.FlutterActivity
 

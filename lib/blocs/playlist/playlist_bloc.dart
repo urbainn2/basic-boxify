@@ -203,7 +203,6 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     } else {
       allPlaylists =
           await _playlistRepository.fetchPlaylistsBasic(event.userId);
-
       allPlaylists = filterPlaylistsByRole(roles, allPlaylists);
     }
 

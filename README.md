@@ -1,6 +1,6 @@
-# BOXIFY
-
-A shared core library powering multiple music streaming applications (Weezify, RiverTunes, and more?).
+# BASIC-BOXIFY
+  This folder contains the working demo of the Basic App version of [Rivers Cuomo](https://github.com/riverscuomo)'s [Boxify](https://github.com/riverscuomo/boxify).\
+  This repository is mainly used as a testing ground to see how changes may impact the Basic App.
 
 ## Overview
 
