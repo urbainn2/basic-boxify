@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'player_event.dart';
@@ -42,11 +42,10 @@ part 'my_player_state.dart';
 class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   final AudioPlayer _audioPlayer;
   StreamSubscription<PositionDiscontinuity>? _discontinuitySubscription;
-  StreamSubscription<auth.User?>? _authStateSubscription;
   static const String _basePlayerStateKey = 'player_state';
 
   String get _playerStateKey {
-    final user = auth.FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     return user != null
         ? '${_basePlayerStateKey}_${user.uid}'
         : _basePlayerStateKey;
@@ -106,7 +105,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   @override
   Future<void> close() {
     _discontinuitySubscription?.cancel();
-    _authStateSubscription?.cancel();
     // Check if a track is already playing
     if (state.player.playing) {
       _savePlaybackState();
@@ -116,25 +114,17 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     return super.close();
   }
 
-  /// Completely resets player state between user account changes
   Future<void> _onPlayerReset(
     PlayerReset event,
     Emitter<MyPlayerState> emit,
   ) async {
-    logger.i('Starting player reset for account change');
-
-    try {
-      if (state.queue.isNotEmpty && state.player.currentIndex != null) {
-        await _savePlaybackState();
-      }
-      await _audioPlayer.stop();
-      await _audioPlayer.setAudioSource(ConcatenatingAudioSource(children: []),
-          preload: false);
-      logger.i('Player reset completed for account change');
-    } catch (error) {
-      logger.e('Error during player reset: $error');
+    if (state.queue.isNotEmpty && state.player.currentIndex != null) {
+      await _savePlaybackState();
     }
-    // Still reset the state even if there was an error
+    await _audioPlayer.stop();
+    await _audioPlayer.setAudioSource(ConcatenatingAudioSource(children: []),
+        preload: false);
+    logger.i('Player reset completed for account change');
     emit(MyPlayerState.initial(player: _audioPlayer));
   }
 
@@ -407,7 +397,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
 
     // Save to SharedPreferences for device-local persistence
     try {
-      final user = auth.FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         final prefs = await SharedPreferences.getInstance();
         logger.d('Saving to SharedPreferences for user ${user.uid}');
@@ -448,7 +438,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
 
   Future<void> _restorePlaybackState() async {
     try {
-      final user = auth.FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         logger.d('No user logged in, cannot restore state');
         return;
