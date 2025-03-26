@@ -44,7 +44,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   StreamSubscription<PositionDiscontinuity>? _discontinuitySubscription;
   StreamSubscription<auth.User?>? _authStateSubscription;
   static const String _basePlayerStateKey = 'player_state';
-  auth.User? _previousUser;
 
   String get _playerStateKey {
     final user = auth.FirebaseAuth.instance.currentUser;
@@ -59,20 +58,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         super(MyPlayerState.initial(
           player: audioPlayer,
         )) {
-    // Listen for auth state changes to reset player when user changes
-    _authStateSubscription =
-        auth.FirebaseAuth.instance.authStateChanges().listen((user) {
-      if (_previousUser != null &&
-          user != null &&
-          _previousUser?.uid != user.uid) {
-        // Only reset when switching between different logged-in users
-        logger.i(
-            'User changed from ${_previousUser?.uid} to ${user.uid} - resetting player state');
-        add(PlayerReset());
-      }
-      _previousUser = user;
-    });
-
     on<PlayerReset>(_onPlayerReset);
     on<StartPlayback>(_onStartPlayback);
     on<LoadPlayer>(_onLoadPlayer);
@@ -145,16 +130,12 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
       await _audioPlayer.stop();
       await _audioPlayer.setAudioSource(ConcatenatingAudioSource(children: []),
           preload: false);
-      emit(MyPlayerState.initial(
-          player:
-              _audioPlayer)); // why not just put it outside the try catch if we run it anyway?
-      _previousUser = auth.FirebaseAuth.instance.currentUser;
       logger.i('Player reset completed for account change');
     } catch (error) {
       logger.e('Error during player reset: $error');
-      // Still reset the state even if there was an error
-      emit(MyPlayerState.initial(player: _audioPlayer));
     }
+    // Still reset the state even if there was an error
+    emit(MyPlayerState.initial(player: _audioPlayer));
   }
 
   Future<void> _onPlay(Play event, Emitter<MyPlayerState> emit) async {
