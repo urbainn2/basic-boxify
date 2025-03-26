@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'player_event.dart';
@@ -42,11 +42,15 @@ part 'my_player_state.dart';
 class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   final AudioPlayer _audioPlayer;
   StreamSubscription<PositionDiscontinuity>? _discontinuitySubscription;
+  StreamSubscription<auth.User?>? _authStateSubscription;
   static const String _basePlayerStateKey = 'player_state';
+  auth.User? _previousUser;
 
   String get _playerStateKey {
-    final user = FirebaseAuth.instance.currentUser;
-    return user != null ? '${_basePlayerStateKey}_${user.uid}' : _basePlayerStateKey;
+    final user = auth.FirebaseAuth.instance.currentUser;
+    return user != null
+        ? '${_basePlayerStateKey}_${user.uid}'
+        : _basePlayerStateKey;
   }
 
   PlayerBloc({
@@ -55,6 +59,20 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         super(MyPlayerState.initial(
           player: audioPlayer,
         )) {
+    // Listen for auth state changes to reset player when user changes
+    _authStateSubscription =
+        auth.FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (_previousUser != null &&
+          user != null &&
+          _previousUser?.uid != user.uid) {
+        // Only reset when switching between different logged-in users
+        logger.i(
+            'User changed from ${_previousUser?.uid} to ${user.uid} - resetting player state');
+        add(PlayerReset());
+      }
+      _previousUser = user;
+    });
+
     on<PlayerReset>(_onPlayerReset);
     on<StartPlayback>(_onStartPlayback);
     on<LoadPlayer>(_onLoadPlayer);
@@ -75,18 +93,19 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     // Listen for both state changes and play/pause events
     _audioPlayer.playbackEventStream.listen((event) {
       if (state.status == PlayerStatus.loaded) {
-        final needsSave = event.processingState == ProcessingState.completed || 
-                         event.processingState == ProcessingState.ready ||
-                         (_lastPlayingState != null && _lastPlayingState != _audioPlayer.playing);
-        
+        final needsSave = event.processingState == ProcessingState.completed ||
+            event.processingState == ProcessingState.ready ||
+            (_lastPlayingState != null &&
+                _lastPlayingState != _audioPlayer.playing);
+
         if (needsSave) {
           _savePlaybackState();
         }
-        
+
         _lastPlayingState = _audioPlayer.playing;
       }
     });
-    
+
     // Add a separate listener for player state changes to ensure pauses are captured properly
     _audioPlayer.playerStateStream.listen((playerState) {
       // Save when transitioning from playing to paused
@@ -102,6 +121,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   @override
   Future<void> close() {
     _discontinuitySubscription?.cancel();
+    _authStateSubscription?.cancel();
     // Check if a track is already playing
     if (state.player.playing) {
       _savePlaybackState();
@@ -111,19 +131,30 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     return super.close();
   }
 
-  /// was causing a memory leak https://github.com/riverscuomo/flutter-apps/issues/104
+  /// Completely resets player state between user account changes
   Future<void> _onPlayerReset(
     PlayerReset event,
     Emitter<MyPlayerState> emit,
   ) async {
-    // Assuming you want to completely reset the player
-    await _audioPlayer.stop(); // Stop any current playback
-    await _audioPlayer.seek(Duration
-        .zero); // Seek to the beginning of the audio source if necessary
-    await _audioPlayer
-        .dispose(); // If you need to dispose of the current instance
+    logger.i('Starting player reset for account change');
 
-    emit(MyPlayerState.initial(player: _audioPlayer));
+    try {
+      if (state.queue.isNotEmpty && state.player.currentIndex != null) {
+        await _savePlaybackState();
+      }
+      await _audioPlayer.stop();
+      await _audioPlayer.setAudioSource(ConcatenatingAudioSource(children: []),
+          preload: false);
+      emit(MyPlayerState.initial(
+          player:
+              _audioPlayer)); // why not just put it outside the try catch if we run it anyway?
+      _previousUser = auth.FirebaseAuth.instance.currentUser;
+      logger.i('Player reset completed for account change');
+    } catch (error) {
+      logger.e('Error during player reset: $error');
+      // Still reset the state even if there was an error
+      emit(MyPlayerState.initial(player: _audioPlayer));
+    }
   }
 
   Future<void> _onPlay(Play event, Emitter<MyPlayerState> emit) async {
@@ -214,7 +245,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
     try {
       // Try to restore state first
       await _restorePlaybackState();
-      
+
       // If restoration didn't work (no state or empty queue), use provided tracks
       if (state.queue.isEmpty) {
         await _setAudioSource(event.tracks);
@@ -224,12 +255,12 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
           player: state.player,
         ));
       }
-      
     } catch (err) {
       logger.e('Error in _onLoadPlayer: $err');
       emit(state.copyWith(
         status: PlayerStatus.error,
-        failure: Failure(code: err.hashCode.toString(), message: err.toString()),
+        failure:
+            Failure(code: err.hashCode.toString(), message: err.toString()),
       ));
     }
   }
@@ -326,7 +357,6 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
               // If problems on web, maybe it has something to do with renaming the files with
               // and index number? Consider handling?
             }
-            // print(url);
             url = Utils.sanitizeUrl(url!);
 
             return AudioSource.uri(
@@ -365,15 +395,17 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
   Future<void> _savePlaybackState() async {
     // Get the current ACTUAL position from the player directly
     final currentPosition = await state.player.position;
-    
+
     // Only save state if we have a valid queue and track - don't check playing state
     if (state.queue.isEmpty || state.player.currentIndex == null) {
-      logger.d('Cannot save state: queueEmpty=${state.queue.isEmpty}, currentIndex=${state.player.currentIndex}');
+      logger.d(
+          'Cannot save state: queueEmpty=${state.queue.isEmpty}, currentIndex=${state.player.currentIndex}');
       return;
     }
 
     if (state.player.currentIndex! >= state.queue.length) {
-      logger.d('Cannot save state: invalid current index ${state.player.currentIndex}');
+      logger.d(
+          'Cannot save state: invalid current index ${state.player.currentIndex}');
       return;
     }
 
@@ -383,7 +415,8 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
       return;
     }
 
-    logger.d('Saving state for track: ${currentTrack.displayTitle} at position ${currentPosition.inSeconds}s');
+    logger.d(
+        'Saving state for track: ${currentTrack.displayTitle} at position ${currentPosition.inSeconds}s');
 
     // Save locally in bloc state
     emit(state.copyWith(
@@ -393,21 +426,23 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
 
     // Save to SharedPreferences for device-local persistence
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = auth.FirebaseAuth.instance.currentUser;
       if (user != null) {
         final prefs = await SharedPreferences.getInstance();
         logger.d('Saving to SharedPreferences for user ${user.uid}');
-        
+
         // Save full queue data for proper restoration
-        final queueData = state.queue.map((track) => {
-          'uuid': track.uuid,
-          'title': track.displayTitle,
-          'link': track.link,
-          'downloadedUrl': track.downloadedUrl,
-          'imageUrl': track.imageUrl,
-          'album': track.album,
-          'available': track.available,
-        }).toList();
+        final queueData = state.queue
+            .map((track) => {
+                  'uuid': track.uuid,
+                  'title': track.displayTitle,
+                  'link': track.link,
+                  'downloadedUrl': track.downloadedUrl,
+                  'imageUrl': track.imageUrl,
+                  'album': track.album,
+                  'available': track.available,
+                })
+            .toList();
 
         // Create a map with all player state data
         final playerStateData = {
@@ -432,7 +467,7 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
 
   Future<void> _restorePlaybackState() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = auth.FirebaseAuth.instance.currentUser;
       if (user == null) {
         logger.d('No user logged in, cannot restore state');
         return;
@@ -440,32 +475,35 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
 
       final prefs = await SharedPreferences.getInstance();
       final savedStateStr = prefs.getString(_playerStateKey);
-      
+
       if (savedStateStr == null) {
         logger.d('No saved state found in SharedPreferences');
         return;
       }
 
       final data = jsonDecode(savedStateStr) as Map<String, dynamic>;
-      
+
       // Verify this state belongs to the current user
       if (data['userId'] != user.uid) {
         logger.d('Saved state belongs to a different user');
         return;
       }
-      
+
       // Restore queue first
       if (data['queue'] != null) {
-        final queueData = List<Map<String, dynamic>>.from(data['queue'] as List);
-        final restoredTracks = queueData.map((trackData) => Track(
-          uuid: trackData['uuid'] as String,
-          displayTitle: trackData['title'] as String,
-          link: trackData['link'] as String?,
-          downloadedUrl: trackData['downloadedUrl'] as String?,
-          imageUrl: trackData['imageUrl'] as String?,
-          album: trackData['album'] as String?,
-          available: trackData['available'] as bool?,
-        )).toList();
+        final queueData =
+            List<Map<String, dynamic>>.from(data['queue'] as List);
+        final restoredTracks = queueData
+            .map((trackData) => Track(
+                  uuid: trackData['uuid'] as String,
+                  displayTitle: trackData['title'] as String,
+                  link: trackData['link'] as String?,
+                  downloadedUrl: trackData['downloadedUrl'] as String?,
+                  imageUrl: trackData['imageUrl'] as String?,
+                  album: trackData['album'] as String?,
+                  available: trackData['available'] as bool?,
+                ))
+            .toList();
 
         if (restoredTracks.isEmpty) {
           logger.d('Restored queue is empty');
@@ -476,18 +514,19 @@ class PlayerBloc extends Bloc<PlayerEvent, MyPlayerState> {
         final trackId = data['trackId'] as String;
         final position = Duration(milliseconds: data['position'] as int);
         final trackIndex = restoredTracks.indexWhere((t) => t.uuid == trackId);
-        
+
         if (trackIndex >= 0) {
-          logger.d('Restoring queue and seeking to saved track at position ${position.inSeconds}s');
+          logger.d(
+              'Restoring queue and seeking to saved track at position ${position.inSeconds}s');
           await _setAudioSource(restoredTracks);
           await state.player.seek(position, index: trackIndex);
-          
+
           emit(state.copyWith(
             queue: restoredTracks,
             savedPosition: position,
             savedTrack: restoredTracks[trackIndex],
           ));
-          
+
           logger.d('State restored successfully');
         }
       }
